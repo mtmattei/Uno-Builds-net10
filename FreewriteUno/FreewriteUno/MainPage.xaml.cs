@@ -36,6 +36,7 @@ public sealed partial class MainPage : Page
     private DispatcherTimer? _chromeHoverLeaveTimer;
     private DispatcherTimer? _toastTimer;
     private DispatcherTimer? _backspaceFlashTimer;
+    private Storyboard? _placeholderShimmerStoryboard;
     private bool _animationsEnabled = true;
 
     public MainPage()
@@ -77,9 +78,45 @@ public sealed partial class MainPage : Page
         StripTooltipsOnTouchPlatforms();
         ApplyThemeToRoot();
         StartCountdownTimer();
+        StartPlaceholderShimmer();
         await ViewModel.InitializeAsync();
         EditorTextBox.Focus(FocusState.Programmatic);
         EditorTextBox.SelectionStart = ViewModel.Text.Length;
+    }
+
+    private void StartPlaceholderShimmer()
+    {
+        if (!_animationsEnabled) return;
+
+        // Brush-opacity pulse: the placeholder text's color brush fades 0.35 -> 0.75
+        // -> 0.35 over 2.6s, looping forever. The text reads as a soft glow that
+        // sweeps in intensity. Animating Brush.Opacity (not TextBlock.Opacity)
+        // avoids conflict with the binding that toggles the placeholder on/off.
+        // LinearGradientBrush sweep is the cleaner spatial effect but doesn't
+        // render reliably on TextBlock.Foreground in Uno Skia today.
+        var up = new DoubleAnimation
+        {
+            From = 0.35, To = 0.75,
+            Duration = TimeSpan.FromSeconds(1.3),
+            EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut },
+        };
+        Storyboard.SetTarget(up, PlaceholderShimmerBrush);
+        Storyboard.SetTargetProperty(up, "Opacity");
+
+        var down = new DoubleAnimation
+        {
+            From = 0.75, To = 0.35,
+            BeginTime = TimeSpan.FromSeconds(1.3),
+            Duration = TimeSpan.FromSeconds(1.3),
+            EasingFunction = new SineEase { EasingMode = EasingMode.EaseInOut },
+        };
+        Storyboard.SetTarget(down, PlaceholderShimmerBrush);
+        Storyboard.SetTargetProperty(down, "Opacity");
+
+        _placeholderShimmerStoryboard = new Storyboard { RepeatBehavior = RepeatBehavior.Forever };
+        _placeholderShimmerStoryboard.Children.Add(up);
+        _placeholderShimmerStoryboard.Children.Add(down);
+        _placeholderShimmerStoryboard.Begin();
     }
 
     private void StripTooltipsOnTouchPlatforms()
@@ -158,6 +195,7 @@ public sealed partial class MainPage : Page
         _chromeHoverLeaveTimer?.Stop();
         _toastTimer?.Stop();
         _backspaceFlashTimer?.Stop();
+        _placeholderShimmerStoryboard?.Stop();
     }
 
     private void StartCountdownTimer()

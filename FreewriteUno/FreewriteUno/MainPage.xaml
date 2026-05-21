@@ -131,22 +131,26 @@
           <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                         VerticalScrollBarVisibility="Auto"
                         Padding="48,48,48,112">
-            <Grid HorizontalAlignment="Center" MinWidth="600" MaxWidth="720">
+            <Grid HorizontalAlignment="Center" MaxWidth="720">
               <!-- Placeholder behind the editor TextBox. Same leading newlines so it
-                   aligns with where the cursor sits; opacity driven by Formatters.
-                   Grid MinWidth keeps the typing area at a consistent position even
-                   when the TextBox is empty (otherwise the auto-sized Grid collapses
-                   to the placeholder's natural width). -->
+                   aligns with where the cursor sits. The Grid is intentionally
+                   auto-sized + centered so writing begins in the middle of the
+                   viewport and grows outward as text is typed (original spec). -->
               <TextBlock x:Name="PlaceholderText"
-                         Text="&#10;&#10;Begin writing..."
+                         Text="&#10;&#10;What's on your mind?"
                          FontFamily="{x:Bind FontFamilyForName(ViewModel.SelectedFont), Mode=OneWay}"
                          FontSize="{x:Bind ViewModel.FontSize, Mode=OneWay}"
-                         Foreground="{ThemeResource ChromeIconBrushInactive}"
                          Opacity="{x:Bind vm:Formatters.PlaceholderOpacity(ViewModel.Text), Mode=OneWay}"
                          IsHitTestVisible="False"
                          TextWrapping="Wrap"
                          HorizontalAlignment="Stretch"
-                         VerticalAlignment="Top" />
+                         VerticalAlignment="Top">
+                <TextBlock.Foreground>
+                  <SolidColorBrush x:Name="PlaceholderShimmerBrush"
+                                   Color="{ThemeResource FreewriteOnSurfaceColor}"
+                                   Opacity="0.35" />
+                </TextBlock.Foreground>
+              </TextBlock>
               <TextBox x:Name="EditorTextBox"
                        Style="{StaticResource EditorTextBoxStyle}"
                        Text="{x:Bind ViewModel.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

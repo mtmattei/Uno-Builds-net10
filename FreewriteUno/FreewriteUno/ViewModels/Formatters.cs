@@ -37,14 +37,15 @@ public static class Formatters
     public static double EntryPreviewOpacity(Entry? entry)
         => entry is null || string.IsNullOrWhiteSpace(entry.Preview) ? 0.55 : 1.0;
 
-    // Editor placeholder: visible only when the entry body (after the leading
-    // "\n\n" padding) is still empty. TextBox.PlaceholderText doesn't work here
-    // because the underlying Text always contains the padding, so we overlay
-    // a TextBlock and drive its opacity from this function.
+    // Editor placeholder: 1 (fully visible) when the entry body (after the leading
+    // "\n\n" padding) is still empty, 0 once the user types. TextBox.PlaceholderText
+    // doesn't work here because the underlying Text always contains the padding,
+    // so we overlay a TextBlock and drive its opacity from this function. The
+    // shimmer pulse on the brush controls the visible intensity within that.
     public static double PlaceholderOpacity(string? text)
     {
-        if (string.IsNullOrEmpty(text)) return 0.45;
-        return string.IsNullOrWhiteSpace(text) ? 0.45 : 0.0;
+        if (string.IsNullOrEmpty(text)) return 1.0;
+        return string.IsNullOrWhiteSpace(text) ? 1.0 : 0.0;
     }
 
     public static string ThemeGlyph(Microsoft.UI.Xaml.ElementTheme theme)
