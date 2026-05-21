@@ -73,3 +73,9 @@ _(InfiniteImage, PrecisionDial, QuoteCraft, ReservoomUno, RivTes, SalesDashboard
 | fix3 | FluxTransit | 6.4.58 | 6.5.33 | STILL BLOCKED (restore) | - |
 | fix3 | QuoteCraft | 6.5.31 | 6.5.33 | ok (net10.0-android:ok, net10.0-browserwasm:ok, net10.0-desktop:ok) | 3dabe82 |
 | fix5 | Wellmetrix | 6.4.58 | 6.5.33 | ok (net10.0-desktop:ok) | 9d3382c |
+| import | Hive | 6.5.31 | 6.5.33 | imported from Hive (no build verify) | 29a9d27 |
+| import | Carousel | 6.5.31 | 6.5.33 | imported from Carousel (no build verify) | c353111 |
+| import | SnackBar | 6.5.31 | 6.5.33 | imported from SnackBar (no build verify) | 66b692c |
+| import | ChefsTest | - | - | imported from ChefsTest (no upgrade attempt) | a414966 |
+| import | DigitalFidget | 6.5.31 | 6.5.33 | imported from DigitalFidget (no build verify) | cec9be0 |
+| import | Thermostat | 6.4.26 | 6.5.33 | imported from Thermostat-Build (no build verify) | e6a5671 |
