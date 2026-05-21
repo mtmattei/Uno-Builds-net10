@@ -1,0 +1,10 @@
+{
+  "background_color": "#ffffff",
+  "description": "TempWasm",
+  "display": "standalone",
+  "name": "TempWasm",
+  "short_name": "TempWasm",
+  "start_url": "/index.html",
+  "theme_color": "#ffffff",
+  "scope": "/"
+}

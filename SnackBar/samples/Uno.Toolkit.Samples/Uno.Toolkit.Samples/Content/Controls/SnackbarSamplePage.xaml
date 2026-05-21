@@ -1,0 +1,86 @@
+<Page x:Class="Uno.Toolkit.Samples.Content.Controls.SnackbarSamplePage"
+	  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	  xmlns:sample="using:Uno.Toolkit.Samples"
+	  xmlns:utu="using:Uno.Toolkit.UI"
+	  mc:Ignorable="d">
+
+	<sample:SamplePageLayout x:Name="SamplePageLayout" IsDesignAgnostic="True">
+		<sample:SamplePageLayout.DesignAgnosticTemplate>
+			<DataTemplate>
+				<Grid>
+					<!-- SnackbarHost wraps the content and provides the overlay area -->
+					<utu:SnackbarHost x:Name="SampleSnackbarHost">
+						<ScrollViewer>
+							<StackPanel Spacing="16"
+										Padding="24,24,24,80"
+										HorizontalAlignment="Stretch">
+
+								<TextBlock Text="Snackbar"
+										   Style="{StaticResource TitleLarge}"
+										   Margin="0,0,0,8" />
+
+								<TextBlock Text="Snackbars provide brief messages about app processes at the bottom of the screen."
+										   Style="{StaticResource BodyMedium}"
+										   Foreground="{ThemeResource OnSurfaceVariantBrush}"
+										   TextWrapping="Wrap" />
+
+								<!-- Basic message -->
+								<Button x:Name="ShowBasicButton"
+										Content="Show Message"
+										Click="OnShowBasicClick"
+										HorizontalAlignment="Stretch" />
+
+								<!-- Message + Action -->
+								<Button x:Name="ShowActionButton"
+										Content="Show with Action"
+										Click="OnShowActionClick"
+										HorizontalAlignment="Stretch" />
+
+								<!-- Message + Action + Dismiss -->
+								<Button x:Name="ShowActionDismissButton"
+										Content="Show with Action + Dismiss"
+										Click="OnShowActionDismissClick"
+										HorizontalAlignment="Stretch" />
+
+								<!-- Multi-line -->
+								<Button x:Name="ShowMultiLineButton"
+										Content="Show Multi-line"
+										Click="OnShowMultiLineClick"
+										HorizontalAlignment="Stretch" />
+
+								<!-- Long duration -->
+								<Button x:Name="ShowLongButton"
+										Content="Show Long Duration (7s)"
+										Click="OnShowLongClick"
+										HorizontalAlignment="Stretch" />
+
+								<!-- Indefinite -->
+								<Button x:Name="ShowIndefiniteButton"
+										Content="Show Indefinite"
+										Click="OnShowIndefiniteClick"
+										HorizontalAlignment="Stretch" />
+
+								<!-- Queue demo -->
+								<Button x:Name="ShowQueueButton"
+										Content="Queue 3 Messages"
+										Click="OnShowQueueClick"
+										HorizontalAlignment="Stretch" />
+
+								<!-- Result display -->
+								<TextBlock x:Name="ResultText"
+										   Text="Dismiss reason will appear here"
+										   Style="{StaticResource BodySmall}"
+										   Foreground="{ThemeResource OnSurfaceVariantBrush}"
+										   HorizontalAlignment="Center"
+										   Margin="0,16,0,0" />
+							</StackPanel>
+						</ScrollViewer>
+					</utu:SnackbarHost>
+				</Grid>
+			</DataTemplate>
+		</sample:SamplePageLayout.DesignAgnosticTemplate>
+	</sample:SamplePageLayout>
+</Page>
