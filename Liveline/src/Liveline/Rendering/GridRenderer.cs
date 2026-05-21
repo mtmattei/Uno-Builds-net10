@@ -3,16 +3,14 @@ using SkiaSharp;
 
 namespace Liveline.Rendering;
 
-/// <summary>
-/// Draws Y-axis labels on the right side and time labels on the X-axis.
-/// </summary>
-public static class GridRenderer
+internal static class GridRenderer
 {
     private const float LeftPadding = 16f;
     private const float RightPadding = 80f;
     private const float TopPadding = 16f;
     private const float BottomPadding = 32f;
     private const int TargetGridLines = 5;
+    private static readonly float[] DashIntervals = [4f, 4f];
 
     public static (float Left, float Right, float Top, float Bottom) GetChartArea(float width, float height)
         => (LeftPadding, width - RightPadding, TopPadding, height - BottomPadding);
@@ -22,7 +20,8 @@ public static class GridRenderer
         float width, float height,
         double minY, double maxY,
         DateTimeOffset[] times,
-        ChartPalette palette)
+        ChartPalette palette,
+        RenderContext rc)
     {
         var (left, right, top, bottom) = GetChartArea(width, height);
         float chartHeight = bottom - top;
@@ -30,13 +29,8 @@ public static class GridRenderer
 
         if (chartHeight <= 0 || chartWidth <= 0) return;
 
-        using var textFont = new SKFont(SKTypeface.FromFamilyName("Segoe UI", SKFontStyle.Normal), 11f);
-
-        using var textPaint = new SKPaint
-        {
-            Color = palette.TextDim,
-            IsAntialias = true
-        };
+        rc.Fill.Color = palette.TextDim;
+        rc.Fill.Style = SKPaintStyle.Fill;
 
         double range = maxY - minY;
         if (range <= 0) range = 1;
@@ -44,17 +38,14 @@ public static class GridRenderer
         double step = NiceStep(range, TargetGridLines);
         double firstLine = Math.Ceiling(minY / step) * step;
 
-        // Y-axis labels on the right
         for (double val = firstLine; val <= maxY; val += step)
         {
             float y = (float)(bottom - (val - minY) / range * chartHeight);
             if (y < top || y > bottom) continue;
 
-            string label = FormatValue(val);
-            canvas.DrawText(label, right + 6f, y + 4f, SKTextAlign.Left, textFont, textPaint);
+            canvas.DrawText(FormatValue(val), right + 6f, y + 4f, SKTextAlign.Left, rc.LabelFont, rc.Fill);
         }
 
-        // X-axis time labels
         if (times.Length >= 2)
         {
             int labelCount = Math.Max(2, (int)(chartWidth / 80));
@@ -64,23 +55,20 @@ public static class GridRenderer
             {
                 float x = left + (float)i / (times.Length - 1) * chartWidth;
                 string timeLabel = times[i].ToString("mm:ss");
-                float tw = textFont.MeasureText(timeLabel);
+                float tw = rc.LabelFont.MeasureText(timeLabel);
 
-                // Clamp so labels stay inside the chart area
                 float drawX = Math.Clamp(x - tw / 2f, left, right - tw);
-                canvas.DrawText(timeLabel, drawX, bottom + 16f, SKTextAlign.Left, textFont, textPaint);
+                canvas.DrawText(timeLabel, drawX, bottom + 16f, SKTextAlign.Left, rc.LabelFont, rc.Fill);
             }
         }
     }
 
-    /// <summary>
-    /// Draws a horizontal dotted tracking line at the live dot Y position.
-    /// </summary>
     public static void DrawTrackingLine(
         SKCanvas canvas,
         float width, float height,
         double dotValue, double minY, double maxY,
-        ChartPalette palette)
+        ChartPalette palette,
+        RenderContext rc)
     {
         var (left, right, top, bottom) = GetChartArea(width, height);
         float chartHeight = bottom - top;
@@ -90,16 +78,13 @@ public static class GridRenderer
         float y = (float)(bottom - (dotValue - minY) / range * chartHeight);
         y = Math.Clamp(y, top, bottom);
 
-        using var paint = new SKPaint
-        {
-            Color = ColorHelper.WithAlpha(palette.LineColor, 90),
-            StrokeWidth = 1f,
-            IsAntialias = true,
-            Style = SKPaintStyle.Stroke,
-            PathEffect = SKPathEffect.CreateDash(new[] { 4f, 4f }, 0)
-        };
+        rc.ThinStroke.Color = ColorHelper.WithAlpha(palette.LineColor, 90);
+        using var dash = SKPathEffect.CreateDash(DashIntervals, 0);
+        rc.ThinStroke.PathEffect = dash;
 
-        canvas.DrawLine(left, y, right, y, paint);
+        canvas.DrawLine(left, y, right, y, rc.ThinStroke);
+
+        rc.ThinStroke.PathEffect = null;
     }
 
     private static double NiceStep(double range, int targetLines)

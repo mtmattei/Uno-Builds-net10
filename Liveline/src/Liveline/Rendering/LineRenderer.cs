@@ -3,10 +3,7 @@ using SkiaSharp;
 
 namespace Liveline.Rendering;
 
-/// <summary>
-/// Draws the main line path with optional gradient fill below it.
-/// </summary>
-public static class LineRenderer
+internal static class LineRenderer
 {
     public static void Draw(
         SKCanvas canvas,
@@ -14,7 +11,8 @@ public static class LineRenderer
         double[] yValues,
         double minY, double maxY,
         bool showFill,
-        ChartPalette palette)
+        ChartPalette palette,
+        RenderContext rc)
     {
         if (yValues.Length < 2) return;
 
@@ -29,53 +27,43 @@ public static class LineRenderer
         float firstY = (float)(bottom - (yValues[0] - minY) / range * chartHeight);
         path.MoveTo(firstX, firstY);
 
+        float invRange = (float)(1.0 / range);
+        float invLast = 1f / (yValues.Length - 1);
+
         for (int i = 1; i < yValues.Length; i++)
         {
-            float x = left + (float)i / (yValues.Length - 1) * chartWidth;
-            float y = (float)(bottom - (yValues[i] - minY) / range * chartHeight);
+            float x = left + i * invLast * chartWidth;
+            float y = bottom - ((float)yValues[i] - (float)minY) * invRange * chartHeight;
 
-            float prevX = left + (float)(i - 1) / (yValues.Length - 1) * chartWidth;
-            float prevY = (float)(bottom - (yValues[i - 1] - minY) / range * chartHeight);
+            float prevX = left + (i - 1) * invLast * chartWidth;
+            float prevY = bottom - ((float)yValues[i - 1] - (float)minY) * invRange * chartHeight;
             float cpOffset = (x - prevX) * 0.3f;
 
             path.CubicTo(prevX + cpOffset, prevY, x - cpOffset, y, x, y);
         }
 
-        // Gradient fill
         if (showFill)
         {
             using var fillPath = new SKPath(path);
-            float lastX = right;
-            fillPath.LineTo(lastX, bottom);
+            fillPath.LineTo(right, bottom);
             fillPath.LineTo(firstX, bottom);
             fillPath.Close();
 
-            using var fillPaint = new SKPaint
-            {
-                IsAntialias = true,
-                Style = SKPaintStyle.Fill,
-                Shader = SKShader.CreateLinearGradient(
-                    new SKPoint(0, top),
-                    new SKPoint(0, bottom),
-                    new[] { palette.FillTop, palette.FillBottom },
-                    null,
-                    SKShaderTileMode.Clamp)
-            };
+            using var gradient = SKShader.CreateLinearGradient(
+                new SKPoint(0, top),
+                new SKPoint(0, bottom),
+                [palette.FillTop, palette.FillBottom],
+                null,
+                SKShaderTileMode.Clamp);
 
-            canvas.DrawPath(fillPath, fillPaint);
+            rc.Fill.Color = SKColors.White;
+            rc.Fill.Style = SKPaintStyle.Fill;
+            rc.Fill.Shader = gradient;
+            canvas.DrawPath(fillPath, rc.Fill);
+            rc.Fill.Shader = null;
         }
 
-        // Line stroke
-        using var linePaint = new SKPaint
-        {
-            Color = palette.LineColor,
-            StrokeWidth = 2.5f,
-            IsAntialias = true,
-            Style = SKPaintStyle.Stroke,
-            StrokeCap = SKStrokeCap.Round,
-            StrokeJoin = SKStrokeJoin.Round
-        };
-
-        canvas.DrawPath(path, linePaint);
+        rc.Stroke.Color = palette.LineColor;
+        canvas.DrawPath(path, rc.Stroke);
     }
 }
