@@ -72,3 +72,4 @@ _(InfiniteImage, PrecisionDial, QuoteCraft, ReservoomUno, RivTes, SalesDashboard
 | 6 | AgentNotifier | 6.4.58 | 6.5.33 | ok (net10.0-desktop) | d3d775e |
 | fix3 | FluxTransit | 6.4.58 | 6.5.33 | STILL BLOCKED (restore) | - |
 | fix3 | QuoteCraft | 6.5.31 | 6.5.33 | ok (net10.0-android:ok, net10.0-browserwasm:ok, net10.0-desktop:ok) | 3dabe82 |
+| fix5 | Wellmetrix | 6.4.58 | 6.5.33 | ok (net10.0-desktop:ok) | 9d3382c |
