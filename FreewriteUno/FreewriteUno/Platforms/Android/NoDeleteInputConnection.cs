@@ -1,4 +1,5 @@
 #if __ANDROID__
+using System.Runtime.Versioning;
 using Android.Views;
 using Android.Views.InputMethods;
 
@@ -24,6 +25,9 @@ internal sealed class NoDeleteInputConnection : InputConnectionWrapper
         return base.DeleteSurroundingText(beforeLength, afterLength);
     }
 
+    // Override only invoked by the system on API 24+. Body and `base` call are both
+    // API-24-only; annotate so CA1416 reflects reality instead of warning at minSdk 21.
+    [SupportedOSPlatform("android24.0")]
     public override bool DeleteSurroundingTextInCodePoints(int beforeLength, int afterLength)
     {
         if (_isLocked()) return true;
