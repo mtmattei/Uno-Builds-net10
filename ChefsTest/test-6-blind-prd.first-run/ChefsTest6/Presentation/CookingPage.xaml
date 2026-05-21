@@ -1,0 +1,105 @@
+<Page x:Class="ChefsTest6.Presentation.CookingPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:ChefsTest6.Presentation"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource BackgroundBrush}">
+  <Page.Resources>
+    <local:BoolToVisibilityConverter x:Key="BoolToVis" />
+    <local:BoolToVisibilityConverter x:Key="InvBoolToVis" Invert="True" />
+    <local:NegateBoolConverter x:Key="NegBool" />
+
+    <DataTemplate x:Key="StepIngredientTemplate">
+      <Grid Padding="0,4,0,4" ColumnSpacing="8">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <SymbolIcon Symbol="Accept" />
+        <TextBlock Grid.Column="1"
+                   Text="{Binding}"
+                   VerticalAlignment="Center"
+                   Style="{ThemeResource BodyMediumTextBlockStyle}" />
+      </Grid>
+    </DataTemplate>
+  </Page.Resources>
+
+  <Grid utu:SafeArea.Insets="VisibleBounds">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="220" />
+      <RowDefinition />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <utu:NavigationBar>
+      <utu:NavigationBar.Content>
+        <TextBlock>
+          <Run Text="Making " />
+          <Run Text="{Binding Recipe.Name}" />
+        </TextBlock>
+      </utu:NavigationBar.Content>
+      <utu:NavigationBar.MainCommand>
+        <AppBarButton Icon="Back" Command="{Binding BackCommand}" />
+      </utu:NavigationBar.MainCommand>
+    </utu:NavigationBar>
+
+    <Border Grid.Row="1" Background="Black">
+      <MediaPlayerElement Source="{Binding VideoSource}"
+                          AutoPlay="False"
+                          AreTransportControlsEnabled="True"
+                          Stretch="Uniform" />
+    </Border>
+
+    <ScrollViewer Grid.Row="2">
+      <StackPanel Padding="16,12,16,12" Spacing="12">
+        <TextBlock Text="{Binding StepCounterText}"
+                   Style="{ThemeResource LabelLargeTextBlockStyle}"
+                   Opacity="0.7" />
+        <TextBlock>
+          <Run Text="{Binding StepNumberText}" />
+          <Run Text="- " />
+          <Run Text="{Binding StepTitle}" />
+        </TextBlock>
+        <ItemsControl ItemsSource="{Binding StepIngredients}"
+                      ItemTemplate="{StaticResource StepIngredientTemplate}" />
+        <TextBlock Text="{Binding StepDescription}"
+                   TextWrapping="Wrap"
+                   Style="{ThemeResource BodyLargeTextBlockStyle}" />
+        <ItemsControl ItemsSource="{Binding StepIndicators}"
+                      HorizontalAlignment="Center"
+                      Margin="0,8,0,0">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel Orientation="Horizontal" Spacing="6" />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Ellipse Width="8" Height="8" Fill="{ThemeResource OnSurfaceVariantBrush}" Opacity="0.6" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </ScrollViewer>
+
+    <Grid Grid.Row="3" Padding="16,8,16,16">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <Button Content="Previous"
+              Command="{Binding PreviousCommand}"
+              Style="{ThemeResource OutlinedButtonStyle}"
+              HorizontalAlignment="Stretch"
+              IsEnabled="{Binding IsFirstStep, Converter={StaticResource NegBool}}"
+              Margin="0,0,8,0" />
+      <Button Grid.Column="1"
+              Content="{Binding NextLabel}"
+              Command="{Binding NextCommand}"
+              Style="{ThemeResource ElevatedButtonStyle}"
+              HorizontalAlignment="Stretch"
+              Margin="8,0,0,0" />
+    </Grid>
+  </Grid>
+</Page>

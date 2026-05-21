@@ -1,0 +1,239 @@
+<Page x:Class="ChefsTest1.Presentation.HomePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:m="using:ChefsTest1.Models"
+      Background="{ThemeResource BackgroundBrush}">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <!-- Inverted top app bar -->
+    <Grid Grid.Row="0"
+          Background="{ThemeResource SurfaceInverseBrush}"
+          Height="56"
+          Padding="16,8">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <TextBlock Text="unoChefs"
+                 VerticalAlignment="Center"
+                 FontWeight="Bold"
+                 FontSize="20"
+                 Foreground="{ThemeResource OnSurfaceInverseBrush}" />
+      <Button Grid.Column="1"
+              Background="Transparent"
+              BorderBrush="Transparent"
+              Foreground="{ThemeResource OnSurfaceInverseBrush}"
+              Command="{x:Bind ViewModel.OpenOwnProfileCommand}">
+        <FontIcon Glyph="&#xE77B;" />
+      </Button>
+      <Button Grid.Column="2"
+              Background="Transparent"
+              BorderBrush="Transparent"
+              Foreground="{ThemeResource OnSurfaceInverseBrush}"
+              Command="{x:Bind ViewModel.OpenNotificationsCommand}">
+        <FontIcon Glyph="&#xEA8F;" />
+      </Button>
+    </Grid>
+
+    <ScrollViewer Grid.Row="1">
+      <StackPanel Spacing="20" Padding="16,16,16,32">
+
+        <!-- Trending Now -->
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Text="Trending Now"
+                     FontSize="18"
+                     FontWeight="SemiBold"
+                     Foreground="{ThemeResource OnBackgroundBrush}" />
+          <Button Grid.Column="1"
+                  Content="View all"
+                  Style="{StaticResource TextButtonStyle}"
+                  Foreground="{ThemeResource PrimaryBrush}"
+                  Command="{x:Bind ViewModel.ViewAllTrendingCommand}" />
+        </Grid>
+        <ScrollViewer HorizontalScrollMode="Enabled"
+                      HorizontalScrollBarVisibility="Hidden"
+                      VerticalScrollBarVisibility="Disabled"
+                      VerticalScrollMode="Disabled">
+          <ItemsRepeater ItemsSource="{x:Bind ViewModel.Trending}">
+            <ItemsRepeater.Layout>
+              <StackLayout Orientation="Horizontal" Spacing="12" />
+            </ItemsRepeater.Layout>
+            <ItemsRepeater.ItemTemplate>
+              <DataTemplate x:DataType="m:Recipe">
+                <Border Width="220"
+                        Background="{ThemeResource SurfaceBrush}"
+                        CornerRadius="16"
+                        BorderBrush="{ThemeResource OutlineVariantBrush}"
+                        BorderThickness="1"
+                        Tapped="OnRecipeTapped">
+                  <Grid>
+                    <Grid.RowDefinitions>
+                      <RowDefinition Height="160" />
+                      <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Image Source="{x:Bind ImageUrl}" Stretch="UniformToFill" />
+                    <Grid Grid.Row="1" Padding="12,8">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                      </Grid.ColumnDefinitions>
+                      <StackPanel>
+                        <TextBlock Text="{x:Bind Name}"
+                                   FontWeight="SemiBold"
+                                   Foreground="{ThemeResource OnSurfaceBrush}" />
+                        <TextBlock Text="{x:Bind Calories}"
+                                   FontSize="12"
+                                   Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+                      </StackPanel>
+                      <FontIcon Grid.Column="1"
+                                Glyph="&#xEB52;"
+                                Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+                    </Grid>
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+          </ItemsRepeater>
+        </ScrollViewer>
+
+        <!-- Categories -->
+        <TextBlock Text="Categories" FontSize="18" FontWeight="SemiBold"
+                   Foreground="{ThemeResource OnBackgroundBrush}" />
+        <ScrollViewer HorizontalScrollMode="Enabled"
+                      HorizontalScrollBarVisibility="Hidden"
+                      VerticalScrollMode="Disabled">
+          <ItemsRepeater ItemsSource="{x:Bind ViewModel.Categories}">
+            <ItemsRepeater.Layout>
+              <StackLayout Orientation="Horizontal" Spacing="12" />
+            </ItemsRepeater.Layout>
+            <ItemsRepeater.ItemTemplate>
+              <DataTemplate x:DataType="m:Category">
+                <Border CornerRadius="20"
+                        Background="{ThemeResource SurfaceBrush}"
+                        BorderBrush="{ThemeResource OutlineVariantBrush}"
+                        BorderThickness="1"
+                        Padding="12,8">
+                  <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Image Source="{x:Bind UrlIcon}"
+                           Width="32" Height="32" Stretch="UniformToFill" />
+                    <StackPanel>
+                      <TextBlock Text="{x:Bind Name}"
+                                 FontWeight="SemiBold"
+                                 Foreground="{ThemeResource OnSurfaceBrush}" />
+                      <TextBlock Text="{x:Bind RecipesLabel}"
+                                 FontSize="11"
+                                 Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+                    </StackPanel>
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+          </ItemsRepeater>
+        </ScrollViewer>
+
+        <!-- Recently Added -->
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Text="Recently Added" FontSize="18" FontWeight="SemiBold"
+                     Foreground="{ThemeResource OnBackgroundBrush}" />
+          <Button Grid.Column="1"
+                  Content="View all"
+                  Style="{StaticResource TextButtonStyle}"
+                  Foreground="{ThemeResource PrimaryBrush}"
+                  Command="{x:Bind ViewModel.ViewAllRecentCommand}" />
+        </Grid>
+        <ScrollViewer HorizontalScrollMode="Enabled"
+                      HorizontalScrollBarVisibility="Hidden"
+                      VerticalScrollMode="Disabled">
+          <ItemsRepeater ItemsSource="{x:Bind ViewModel.RecentlyAdded}">
+            <ItemsRepeater.Layout>
+              <StackLayout Orientation="Horizontal" Spacing="12" />
+            </ItemsRepeater.Layout>
+            <ItemsRepeater.ItemTemplate>
+              <DataTemplate x:DataType="m:Recipe">
+                <Border Width="160"
+                        Background="{ThemeResource SurfaceBrush}"
+                        CornerRadius="16"
+                        BorderBrush="{ThemeResource OutlineVariantBrush}"
+                        BorderThickness="1"
+                        Tapped="OnRecipeTapped">
+                  <Grid>
+                    <Grid.RowDefinitions>
+                      <RowDefinition Height="120" />
+                      <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Image Source="{x:Bind ImageUrl}" Stretch="UniformToFill" />
+                    <StackPanel Grid.Row="1" Padding="10,8">
+                      <TextBlock Text="{x:Bind Name}"
+                                 FontWeight="SemiBold"
+                                 TextTrimming="CharacterEllipsis"
+                                 Foreground="{ThemeResource OnSurfaceBrush}" />
+                      <TextBlock Text="{x:Bind Calories}"
+                                 FontSize="11"
+                                 Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+                    </StackPanel>
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+          </ItemsRepeater>
+        </ScrollViewer>
+
+        <!-- Popular Contributors -->
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Text="Popular Contributors" FontSize="18" FontWeight="SemiBold"
+                     Foreground="{ThemeResource OnBackgroundBrush}" />
+          <Button Grid.Column="1"
+                  Content="Near me"
+                  Style="{StaticResource TextButtonStyle}"
+                  Foreground="{ThemeResource PrimaryBrush}"
+                  Command="{x:Bind ViewModel.NearMeCommand}" />
+        </Grid>
+        <ScrollViewer HorizontalScrollMode="Enabled"
+                      HorizontalScrollBarVisibility="Hidden"
+                      VerticalScrollMode="Disabled">
+          <ItemsRepeater ItemsSource="{x:Bind ViewModel.PopularContributors}">
+            <ItemsRepeater.Layout>
+              <StackLayout Orientation="Horizontal" Spacing="16" />
+            </ItemsRepeater.Layout>
+            <ItemsRepeater.ItemTemplate>
+              <DataTemplate x:DataType="m:User">
+                <StackPanel Width="80" HorizontalAlignment="Center" Spacing="6"
+                            Tapped="OnContributorTapped">
+                  <PersonPicture Width="64" Height="64"
+                                 ProfilePicture="{x:Bind UrlProfileImage}" />
+                  <TextBlock Text="{x:Bind ShortName}"
+                             FontSize="12"
+                             TextAlignment="Center"
+                             TextTrimming="CharacterEllipsis"
+                             Foreground="{ThemeResource OnSurfaceBrush}" />
+                  <TextBlock Text="{x:Bind FollowersText}"
+                             FontSize="10"
+                             TextAlignment="Center"
+                             Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+                </StackPanel>
+              </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+          </ItemsRepeater>
+        </ScrollViewer>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</Page>

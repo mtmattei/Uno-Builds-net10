@@ -1,0 +1,85 @@
+<UserControl x:Class="ChefsTest4.Presentation.Pages.LiveCookingPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:m="using:ChefsTest4.Models"
+             xmlns:c="using:ChefsTest4.Presentation.Converters"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Background="{ThemeResource CanvasBrush}">
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Border Grid.Row="0" Style="{StaticResource InvertedAppBarBorderStyle}">
+      <Grid>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+        <Button Grid.Column="0" Background="Transparent" BorderThickness="0" Padding="8" Command="{x:Bind ViewModel.BackCommand}">
+          <FontIcon Glyph="&#xE76B;" FontSize="20" Foreground="{ThemeResource AppBarForegroundBrush}" />
+        </Button>
+        <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.Title, Mode=OneWay}" Style="{StaticResource AppBarTitleStyle}" VerticalAlignment="Center" Margin="8,0,0,0" />
+      </Grid>
+    </Border>
+
+    <!-- Video container -->
+    <Border Grid.Row="1" Margin="16,16,16,0" CornerRadius="12" Background="{ThemeResource VideoSurfaceBrush}" Height="203">
+      <Grid>
+        <FontIcon Glyph="&#xE714;" FontSize="48" Foreground="White" />
+        <Border VerticalAlignment="Bottom" Background="{ThemeResource VideoOverlayScrimBrush}" Padding="12,8">
+          <Grid>
+            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+            <FontIcon Grid.Column="0" Glyph="&#xE768;" FontSize="20" Foreground="White" Margin="0,0,8,0" />
+            <Grid Grid.Column="1" Height="4" VerticalAlignment="Center">
+              <Border Background="{ThemeResource VideoScrubberTrackBrush}" CornerRadius="2" />
+              <Border Background="{ThemeResource PrimaryBrush}" CornerRadius="2" HorizontalAlignment="Left" Width="80" />
+            </Grid>
+            <FontIcon Grid.Column="2" Glyph="&#xE767;" FontSize="20" Foreground="White" Margin="8,0,0,0" />
+            <FontIcon Grid.Column="3" Glyph="&#xE7F0;" FontSize="20" Foreground="White" Margin="8,0,0,0" />
+            <FontIcon Grid.Column="4" Glyph="&#xE740;" FontSize="20" Foreground="White" Margin="8,0,0,0" />
+          </Grid>
+        </Border>
+      </Grid>
+    </Border>
+
+    <ScrollViewer Grid.Row="2" Padding="16,16,16,16">
+      <StackPanel Spacing="16">
+        <TextBlock HorizontalAlignment="Center" Style="{StaticResource H2TextStyle}">
+          <Run Text="{x:Bind ViewModel.CurrentStepIndex, Mode=OneWay}" />
+          <Run Text="- " />
+          <Run Text="{x:Bind ViewModel.CurrentStep.Name, Mode=OneWay}" />
+        </TextBlock>
+
+        <Border Background="{ThemeResource GroupedBgBrush}" CornerRadius="12" Padding="16">
+          <StackPanel Spacing="8">
+            <TextBlock Text="Ingredients:" Style="{StaticResource H4TextStyle}" />
+            <ItemsControl ItemsSource="{x:Bind ViewModel.CurrentStep.Ingredients, Mode=OneWay}">
+              <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="12" /></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="x:String">
+                  <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                    <FontIcon Glyph="&#xE73E;" FontSize="14" Foreground="{ThemeResource SuccessBrush}" />
+                    <TextBlock Text="{x:Bind}" Style="{StaticResource Body2TextStyle}" />
+                  </StackPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </Border>
+
+        <TextBlock Text="{x:Bind ViewModel.CurrentStep.Description, Mode=OneWay}" Style="{StaticResource Body1TextStyle}" TextWrapping="Wrap" TextAlignment="Center" />
+
+        <PipsPager NumberOfPages="{x:Bind ViewModel.TotalSteps, Mode=OneWay}" SelectedPageIndex="{x:Bind ViewModel.CurrentStepIndex, Mode=TwoWay}" HorizontalAlignment="Center" Margin="0,8,0,0" />
+      </StackPanel>
+    </ScrollViewer>
+
+    <Grid Grid.Row="3" Padding="16,12,16,16" Background="{ThemeResource CanvasBrush}">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="12" /><ColumnDefinition Width="2*" /></Grid.ColumnDefinitions>
+      <Button Grid.Column="0" Style="{StaticResource SecondaryOutlineButtonStyle}" Content="Previous" Command="{x:Bind ViewModel.PreviousCommand}" />
+      <Button Grid.Column="2" Style="{StaticResource PrimaryCtaButtonStyle}" Content="Next" Command="{x:Bind ViewModel.NextCommand}" />
+    </Grid>
+  </Grid>
+</UserControl>

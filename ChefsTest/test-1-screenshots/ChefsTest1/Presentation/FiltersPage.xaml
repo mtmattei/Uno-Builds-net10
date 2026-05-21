@@ -1,0 +1,87 @@
+<Page x:Class="ChefsTest1.Presentation.FiltersPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource BackgroundBrush}">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Grid Grid.Row="0" Padding="8,8,16,8" Height="56">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <Button Background="Transparent"
+              Command="{x:Bind ViewModel.CloseCommand}"
+              Foreground="{ThemeResource OnBackgroundBrush}">
+        <FontIcon Glyph="&#xE711;" />
+      </Button>
+      <TextBlock Grid.Column="1" Text="Filters" VerticalAlignment="Center" Margin="8,0,0,0"
+                 FontWeight="SemiBold" FontSize="18"
+                 Foreground="{ThemeResource OnBackgroundBrush}" />
+    </Grid>
+
+    <ScrollViewer Grid.Row="1">
+      <StackPanel Spacing="20" Padding="16">
+        <TextBlock Text="Recipe Categories" FontWeight="SemiBold"
+                   Foreground="{ThemeResource OnBackgroundBrush}" />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <Button Content="Popular" Style="{StaticResource OutlinedButtonStyle}"
+                  CommandParameter="Popular"
+                  Command="{x:Bind ViewModel.SelectCategoryCommand}" />
+          <Button Content="Trending" Style="{StaticResource OutlinedButtonStyle}"
+                  CommandParameter="Trending"
+                  Command="{x:Bind ViewModel.SelectCategoryCommand}" />
+          <Button Content="Recent" Style="{StaticResource OutlinedButtonStyle}"
+                  CommandParameter="Recent"
+                  Command="{x:Bind ViewModel.SelectCategoryCommand}" />
+        </StackPanel>
+
+        <TextBlock Text="Cooking Time" FontWeight="SemiBold"
+                   Foreground="{ThemeResource OnBackgroundBrush}" />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <Button Content="15 min" Style="{StaticResource OutlinedButtonStyle}"
+                  CommandParameter="15"
+                  Command="{x:Bind ViewModel.SelectCookTimeCommand}" />
+          <Button Content="30 min" Style="{StaticResource OutlinedButtonStyle}"
+                  CommandParameter="30"
+                  Command="{x:Bind ViewModel.SelectCookTimeCommand}" />
+          <Button Content="60 min" Style="{StaticResource OutlinedButtonStyle}"
+                  CommandParameter="60"
+                  Command="{x:Bind ViewModel.SelectCookTimeCommand}" />
+        </StackPanel>
+
+        <TextBlock Text="Skill Level" FontWeight="SemiBold"
+                   Foreground="{ThemeResource OnBackgroundBrush}" />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <Button Content="Beginner" Style="{StaticResource OutlinedButtonStyle}"
+                  CommandParameter="Beginner"
+                  Command="{x:Bind ViewModel.SelectSkillCommand}" />
+          <Button Content="Intermediate" Style="{StaticResource OutlinedButtonStyle}"
+                  CommandParameter="Intermediate"
+                  Command="{x:Bind ViewModel.SelectSkillCommand}" />
+          <Button Content="Advance" Style="{StaticResource OutlinedButtonStyle}"
+                  CommandParameter="Advance"
+                  Command="{x:Bind ViewModel.SelectSkillCommand}" />
+        </StackPanel>
+      </StackPanel>
+    </ScrollViewer>
+
+    <Grid Grid.Row="2" Padding="16" ColumnSpacing="12">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="2*" />
+      </Grid.ColumnDefinitions>
+      <Button Grid.Column="0" Content="Reset" HorizontalAlignment="Stretch" Height="48"
+              Style="{StaticResource OutlinedButtonStyle}"
+              Command="{x:Bind ViewModel.ResetCommand}" />
+      <Button Grid.Column="1" Content="Apply filter" HorizontalAlignment="Stretch" Height="48"
+              Style="{StaticResource FilledButtonStyle}"
+              Command="{x:Bind ViewModel.ApplyCommand}" />
+    </Grid>
+  </Grid>
+</Page>

@@ -1,0 +1,45 @@
+<Page x:Class="ChefsTest7.Presentation.Pages.NearMeMapPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:models="using:ChefsTest7.Models"
+      Background="{ThemeResource BackgroundBrush}">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <utu:NavigationBar Grid.Row="0" Content="Chefs near me"
+                       Background="{ThemeResource SurfaceInverseBrush}"
+                       Foreground="{ThemeResource OnSurfaceInverseBrush}" />
+    <Grid Grid.Row="1">
+      <Border Background="{ThemeResource SurfaceVariantBrush}">
+        <Image Source="ms-appx:///Assets/Maps/MapPlaceholder.png" Stretch="UniformToFill"/>
+      </Border>
+      <Border Background="#33000000" />
+      <Border VerticalAlignment="Bottom" Background="{ThemeResource SurfaceBrush}" CornerRadius="20,20,0,0" Padding="20">
+        <StackPanel Spacing="12">
+          <TextBlock Text="Featured chef" Style="{ThemeResource LabelLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}"/>
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" Width="56" Height="56" CornerRadius="28" Background="{ThemeResource SurfaceVariantBrush}">
+              <Image Source="{x:Bind ViewModel.SelectedChef.UrlProfileImage, Mode=OneWay, FallbackValue=''}" Stretch="UniformToFill"/>
+            </Border>
+            <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+              <TextBlock Text="{x:Bind ViewModel.SelectedChef.FullName, Mode=OneWay, FallbackValue=Chef}" Style="{ThemeResource TitleSmall}" Foreground="{ThemeResource OnSurfaceBrush}"/>
+              <TextBlock Text="{x:Bind ViewModel.SelectedChef.Description, Mode=OneWay, FallbackValue=''}" Style="{ThemeResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}"/>
+            </StackPanel>
+            <Button Grid.Column="2" Content="View"
+                    Style="{ThemeResource FilledButtonStyle}"
+                    Command="{x:Bind ViewModel.OpenChefCommand}"
+                    CommandParameter="{x:Bind ViewModel.SelectedChef, Mode=OneWay}"/>
+          </Grid>
+        </StackPanel>
+      </Border>
+    </Grid>
+  </Grid>
+</Page>

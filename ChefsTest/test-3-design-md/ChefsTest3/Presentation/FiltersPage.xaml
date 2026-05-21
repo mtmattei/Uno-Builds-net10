@@ -1,0 +1,108 @@
+<Page x:Class="ChefsTest3.Presentation.FiltersPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:ChefsTest3.Presentation"
+      Background="{ThemeResource ScreenBackgroundBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="{ThemeResource AppBarBackgroundBrush}"
+              Padding="20,16,20,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Style="{StaticResource AppBarIconButtonStyle}"
+                    Command="{x:Bind ViewModel.CloseCommand}">
+                <TextBlock Text="✕" FontSize="20"/>
+            </Button>
+            <TextBlock Grid.Column="1" Text="Filters"
+                       Foreground="{ThemeResource AppBarForegroundBrush}"
+                       FontSize="18" FontWeight="Bold"
+                       VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <HyperlinkButton Grid.Column="2" Command="{x:Bind ViewModel.ResetCommand}"
+                             Foreground="{ThemeResource AppBarForegroundBrush}">
+                <TextBlock Text="Reset" FontWeight="SemiBold"/>
+            </HyperlinkButton>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1" Padding="20,20,20,16">
+            <StackPanel Spacing="20">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Category" Style="{StaticResource H2Style}"/>
+                    <ItemsControl ItemsSource="{x:Bind ViewModel.Categories}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VariableSizedWrapGrid Orientation="Horizontal" ItemHeight="40"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="local:FilterChip">
+                                <local:ChipButton Margin="0,0,8,8"
+                                                  Label="{x:Bind Label, Mode=OneWay}"
+                                                  IsSelected="{x:Bind IsSelected, Mode=TwoWay}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Cooking Time" Style="{StaticResource H2Style}"/>
+                    <ItemsControl ItemsSource="{x:Bind ViewModel.CookTime}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VariableSizedWrapGrid Orientation="Horizontal" ItemHeight="40"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="local:FilterChip">
+                                <local:ChipButton Margin="0,0,8,8"
+                                                  Label="{x:Bind Label, Mode=OneWay}"
+                                                  IsSelected="{x:Bind IsSelected, Mode=TwoWay}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Skill Level" Style="{StaticResource H2Style}"/>
+                    <ItemsControl ItemsSource="{x:Bind ViewModel.SkillLevels}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VariableSizedWrapGrid Orientation="Horizontal" ItemHeight="40"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="local:FilterChip">
+                                <local:ChipButton Margin="0,0,8,8"
+                                                  Label="{x:Bind Label, Mode=OneWay}"
+                                                  IsSelected="{x:Bind IsSelected, Mode=TwoWay}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid Grid.Row="2" Padding="20,12,20,16" Background="{ThemeResource ScreenBackgroundBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Margin="0,0,8,0" Style="{StaticResource SecondaryCtaButtonStyle}"
+                    Command="{x:Bind ViewModel.ResetCommand}">
+                <TextBlock Text="Reset"/>
+            </Button>
+            <Button Grid.Column="1" Margin="8,0,0,0" Style="{StaticResource PrimaryCtaButtonStyle}"
+                    Command="{x:Bind ViewModel.ApplyCommand}">
+                <TextBlock Text="Apply"/>
+            </Button>
+        </Grid>
+    </Grid>
+</Page>

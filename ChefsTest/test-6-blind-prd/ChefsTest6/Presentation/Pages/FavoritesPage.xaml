@@ -1,0 +1,132 @@
+<Page x:Class="ChefsTest6.Presentation.Pages.FavoritesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:m="using:ChefsTest6.Models"
+      x:Name="PageRoot"
+      NavigationCacheMode="Required"
+      Background="{ThemeResource BackgroundBrush}">
+  <utu:SafeArea Insets="VisibleBounds">
+    <Grid Padding="16,12">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+
+      <TextBlock Grid.Row="0" Text="Favorites" Style="{StaticResource HeadlineLarge}" Margin="0,8,0,12" />
+
+      <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="0">
+        <Button Content="All Recipes"
+                Command="{Binding SelectSegmentCommand}" CommandParameter="0"
+                Style="{StaticResource OutlinedButtonStyle}" />
+        <Button Content="My Cookbooks"
+                Command="{Binding SelectSegmentCommand}" CommandParameter="1"
+                Style="{StaticResource OutlinedButtonStyle}" />
+      </StackPanel>
+
+      <TextBlock Grid.Row="2" Margin="0,12,0,8"
+                 Text="{Binding SavedCountLabel}"
+                 Style="{StaticResource TitleMedium}"
+                 Visibility="{Binding ShowAllRecipes, Converter={StaticResource BoolToVisible}}" />
+
+      <TextBlock Grid.Row="2" Margin="0,12,0,8"
+                 Text="{Binding CookbookCountLabel}"
+                 Style="{StaticResource TitleMedium}"
+                 Visibility="{Binding ShowCookbooks, Converter={StaticResource BoolToVisible}}" />
+
+      <!-- All Recipes branch -->
+      <Grid Grid.Row="3" Visibility="{Binding ShowAllRecipes, Converter={StaticResource BoolToVisible}}">
+        <StackPanel Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Visibility="{Binding HasSavedRecipes, Converter={StaticResource BoolToVisibleInverted}}">
+          <Image Source="ms-appx:///Assets/Images/empty_box_light.svg" Width="200" Height="200" Stretch="Uniform" />
+          <TextBlock Text="No saved recipes yet" Style="{StaticResource TitleLarge}" HorizontalAlignment="Center" />
+          <Button Content="See popular recipes" Style="{StaticResource FilledButtonStyle}" Command="{Binding OpenSearchCommand}" />
+        </StackPanel>
+        <ScrollViewer Visibility="{Binding HasSavedRecipes, Converter={StaticResource BoolToVisible}}">
+          <GridView ItemsSource="{Binding SavedRecipes}" SelectionMode="None">
+            <GridView.ItemsPanel>
+              <ItemsPanelTemplate>
+                <ItemsWrapGrid Orientation="Horizontal" />
+              </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+            <GridView.ItemTemplate>
+              <DataTemplate x:DataType="m:RecipeData">
+                <Button Width="180" Margin="4" Background="Transparent" BorderThickness="0" Padding="0"
+                        Command="{Binding DataContext.OpenRecipeCommand, ElementName=PageRoot}"
+                        CommandParameter="{x:Bind}">
+                  <Border CornerRadius="16" Background="{ThemeResource SurfaceVariantBrush}">
+                    <StackPanel>
+                      <Image Source="{x:Bind ImageUrl}" Height="120" Stretch="UniformToFill" />
+                      <StackPanel Padding="10" Spacing="2">
+                        <TextBlock Text="{x:Bind Name}" Style="{StaticResource TitleSmall}" TextWrapping="Wrap" />
+                        <TextBlock Text="{x:Bind CookTimeLabel}" Style="{StaticResource BodySmall}" Opacity="0.7" />
+                      </StackPanel>
+                    </StackPanel>
+                  </Border>
+                </Button>
+              </DataTemplate>
+            </GridView.ItemTemplate>
+          </GridView>
+        </ScrollViewer>
+      </Grid>
+
+      <!-- Cookbooks branch -->
+      <Grid Grid.Row="3" Visibility="{Binding ShowCookbooks, Converter={StaticResource BoolToVisible}}">
+        <StackPanel Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Visibility="{Binding HasCookbooks, Converter={StaticResource BoolToVisibleInverted}}">
+          <Image Source="ms-appx:///Assets/Images/empty_box_light.svg" Width="200" Height="200" Stretch="Uniform" />
+          <TextBlock Text="No Cookbooks Created" Style="{StaticResource TitleLarge}" HorizontalAlignment="Center" />
+          <Button Content="Create cookbook" Style="{StaticResource FilledButtonStyle}" Command="{Binding CreateCookbookCommand}" />
+        </StackPanel>
+        <ScrollViewer Visibility="{Binding HasCookbooks, Converter={StaticResource BoolToVisible}}">
+          <GridView ItemsSource="{Binding Cookbooks}" SelectionMode="None">
+            <GridView.ItemsPanel>
+              <ItemsPanelTemplate>
+                <ItemsWrapGrid Orientation="Horizontal" />
+              </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+            <GridView.ItemTemplate>
+              <DataTemplate x:DataType="m:CookbookData">
+                <Button Width="180" Margin="4" Background="Transparent" BorderThickness="0" Padding="0"
+                        Command="{Binding DataContext.OpenCookbookCommand, ElementName=PageRoot}"
+                        CommandParameter="{x:Bind}">
+                  <Border CornerRadius="16" Background="{ThemeResource SurfaceVariantBrush}">
+                    <StackPanel>
+                      <Grid Height="160">
+                        <Grid.RowDefinitions>
+                          <RowDefinition />
+                          <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition />
+                          <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Row="0" Grid.Column="0" Source="{x:Bind Preview1}" Stretch="UniformToFill" />
+                        <Image Grid.Row="0" Grid.Column="1" Source="{x:Bind Preview2}" Stretch="UniformToFill" />
+                        <Image Grid.Row="1" Grid.Column="0" Source="{x:Bind Preview3}" Stretch="UniformToFill" />
+                        <Image Grid.Row="1" Grid.Column="1" Source="{x:Bind Preview4}" Stretch="UniformToFill" />
+                      </Grid>
+                      <StackPanel Padding="10" Spacing="2">
+                        <TextBlock Text="{x:Bind Name, Mode=OneWay}" Style="{StaticResource TitleSmall}" TextWrapping="Wrap" />
+                        <TextBlock Text="{x:Bind CountLabel}" Style="{StaticResource BodySmall}" Opacity="0.7" />
+                      </StackPanel>
+                    </StackPanel>
+                  </Border>
+                </Button>
+              </DataTemplate>
+            </GridView.ItemTemplate>
+          </GridView>
+        </ScrollViewer>
+
+        <Button Style="{StaticResource FabStyle}"
+                HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                Margin="16"
+                Command="{Binding CreateCookbookCommand}">
+          <SymbolIcon Symbol="Add" />
+        </Button>
+      </Grid>
+    </Grid>
+  </utu:SafeArea>
+</Page>

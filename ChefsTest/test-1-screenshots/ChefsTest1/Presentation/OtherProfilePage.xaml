@@ -1,0 +1,85 @@
+<Page x:Class="ChefsTest1.Presentation.OtherProfilePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:m="using:ChefsTest1.Models"
+      Background="{ThemeResource BackgroundBrush}">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <Grid Grid.Row="0" Padding="8,8,16,8" Height="56">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <Button Background="Transparent" Command="{x:Bind ViewModel.BackCommand}"
+              Foreground="{ThemeResource OnBackgroundBrush}">
+        <FontIcon Glyph="&#xE72B;" />
+      </Button>
+      <TextBlock Grid.Column="1" Text="Profile" Margin="8,0,0,0" VerticalAlignment="Center"
+                 FontWeight="SemiBold" FontSize="22"
+                 Foreground="{ThemeResource OnBackgroundBrush}" />
+    </Grid>
+
+    <ScrollViewer Grid.Row="1">
+      <StackPanel Spacing="12" Padding="16,12,16,32">
+        <PersonPicture Width="96" Height="96" HorizontalAlignment="Center"
+                       ProfilePicture="{x:Bind ViewModel.User.UrlProfileImage}" />
+        <TextBlock Text="{x:Bind ViewModel.User.FullName}" FontSize="18" FontWeight="SemiBold"
+                   HorizontalAlignment="Center" Foreground="{ThemeResource OnBackgroundBrush}" />
+        <Grid HorizontalAlignment="Center" ColumnSpacing="32">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+            <TextBlock Text="{x:Bind ViewModel.User.Recipes}" FontWeight="Bold" HorizontalAlignment="Center" />
+            <TextBlock Text="Recipes" FontSize="12" HorizontalAlignment="Center"
+                       Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+            <TextBlock Text="{x:Bind ViewModel.User.Followers}" FontWeight="Bold" HorizontalAlignment="Center" />
+            <TextBlock Text="Followers" FontSize="12" HorizontalAlignment="Center"
+                       Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+          </StackPanel>
+          <StackPanel Grid.Column="2" HorizontalAlignment="Center">
+            <TextBlock Text="{x:Bind ViewModel.User.Following}" FontWeight="Bold" HorizontalAlignment="Center" />
+            <TextBlock Text="Following" FontSize="12" HorizontalAlignment="Center"
+                       Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+          </StackPanel>
+        </Grid>
+        <Border Height="1" Background="{ThemeResource OutlineVariantBrush}" Margin="0,8,0,8" />
+        <TextBlock Text="Recipes" FontWeight="SemiBold"
+                   Foreground="{ThemeResource OnBackgroundBrush}" />
+        <ItemsRepeater ItemsSource="{x:Bind ViewModel.TheirRecipes}">
+          <ItemsRepeater.Layout>
+            <UniformGridLayout MinItemWidth="150" MinItemHeight="200" MinRowSpacing="12" MinColumnSpacing="12" />
+          </ItemsRepeater.Layout>
+          <ItemsRepeater.ItemTemplate>
+            <DataTemplate x:DataType="m:Recipe">
+              <Border Background="{ThemeResource SurfaceBrush}" CornerRadius="16"
+                      BorderBrush="{ThemeResource OutlineVariantBrush}" BorderThickness="1">
+                <Grid>
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="130" />
+                    <RowDefinition Height="Auto" />
+                  </Grid.RowDefinitions>
+                  <Image Source="{x:Bind ImageUrl}" Stretch="UniformToFill" />
+                  <StackPanel Grid.Row="1" Padding="10,8">
+                    <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold"
+                               Foreground="{ThemeResource OnSurfaceBrush}" />
+                    <TextBlock Text="{x:Bind Calories}" FontSize="11"
+                               Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+                  </StackPanel>
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsRepeater.ItemTemplate>
+        </ItemsRepeater>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</Page>

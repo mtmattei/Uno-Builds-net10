@@ -1,0 +1,16 @@
+<Page x:Class="ChefsTest1.Presentation.SplashPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="{ThemeResource ScreenBackgroundBrush}">
+  <Grid>
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
+      <Border Width="160" Height="160" CornerRadius="80" Background="White" HorizontalAlignment="Center">
+        <FontIcon Glyph="&#xE7E3;" FontSize="72" Foreground="{ThemeResource PrimaryBrush}" />
+      </Border>
+      <TextBlock HorizontalAlignment="Center" FontSize="32" FontWeight="Bold">
+        <Run Text="uno" />
+        <Run Text="Chefs" FontStyle="Italic" Foreground="{ThemeResource PrimaryBrush}" />
+      </TextBlock>
+    </StackPanel>
+  </Grid>
+</Page>

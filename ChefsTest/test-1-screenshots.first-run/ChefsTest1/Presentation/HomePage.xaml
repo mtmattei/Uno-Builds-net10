@@ -1,0 +1,271 @@
+<Page x:Class="ChefsTest1.Presentation.HomePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:ChefsTest1.Presentation"
+      xmlns:models="using:ChefsTest1.Models"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource ScreenBackgroundBrush}"
+      mc:Ignorable="d">
+  <Page.Resources>
+    <local:HexColorToBrushConverter x:Key="HexBrush" />
+  </Page.Resources>
+  <Grid x:Name="RootGrid">
+    <VisualStateManager.VisualStateGroups>
+      <VisualStateGroup x:Name="Adaptive">
+        <VisualState x:Name="Phone">
+          <VisualState.StateTriggers>
+            <AdaptiveTrigger MinWindowWidth="0" />
+          </VisualState.StateTriggers>
+        </VisualState>
+        <VisualState x:Name="Tablet">
+          <VisualState.StateTriggers>
+            <AdaptiveTrigger MinWindowWidth="720" />
+          </VisualState.StateTriggers>
+          <VisualState.Setters>
+            <Setter Target="BottomNav.Visibility" Value="Collapsed" />
+            <Setter Target="LeftRail.Visibility" Value="Visible" />
+            <Setter Target="ContentGrid.(Grid.Column)" Value="1" />
+            <Setter Target="AppBar.(Grid.Column)" Value="1" />
+          </VisualState.Setters>
+        </VisualState>
+      </VisualStateGroup>
+    </VisualStateManager.VisualStateGroups>
+
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <!-- Left rail (tablet+) -->
+    <Border x:Name="LeftRail" Grid.Column="0" Grid.RowSpan="3" Background="{ThemeResource SurfaceBrush}"
+            BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,0,1,0" Width="80" Visibility="Collapsed">
+      <StackPanel Spacing="24" Padding="0,40,0,0" HorizontalAlignment="Center">
+        <TextBlock HorizontalAlignment="Center" FontSize="14" FontWeight="Bold">
+          <Run Text="uno" />
+          <Run Text="Chefs" FontStyle="Italic" Foreground="{ThemeResource PrimaryBrush}" />
+        </TextBlock>
+        <Button Style="{StaticResource IconButtonStyle}" HorizontalAlignment="Center">
+          <StackPanel HorizontalAlignment="Center" Spacing="2">
+            <FontIcon Glyph="&#xE80F;" FontSize="22" />
+            <TextBlock Text="Home" FontSize="11" FontWeight="SemiBold" />
+          </StackPanel>
+        </Button>
+        <Button Style="{StaticResource IconButtonStyle}" HorizontalAlignment="Center" Command="{x:Bind ViewModel.GoSearchCommand}">
+          <StackPanel HorizontalAlignment="Center" Spacing="2">
+            <FontIcon Glyph="&#xE721;" FontSize="22" />
+            <TextBlock Text="Search" FontSize="11" />
+          </StackPanel>
+        </Button>
+        <Button Style="{StaticResource IconButtonStyle}" HorizontalAlignment="Center" Command="{x:Bind ViewModel.GoFavoritesCommand}">
+          <StackPanel HorizontalAlignment="Center" Spacing="2">
+            <FontIcon Glyph="&#xEB52;" FontSize="22" />
+            <TextBlock Text="Favorites" FontSize="11" />
+          </StackPanel>
+        </Button>
+      </StackPanel>
+    </Border>
+
+    <!-- App Bar -->
+    <Border x:Name="AppBar" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Background="{ThemeResource AppBarBackgroundBrush}" Padding="20,12">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="0" Foreground="White" VerticalAlignment="Center" FontSize="20" FontWeight="Bold">
+          <Run Text="uno" />
+          <Run Text="Chefs" FontStyle="Italic" />
+        </TextBlock>
+        <Button Grid.Column="1" Style="{StaticResource IconButtonStyle}" Foreground="White" Margin="0,0,4,0" Command="{x:Bind ViewModel.OpenProfileCommand}">
+          <FontIcon Glyph="&#xE77B;" FontSize="22" Foreground="White" />
+        </Button>
+        <Button Grid.Column="2" Style="{StaticResource IconButtonStyle}" Foreground="White" Command="{x:Bind ViewModel.OpenNotificationsCommand}">
+          <FontIcon Glyph="&#xEA8F;" FontSize="22" Foreground="White" />
+        </Button>
+      </Grid>
+    </Border>
+
+    <ScrollViewer x:Name="ContentGrid" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+      <StackPanel Spacing="20" Padding="0,16,0,16">
+        <!-- Trending Now -->
+        <Grid Padding="20,0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Text="Trending Now" Style="{StaticResource H2Text}" />
+          <HyperlinkButton Grid.Column="1" Content="View all" Foreground="{ThemeResource PrimaryBrush}" Padding="0" />
+        </Grid>
+        <ScrollViewer HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
+          <ItemsRepeater ItemsSource="{x:Bind ViewModel.Trending, Mode=OneWay}" Margin="20,0"
+                         utu:CommandExtensions.Command="{x:Bind ViewModel.OpenRecipeCommand}">
+            <ItemsRepeater.Layout>
+              <StackLayout Orientation="Horizontal" Spacing="14" />
+            </ItemsRepeater.Layout>
+            <ItemsRepeater.ItemTemplate>
+              <DataTemplate x:DataType="models:RecipeData">
+                <Border Style="{StaticResource RecipeCardStyle}" Width="240" Height="220">
+                  <Grid>
+                    <Grid.RowDefinitions>
+                      <RowDefinition Height="*" />
+                      <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" CornerRadius="14,14,0,0">
+                      <Border.Background>
+                        <ImageBrush ImageSource="{x:Bind ImageUrl}" Stretch="UniformToFill" />
+                      </Border.Background>
+                    </Border>
+                    <Grid Grid.Row="1" Padding="12,10">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                      </Grid.ColumnDefinitions>
+                      <StackPanel Grid.Column="0" Spacing="2" HorizontalAlignment="Left">
+                        <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" FontSize="14" />
+                        <TextBlock Text="{x:Bind Calories}" Style="{StaticResource CaptionText}" />
+                      </StackPanel>
+                      <Border Grid.Column="1" Background="{ThemeResource CardBackgroundBrush}" Width="34" Height="34" CornerRadius="17">
+                        <FontIcon Glyph="&#xEB52;" FontSize="16" Foreground="{ThemeResource PrimaryBrush}" />
+                      </Border>
+                    </Grid>
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+          </ItemsRepeater>
+        </ScrollViewer>
+
+        <!-- Categories -->
+        <TextBlock Text="Categories" Style="{StaticResource H2Text}" Padding="20,0" />
+        <ScrollViewer HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
+          <ItemsRepeater ItemsSource="{x:Bind ViewModel.Categories, Mode=OneWay}" Margin="20,0">
+            <ItemsRepeater.Layout>
+              <StackLayout Orientation="Horizontal" Spacing="10" />
+            </ItemsRepeater.Layout>
+            <ItemsRepeater.ItemTemplate>
+              <DataTemplate x:DataType="models:CategoryData">
+                <Border Background="{ThemeResource CardBackgroundBrush}" CornerRadius="12" Padding="12,8">
+                  <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <Border Width="42" Height="42" CornerRadius="21" Background="{x:Bind Color, Converter={StaticResource HexBrush}}">
+                      <Image Source="{x:Bind UrlIcon}" Width="26" Height="26" />
+                    </Border>
+                    <StackPanel Spacing="0">
+                      <TextBlock Text="{x:Bind Name}" FontSize="14" FontWeight="SemiBold" />
+                      <TextBlock Text="recipes" Style="{StaticResource CaptionText}" />
+                    </StackPanel>
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+          </ItemsRepeater>
+        </ScrollViewer>
+
+        <!-- Recently Added -->
+        <Grid Padding="20,0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Text="Recently Added" Style="{StaticResource H2Text}" />
+          <HyperlinkButton Grid.Column="1" Content="View all" Foreground="{ThemeResource PrimaryBrush}" Padding="0" />
+        </Grid>
+        <ScrollViewer HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
+          <ItemsRepeater ItemsSource="{x:Bind ViewModel.Recent, Mode=OneWay}" Margin="20,0"
+                         utu:CommandExtensions.Command="{x:Bind ViewModel.OpenRecipeCommand}">
+            <ItemsRepeater.Layout>
+              <StackLayout Orientation="Horizontal" Spacing="14" />
+            </ItemsRepeater.Layout>
+            <ItemsRepeater.ItemTemplate>
+              <DataTemplate x:DataType="models:RecipeData">
+                <Border Style="{StaticResource RecipeCardStyle}" Width="170" Height="200">
+                  <Grid>
+                    <Grid.RowDefinitions>
+                      <RowDefinition Height="*" />
+                      <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" CornerRadius="14,14,0,0">
+                      <Border.Background>
+                        <ImageBrush ImageSource="{x:Bind ImageUrl}" Stretch="UniformToFill" />
+                      </Border.Background>
+                    </Border>
+                    <StackPanel Grid.Row="1" Padding="10,8" Spacing="2" HorizontalAlignment="Left">
+                      <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" FontSize="13" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Text="{x:Bind Calories}" Style="{StaticResource CaptionText}" />
+                    </StackPanel>
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+          </ItemsRepeater>
+        </ScrollViewer>
+
+        <!-- Popular Contributors -->
+        <Grid Padding="20,0">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Text="Popular Contributors" Style="{StaticResource H2Text}" />
+          <HyperlinkButton Grid.Column="1" Content="Near me" Foreground="{ThemeResource PrimaryBrush}" Padding="0" Command="{x:Bind ViewModel.OpenNearMeCommand}" />
+        </Grid>
+        <ScrollViewer HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
+          <ItemsRepeater ItemsSource="{x:Bind ViewModel.Creators, Mode=OneWay}" Margin="20,0,20,8">
+            <ItemsRepeater.Layout>
+              <StackLayout Orientation="Horizontal" Spacing="16" />
+            </ItemsRepeater.Layout>
+            <ItemsRepeater.ItemTemplate>
+              <DataTemplate x:DataType="models:UserData">
+                <StackPanel Width="80" HorizontalAlignment="Center" Spacing="6">
+                  <Border Width="64" Height="64" CornerRadius="32">
+                    <Border.Background>
+                      <ImageBrush ImageSource="{x:Bind UrlProfileImage}" Stretch="UniformToFill" />
+                    </Border.Background>
+                  </Border>
+                  <TextBlock Text="{x:Bind FullName}" FontSize="12" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" HorizontalAlignment="Center" />
+                  <TextBlock Style="{StaticResource CaptionText}" FontSize="11" HorizontalAlignment="Center" Text="recipes" />
+                </StackPanel>
+              </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+          </ItemsRepeater>
+        </ScrollViewer>
+      </StackPanel>
+    </ScrollViewer>
+
+    <!-- Bottom Nav (phone) -->
+    <Border x:Name="BottomNav" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Background="{ThemeResource SurfaceBrush}" BorderBrush="{ThemeResource DividerBrush}" BorderThickness="0,1,0,0" Padding="0,6">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Button Grid.Column="0" Style="{StaticResource IconButtonStyle}" HorizontalAlignment="Stretch">
+          <StackPanel HorizontalAlignment="Center" Spacing="2">
+            <FontIcon Glyph="&#xE80F;" FontSize="22" />
+            <TextBlock Text="Home" FontSize="12" FontWeight="SemiBold" />
+          </StackPanel>
+        </Button>
+        <Button Grid.Column="1" Style="{StaticResource IconButtonStyle}" HorizontalAlignment="Stretch" Command="{x:Bind ViewModel.GoSearchCommand}">
+          <StackPanel HorizontalAlignment="Center" Spacing="2">
+            <FontIcon Glyph="&#xE721;" FontSize="22" />
+            <TextBlock Text="Search" FontSize="12" />
+          </StackPanel>
+        </Button>
+        <Button Grid.Column="2" Style="{StaticResource IconButtonStyle}" HorizontalAlignment="Stretch" Command="{x:Bind ViewModel.GoFavoritesCommand}">
+          <StackPanel HorizontalAlignment="Center" Spacing="2">
+            <FontIcon Glyph="&#xEB52;" FontSize="22" />
+            <TextBlock Text="Favorites" FontSize="12" />
+          </StackPanel>
+        </Button>
+      </Grid>
+    </Border>
+  </Grid>
+</Page>

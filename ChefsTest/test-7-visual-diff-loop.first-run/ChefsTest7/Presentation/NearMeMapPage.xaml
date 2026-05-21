@@ -1,0 +1,64 @@
+<Page x:Class="ChefsTest7.Presentation.NearMeMapPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:m="using:ChefsTest7.Models"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource BackgroundBrush}">
+  <Grid utu:SafeArea.Insets="VisibleBounds">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+    <Grid Grid.Row="0" Background="{ThemeResource AppBarFillBrush}" Padding="8,8" ColumnSpacing="8">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Button Grid.Column="0" Content="←" FontSize="20" Background="Transparent" Foreground="{ThemeResource OnAppBarBrush}" Command="{Binding BackCommand}"/>
+      <TextBlock Grid.Column="1" Text="Near Me" FontSize="18" FontWeight="Bold" VerticalAlignment="Center" Foreground="{ThemeResource OnAppBarBrush}"/>
+    </Grid>
+
+    <Grid Grid.Row="1">
+      <!-- Map surface placeholder (no native map control under Skia renderer); chef pins overlaid. -->
+      <Border Background="{ThemeResource SurfaceVariantBrush}"/>
+      <ItemsControl ItemsSource="{Binding Chefs}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <Canvas/>
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="m:UserData">
+            <Grid Width="40" Height="48">
+              <TextBlock Text="📍" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="{ThemeResource PrimaryBrush}"/>
+            </Grid>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+
+      <!-- Contributor card overlay -->
+      <Border Background="{ThemeResource SurfaceBrush}" CornerRadius="12" Padding="14,12" Margin="16,0,16,80" VerticalAlignment="Bottom">
+        <Grid ColumnSpacing="12">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="56"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          <Border Grid.Column="0" Width="56" Height="56" CornerRadius="28" Background="{ThemeResource SurfaceVariantBrush}">
+            <Image Source="{Binding SelectedChef.UrlProfileImage}" Stretch="UniformToFill"/>
+          </Border>
+          <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+            <TextBlock Text="{Binding SelectedChef.FullName}" FontWeight="SemiBold" FontSize="15" Foreground="{ThemeResource OnSurfaceBrush}"/>
+            <TextBlock FontSize="12" Foreground="{ThemeResource OnSurfaceVariantBrush}">
+              <Run Text="{Binding SelectedChef.Followers}"/><Run Text=" followers"/>
+            </TextBlock>
+          </StackPanel>
+          <Button Grid.Column="2" Content="View" Background="{ThemeResource PrimaryBrush}" Foreground="{ThemeResource OnPrimaryBrush}" Command="{Binding OpenChefCommand}"/>
+        </Grid>
+      </Border>
+
+      <Button Content="+" Width="56" Height="56" CornerRadius="28" FontSize="24" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,16,16"
+              Background="{ThemeResource PrimaryBrush}" Foreground="{ThemeResource OnPrimaryBrush}"/>
+    </Grid>
+  </Grid>
+</Page>

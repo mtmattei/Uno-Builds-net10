@@ -1,0 +1,55 @@
+<Page x:Class="ChefsTest5.Presentation.RegisterPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource ChefBackgroundBrush}">
+  <ScrollViewer>
+    <Grid utu:SafeArea.Insets="VisibleBounds" Padding="24,32" RowSpacing="14">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+
+      <StackPanel Orientation="Horizontal" Spacing="12">
+        <Button Background="Transparent" BorderThickness="0" Padding="6"
+                Command="{x:Bind ViewModel.BackCommand}">
+          <TextBlock Text="&#xE0C4;" FontFamily="Segoe MDL2 Assets" FontSize="20" Foreground="{ThemeResource ChefBodyBrush}" />
+        </Button>
+        <TextBlock Text="Register" Style="{StaticResource ChefH1}" />
+      </StackPanel>
+
+      <Image Grid.Row="1" Source="ms-appx:///Assets/Images/chefsappsignature_light.svg"
+             Width="160" Height="48" Margin="0,12,0,12" HorizontalAlignment="Center" />
+
+      <Border Grid.Row="2" Style="{StaticResource ChefCard}" BorderBrush="{ThemeResource ChefDividerBrush}" BorderThickness="1" Padding="14,8">
+        <TextBox PlaceholderText="Username" Text="{x:Bind ViewModel.Username, Mode=TwoWay}"
+                 BorderThickness="0" Background="Transparent" />
+      </Border>
+      <Border Grid.Row="3" Style="{StaticResource ChefCard}" BorderBrush="{ThemeResource ChefDividerBrush}" BorderThickness="1" Padding="14,8">
+        <TextBox PlaceholderText="Email" Text="{x:Bind ViewModel.Email, Mode=TwoWay}"
+                 BorderThickness="0" Background="Transparent" />
+      </Border>
+      <Border Grid.Row="4" Style="{StaticResource ChefCard}" BorderBrush="{ThemeResource ChefDividerBrush}" BorderThickness="1" Padding="14,8">
+        <PasswordBox PlaceholderText="Password" Password="{x:Bind ViewModel.Password, Mode=TwoWay}"
+                     BorderThickness="0" Background="Transparent" />
+      </Border>
+
+      <Button Grid.Row="5" Style="{StaticResource ChefPrimaryButton}"
+              Content="Sign Up" Margin="0,12,0,0" Command="{x:Bind ViewModel.SignUpCommand}" />
+
+      <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0" Spacing="6">
+        <TextBlock Text="Already have an account?" Foreground="{ThemeResource ChefMutedBrush}" />
+        <HyperlinkButton Content="Login"
+                         Foreground="{ThemeResource ChefPinkBrush}"
+                         FontWeight="SemiBold"
+                         Padding="0"
+                         Command="{x:Bind ViewModel.BackCommand}" />
+      </StackPanel>
+    </Grid>
+  </ScrollViewer>
+</Page>

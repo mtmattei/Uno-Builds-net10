@@ -1,0 +1,93 @@
+<Page x:Class="ChefsTest2.Presentation.FiltersPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:m="using:ChefsTest2.Models"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource SurfaceBrush}"
+      NavigationCacheMode="Required">
+
+  <Grid utu:SafeArea.Insets="VisibleBounds">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Grid Grid.Row="0" Padding="20,16,20,8">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <Button Grid.Column="0" Background="Transparent" BorderThickness="0"
+              Command="{x:Bind ViewModel.CloseCommand}"
+              AutomationProperties.AutomationId="FiltersClose">
+        <FontIcon Glyph="&#xE711;" FontSize="20" />
+      </Button>
+      <TextBlock Grid.Column="1" Text="Filters" Style="{StaticResource ChefsTitleLarge}"
+                 VerticalAlignment="Center" Margin="12,0,0,0"
+                 Foreground="{ThemeResource OnSurfaceBrush}" />
+    </Grid>
+
+    <ScrollViewer Grid.Row="1">
+      <StackPanel Spacing="20" Padding="20">
+        <TextBlock Style="{StaticResource ChefsTitleMedium}" Text="Category"
+                   Foreground="{ThemeResource OnSurfaceBrush}" />
+        <ItemsRepeater ItemsSource="{x:Bind ViewModel.Categories, Mode=OneWay}">
+          <ItemsRepeater.Layout>
+            <UniformGridLayout MinItemWidth="120" MinItemHeight="40"
+                               MinRowSpacing="8" MinColumnSpacing="8" />
+          </ItemsRepeater.Layout>
+          <ItemsRepeater.ItemTemplate>
+            <DataTemplate x:DataType="m:Category">
+              <Border CornerRadius="20" Padding="16,8"
+                      Background="{x:Bind Color, Converter={StaticResource HexToBrush}}">
+                <TextBlock Text="{x:Bind Name}" Foreground="White" FontWeight="Medium"
+                           HorizontalAlignment="Center" />
+              </Border>
+            </DataTemplate>
+          </ItemsRepeater.ItemTemplate>
+        </ItemsRepeater>
+
+        <TextBlock Style="{StaticResource ChefsTitleMedium}" Text="Cooking Time"
+                   Foreground="{ThemeResource OnSurfaceBrush}" />
+        <ListView ItemsSource="{x:Bind ViewModel.CookingTimes}"
+                  SelectionMode="Single"
+                  SelectedItem="{x:Bind ViewModel.SelectedCookingTime, Mode=TwoWay}">
+          <ListView.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding}" Padding="8" />
+            </DataTemplate>
+          </ListView.ItemTemplate>
+        </ListView>
+
+        <TextBlock Style="{StaticResource ChefsTitleMedium}" Text="Skill Level"
+                   Foreground="{ThemeResource OnSurfaceBrush}" />
+        <ListView ItemsSource="{x:Bind ViewModel.SkillLevels}"
+                  SelectionMode="Single"
+                  SelectedItem="{x:Bind ViewModel.SelectedSkillLevel, Mode=TwoWay}">
+          <ListView.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding}" Padding="8" />
+            </DataTemplate>
+          </ListView.ItemTemplate>
+        </ListView>
+      </StackPanel>
+    </ScrollViewer>
+
+    <Grid Grid.Row="2" Padding="20,12">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <Button Grid.Column="0" Margin="0,0,8,0" HorizontalAlignment="Stretch"
+              Content="Reset" Command="{x:Bind ViewModel.ResetCommand}"
+              AutomationProperties.AutomationId="FiltersReset" />
+      <Button Grid.Column="1" Margin="8,0,0,0" HorizontalAlignment="Stretch"
+              Content="Apply"
+              Background="{ThemeResource PrimaryBrush}"
+              Foreground="{ThemeResource OnPrimaryBrush}"
+              Command="{x:Bind ViewModel.ApplyCommand}"
+              AutomationProperties.AutomationId="FiltersApply" />
+    </Grid>
+  </Grid>
+</Page>

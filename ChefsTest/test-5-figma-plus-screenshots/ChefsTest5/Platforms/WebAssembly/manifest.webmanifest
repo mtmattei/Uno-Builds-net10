@@ -1,0 +1,10 @@
+{
+  "background_color": "#ffffff",
+  "description": "ChefsTest5",
+  "display": "standalone",
+  "name": "ChefsTest5",
+  "short_name": "ChefsTest5",
+  "start_url": "/index.html",
+  "theme_color": "#ffffff",
+  "scope": "/"
+}

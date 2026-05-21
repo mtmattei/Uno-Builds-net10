@@ -1,0 +1,93 @@
+<Page x:Class="ChefsTest5.Presentation.LoginPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource ChefBackgroundBrush}">
+  <ScrollViewer>
+    <Grid utu:SafeArea.Insets="VisibleBounds" Padding="24,32" RowSpacing="16">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+
+      <Image Grid.Row="0" Source="ms-appx:///Assets/Images/chefsappsignature_light.svg"
+             Width="180" Height="60" Margin="0,24,0,32" HorizontalAlignment="Center" />
+
+      <Border Grid.Row="1" Style="{StaticResource ChefCard}" BorderBrush="{ThemeResource ChefDividerBrush}" BorderThickness="1" Padding="14,8">
+        <Grid ColumnSpacing="8">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Text="&#xE13D;" FontFamily="Segoe MDL2 Assets" FontSize="18"
+                     Foreground="{ThemeResource ChefMutedBrush}" VerticalAlignment="Center" />
+          <TextBox Grid.Column="1" PlaceholderText="Username"
+                   Text="{x:Bind ViewModel.Username, Mode=TwoWay}"
+                   BorderThickness="0" Background="Transparent" />
+        </Grid>
+      </Border>
+
+      <Border Grid.Row="2" Style="{StaticResource ChefCard}" BorderBrush="{ThemeResource ChefDividerBrush}" BorderThickness="1" Padding="14,8">
+        <Grid ColumnSpacing="8">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Text="&#xE192;" FontFamily="Segoe MDL2 Assets" FontSize="18"
+                     Foreground="{ThemeResource ChefMutedBrush}" VerticalAlignment="Center" />
+          <PasswordBox Grid.Column="1" PlaceholderText="Password"
+                       Password="{x:Bind ViewModel.Password, Mode=TwoWay}"
+                       BorderThickness="0" Background="Transparent" />
+        </Grid>
+      </Border>
+
+      <Grid Grid.Row="3">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <CheckBox Content="Remember me"
+                  IsChecked="{x:Bind ViewModel.RememberMe, Mode=TwoWay}"
+                  Foreground="{ThemeResource ChefMutedBrush}" FontSize="13" />
+        <HyperlinkButton Grid.Column="1" Content="Forgot password?"
+                         Foreground="{ThemeResource ChefPinkBrush}"
+                         FontSize="13" FontWeight="SemiBold" Padding="0" />
+      </Grid>
+
+      <Button Grid.Row="4" Style="{StaticResource ChefPrimaryButton}"
+              Content="Login" Command="{x:Bind ViewModel.LoginCommand}" />
+
+      <Border Grid.Row="5" Height="1" Background="{ThemeResource ChefDividerBrush}" Margin="0,12" />
+
+      <Button Grid.Row="6" Style="{StaticResource ChefSecondaryButton}">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBlock Text="&#xE76C;" FontFamily="Segoe MDL2 Assets" FontSize="14" />
+          <TextBlock Text="Sign in with Apple" />
+        </StackPanel>
+      </Button>
+
+      <Button Grid.Row="7" Style="{StaticResource ChefSecondaryButton}">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <TextBlock Text="G" FontWeight="Bold" />
+          <TextBlock Text="Sign in with Google" />
+        </StackPanel>
+      </Button>
+
+      <StackPanel Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,24,0,0" Spacing="6">
+        <TextBlock Text="Not a member?" Foreground="{ThemeResource ChefMutedBrush}" />
+        <HyperlinkButton Content="Register Now"
+                         Foreground="{ThemeResource ChefPinkBrush}"
+                         FontWeight="SemiBold"
+                         Padding="0"
+                         Command="{x:Bind ViewModel.RegisterCommand}" />
+      </StackPanel>
+    </Grid>
+  </ScrollViewer>
+</Page>

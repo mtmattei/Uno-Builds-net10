@@ -1,0 +1,95 @@
+<Page x:Class="ChefsTest3.Presentation.NearMeMapPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:ChefsTest3.Presentation"
+      xmlns:models="using:ChefsTest3.Models"
+      Background="{ThemeResource ScreenBackgroundBrush}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="{ThemeResource AppBarBackgroundBrush}"
+              Padding="20,16,20,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Style="{StaticResource AppBarIconButtonStyle}"
+                    Command="{x:Bind ViewModel.GoBackCommand}">
+                <TextBlock Text="‹" FontSize="22"/>
+            </Button>
+            <TextBlock Grid.Column="1" Text="Near me"
+                       Foreground="{ThemeResource AppBarForegroundBrush}"
+                       FontSize="18" FontWeight="Bold"
+                       VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <!-- Map surface (DESIGN.md silent on map control — using a styled placeholder + pins) -->
+            <Border Background="{ThemeResource MapSurfaceBrush}">
+                <Grid>
+                    <Image Source="ms-appx:///Assets/Maps/location_pin.svg"
+                           Width="80" Height="80"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.3"/>
+                    <ItemsControl ItemsSource="{x:Bind ViewModel.Chefs}"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="20"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:UserData">
+                                <Button Background="Transparent" BorderThickness="0" Padding="0"
+                                        Click="OnPinClick" Tag="{x:Bind}">
+                                    <Border Width="48" Height="48" CornerRadius="24"
+                                            BorderThickness="3" BorderBrush="{ThemeResource PrimaryBrush}">
+                                        <Image Source="{x:Bind UrlProfileImage}" Stretch="UniformToFill"/>
+                                    </Border>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </Border>
+
+            <!-- Selected chef card overlay -->
+            <Border VerticalAlignment="Bottom" Margin="20,0,20,80"
+                    Style="{StaticResource SectionCardStyle}" Padding="14"
+                    Visibility="Visible">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" Width="48" Height="48" CornerRadius="24">
+                        <Image Source="{x:Bind ViewModel.Selected.UrlProfileImage, Mode=OneWay}" Stretch="UniformToFill"/>
+                    </Border>
+                    <StackPanel Grid.Column="1" Margin="12,0" VerticalAlignment="Center">
+                        <TextBlock Text="{x:Bind ViewModel.Selected.FullName, Mode=OneWay}"
+                                   Style="{StaticResource BodyLargeStyle}"/>
+                        <TextBlock Style="{StaticResource CaptionStyle}">
+                            <Run Text="{x:Bind ViewModel.Selected.Recipes, Mode=OneWay}"/><Run Text=" recipes · "/><Run Text="{x:Bind ViewModel.Selected.Followers, Mode=OneWay}"/><Run Text=" followers"/>
+                        </TextBlock>
+                    </StackPanel>
+                    <Button Grid.Column="2" Style="{StaticResource PrimaryCtaButtonStyle}"
+                            HorizontalAlignment="Right" Padding="14,10"
+                            Command="{x:Bind ViewModel.OpenSelectedCommand}">
+                        <TextBlock Text="View"/>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <Button HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                    Width="56" Height="56" CornerRadius="28"
+                    Background="{ThemeResource PrimaryBrush}"
+                    Foreground="White" BorderThickness="0"
+                    Margin="0,0,24,16">
+                <TextBlock Text="📍" FontSize="20"/>
+            </Button>
+        </Grid>
+    </Grid>
+</Page>

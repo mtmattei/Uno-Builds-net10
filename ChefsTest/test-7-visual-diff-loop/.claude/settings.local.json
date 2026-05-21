@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Platform006/OneDrive - Uno Platform/Desktop/unOS/AI-builds/ChefsFT-test/claude-code-uno-starter-kit/project-level/**)",
+      "Read(//c/Users/Platform006/OneDrive - Uno Platform/Desktop/unOS/AI-builds/ChefsFT-test/reference/**)",
+      "Read(//c/Users/Platform006/OneDrive - Uno Platform/Desktop/unOS/AI-builds/ChefsFT-test/reference/assets/**)",
+      "Bash(mv \"../results/test-7.md\" \"../results/test-7.first-run.md\")",
+      "Bash(mv \"../results/test-7.log\" \"../results/test-7.first-run.log\")",
+      "Bash(mv \"../test-7-visual-diff-loop.first-tun\" \"../test-7-visual-diff-loop.first-run\")",
+      "Bash(cp *)",
+      "mcp__uno__uno_platform_agent_rules_init",
+      "mcp__uno__uno_platform_usage_rules_init",
+      "Bash(\"C:/Users/Platform006/.nuget/packages/microsoft.windowsappsdk/1.7.250909003/tools/net472/XamlCompiler.exe\" \"obj/Debug/net10.0-windows10.0.26100/input.json\" \"obj/Debug/net10.0-windows10.0.26100/output.json\")",
+      "Bash(\"C:/Users/Platform006/.nuget/packages/microsoft.windowsappsdk/1.7.250909003/tools/net472/XamlCompiler.exe\" \"obj/Debug/net10.0-windows10.0.26100/input.json\" \"/tmp/winxaml.json\")",
+      "Read(//tmp/**)",
+      "Bash(\"C:/Users/Platform006/.nuget/packages/microsoft.windowsappsdk/1.7.250909003/tools/net472/XamlCompiler.exe\" \"C:/Users/Platform006/OneDrive - Uno Platform/Desktop/unOS/AI-builds/ChefsFT-test/test-7-visual-diff-loop/ChefsTest7/obj/Debug/net10.0-windows10.0.26100/input.json\" \"C:/Users/Platform006/OneDrive - Uno Platform/Desktop/unOS/AI-builds/ChefsFT-test/test-7-visual-diff-loop/ChefsTest7/obj/Debug/net10.0-windows10.0.26100/output.json\")",
+      "Bash(taskkill //F //IM ChefsTest7.exe)"
+    ]
+  }
+}

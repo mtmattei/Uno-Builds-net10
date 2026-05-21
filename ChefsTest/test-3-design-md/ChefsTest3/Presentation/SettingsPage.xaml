@@ -1,0 +1,104 @@
+<Page x:Class="ChefsTest3.Presentation.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:ChefsTest3.Presentation"
+      Background="{ThemeResource ScreenBackgroundBrush}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="{ThemeResource AppBarBackgroundBrush}"
+              Padding="20,16,20,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Style="{StaticResource AppBarIconButtonStyle}"
+                    Command="{x:Bind ViewModel.GoBackCommand}">
+                <TextBlock Text="‹" FontSize="22"/>
+            </Button>
+            <TextBlock Grid.Column="1" Text="Settings"
+                       Foreground="{ThemeResource AppBarForegroundBrush}"
+                       FontSize="18" FontWeight="Bold"
+                       VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1" Padding="20,20,20,16">
+            <StackPanel Spacing="20">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Personal Information" Style="{StaticResource H2Style}"/>
+                    <Border Style="{StaticResource SectionCardStyle}" Padding="16">
+                        <StackPanel Spacing="14">
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="Name" Style="{StaticResource CaptionStyle}"/>
+                                <TextBox Style="{StaticResource FormInputStyle}"
+                                         Text="{x:Bind ViewModel.Name, Mode=TwoWay}"/>
+                            </StackPanel>
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="Email" Style="{StaticResource CaptionStyle}"/>
+                                <TextBox Style="{StaticResource FormInputStyle}"
+                                         Text="{x:Bind ViewModel.Email, Mode=TwoWay}"/>
+                            </StackPanel>
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="Mobile Number" Style="{StaticResource CaptionStyle}"/>
+                                <TextBox Style="{StaticResource FormInputStyle}"
+                                         Text="{x:Bind ViewModel.PhoneNumber, Mode=TwoWay}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Application Settings" Style="{StaticResource H2Style}"/>
+                    <Border Style="{StaticResource SectionCardStyle}" Padding="16">
+                        <StackPanel Spacing="14">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Notifications" Style="{StaticResource BodyLargeStyle}"/>
+                                    <TextBlock Text="Push alerts for new recipes and replies"
+                                               Style="{StaticResource CaptionStyle}"/>
+                                </StackPanel>
+                                <ToggleSwitch Grid.Column="1" IsOn="{x:Bind ViewModel.NotificationsEnabled, Mode=TwoWay}"
+                                              OnContent="" OffContent=""/>
+                            </Grid>
+                            <Rectangle Height="1" Fill="{ThemeResource DividerBrush}"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Night Mode" Style="{StaticResource BodyLargeStyle}"/>
+                                    <TextBlock Text="Use dark colors throughout the app"
+                                               Style="{StaticResource CaptionStyle}"/>
+                                </StackPanel>
+                                <ToggleSwitch Grid.Column="1" IsOn="{x:Bind ViewModel.NightMode, Mode=TwoWay}"
+                                              OnContent="" OffContent=""/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid Grid.Row="2" Padding="20,12,20,16" Background="{ThemeResource ScreenBackgroundBrush}">
+            <StackPanel Spacing="10">
+                <Button Style="{StaticResource PrimaryCtaButtonStyle}"
+                        Command="{x:Bind ViewModel.SaveChangesCommand}">
+                    <TextBlock Text="Save Changes"/>
+                </Button>
+                <Button Style="{StaticResource SecondaryCtaButtonStyle}"
+                        Command="{x:Bind ViewModel.LogoutCommand}">
+                    <TextBlock Text="Log out"/>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

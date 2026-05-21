@@ -1,0 +1,92 @@
+<Page x:Class="ChefsTest2.Presentation.SearchPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:m="using:ChefsTest2.Models"
+      xmlns:local="using:ChefsTest2.Presentation"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource BackgroundBrush}"
+      NavigationCacheMode="Required">
+
+  <Grid utu:SafeArea.Insets="VisibleBounds">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Grid Grid.Row="0" Padding="20,16,20,8" Background="{ThemeResource SurfaceBrush}">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <TextBox Grid.Column="0" PlaceholderText="Search recipes…"
+               Text="{x:Bind ViewModel.Query, Mode=TwoWay}"
+               AutomationProperties.AutomationId="SearchInput" />
+      <Button Grid.Column="1" Margin="12,0,0,0"
+              Background="{ThemeResource PrimaryContainerBrush}"
+              Foreground="{ThemeResource OnPrimaryContainerBrush}"
+              Command="{x:Bind ViewModel.OpenFiltersCommand}"
+              AutomationProperties.AutomationId="SearchFiltersButton">
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <FontIcon Glyph="&#xE71C;" FontSize="16" />
+          <TextBlock Text="Filters" />
+        </StackPanel>
+      </Button>
+    </Grid>
+
+    <TextBlock Grid.Row="1" Padding="20,8,20,8"
+               Style="{StaticResource ChefsBodySmall}"
+               Foreground="{ThemeResource OnBackgroundBrush}">
+      <Run Text="{x:Bind ViewModel.ResultCount, Mode=OneWay}" />
+      <Run Text=" results" />
+    </TextBlock>
+
+    <Grid Grid.Row="2">
+      <Grid Visibility="{x:Bind ViewModel.Results.Count, Mode=OneWay, Converter={StaticResource EmptyToVisibility}}"
+            HorizontalAlignment="Center" VerticalAlignment="Center"
+            AutomationProperties.AutomationId="SearchEmptyState">
+        <StackPanel Spacing="12" HorizontalAlignment="Center">
+          <FontIcon Glyph="&#xE721;" FontSize="64" Foreground="{ThemeResource OutlineBrush}" />
+          <TextBlock Style="{StaticResource ChefsTitleMedium}" Text="No results" TextAlignment="Center"
+                     Foreground="{ThemeResource OnBackgroundBrush}" />
+          <TextBlock Style="{StaticResource ChefsBodySmall}" Text="Try a different keyword."
+                     TextAlignment="Center" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+        </StackPanel>
+      </Grid>
+
+      <ScrollViewer Visibility="{x:Bind ViewModel.Results.Count, Mode=OneWay, Converter={StaticResource HasItemsToVisibility}}">
+        <ItemsRepeater ItemsSource="{x:Bind ViewModel.Results, Mode=OneWay}"
+                       Margin="20,0,20,16">
+          <ItemsRepeater.Layout>
+            <UniformGridLayout MinItemWidth="160" MinItemHeight="220"
+                               MinRowSpacing="12" MinColumnSpacing="12" />
+          </ItemsRepeater.Layout>
+          <ItemsRepeater.ItemTemplate>
+            <DataTemplate x:DataType="m:Recipe">
+              <Button Background="Transparent" BorderThickness="0" Padding="0"
+                      Click="OnRecipeClick" Tag="{x:Bind}"
+                      HorizontalAlignment="Stretch"
+                      AutomationProperties.AutomationId="SearchResultCard">
+                <Border CornerRadius="12" Background="{ThemeResource SurfaceBrush}">
+                  <StackPanel>
+                    <Image Source="{x:Bind ImageUrl}" Height="120" Stretch="UniformToFill" />
+                    <StackPanel Padding="12,8" Spacing="4">
+                      <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold"
+                                 Foreground="{ThemeResource OnSurfaceBrush}"
+                                 TextWrapping="Wrap" MaxLines="2" />
+                      <TextBlock Text="{x:Bind Category.Name}" FontSize="12"
+                                 Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+                    </StackPanel>
+                  </StackPanel>
+                </Border>
+              </Button>
+            </DataTemplate>
+          </ItemsRepeater.ItemTemplate>
+        </ItemsRepeater>
+      </ScrollViewer>
+    </Grid>
+
+    <local:BottomNavBar Grid.Row="3" ActiveTab="Search" />
+  </Grid>
+</Page>

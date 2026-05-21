@@ -1,0 +1,97 @@
+<UserControl x:Class="ChefsTest4.Presentation.Pages.SettingsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Background="{ThemeResource CanvasBrush}">
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Border Grid.Row="0" Style="{StaticResource InvertedAppBarBorderStyle}">
+      <Grid>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+        <Button Grid.Column="0" Background="Transparent" BorderThickness="0" Padding="8" Command="{x:Bind ViewModel.BackCommand}">
+          <FontIcon Glyph="&#xE76B;" FontSize="20" Foreground="{ThemeResource AppBarForegroundBrush}" />
+        </Button>
+        <TextBlock Grid.Column="1" Text="Settings" Style="{StaticResource AppBarTitleStyle}" VerticalAlignment="Center" Margin="8,0,0,0" />
+      </Grid>
+    </Border>
+
+    <ScrollViewer Grid.Row="1" Padding="16,24,16,24">
+      <StackPanel Spacing="24">
+
+        <!-- Personal Information -->
+        <StackPanel Spacing="12">
+          <TextBlock Text="Personal Information" Style="{StaticResource H3TextStyle}" />
+          <Border Style="{StaticResource GroupedCardBorderStyle}">
+            <StackPanel>
+              <Grid Padding="0,8" ColumnSpacing="12">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                <FontIcon Grid.Column="0" Glyph="&#xE77B;" FontSize="20" Foreground="{ThemeResource MutedTextBrush}" VerticalAlignment="Center" />
+                <StackPanel Grid.Column="1">
+                  <TextBlock Text="Name" Style="{StaticResource CaptionTextStyle}" />
+                  <TextBox BorderThickness="0" Background="Transparent" Text="{x:Bind ViewModel.FullName, Mode=TwoWay}" />
+                </StackPanel>
+              </Grid>
+              <Border Background="{ThemeResource DividerBrush}" Height="1" Opacity="0.5" />
+              <Grid Padding="0,8" ColumnSpacing="12">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                <FontIcon Grid.Column="0" Glyph="&#xE715;" FontSize="20" Foreground="{ThemeResource MutedTextBrush}" VerticalAlignment="Center" />
+                <StackPanel Grid.Column="1">
+                  <TextBlock Text="Email" Style="{StaticResource CaptionTextStyle}" />
+                  <TextBox BorderThickness="0" Background="Transparent" Text="{x:Bind ViewModel.EmailAddress, Mode=TwoWay}" />
+                </StackPanel>
+              </Grid>
+              <Border Background="{ThemeResource DividerBrush}" Height="1" Opacity="0.5" />
+              <Grid Padding="0,8" ColumnSpacing="12">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                <FontIcon Grid.Column="0" Glyph="&#xE8EA;" FontSize="20" Foreground="{ThemeResource MutedTextBrush}" VerticalAlignment="Center" />
+                <StackPanel Grid.Column="1">
+                  <TextBlock Text="Mobile Number" Style="{StaticResource CaptionTextStyle}" />
+                  <TextBox BorderThickness="0" Background="Transparent" Text="{x:Bind ViewModel.PhoneNumber, Mode=TwoWay}" PlaceholderText="Add a number" />
+                </StackPanel>
+              </Grid>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <!-- Application Settings (audit fix #5: Title Case) -->
+        <StackPanel Spacing="12">
+          <TextBlock Text="Application Settings" Style="{StaticResource H3TextStyle}" />
+          <Border Style="{StaticResource GroupedCardBorderStyle}">
+            <StackPanel>
+              <Grid Padding="0,8" ColumnSpacing="12">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                <FontIcon Grid.Column="0" Glyph="&#xEA8F;" FontSize="20" Foreground="{ThemeResource MutedTextBrush}" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="Notifications" Style="{StaticResource Body1TextStyle}" VerticalAlignment="Center" />
+                <ToggleSwitch Grid.Column="2" IsOn="{x:Bind ViewModel.NotificationsEnabled, Mode=TwoWay}" OffContent="" OnContent="" />
+              </Grid>
+              <Border Background="{ThemeResource DividerBrush}" Height="1" Opacity="0.5" />
+              <Grid Padding="0,8" ColumnSpacing="12">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                <FontIcon Grid.Column="0" Glyph="&#xE708;" FontSize="20" Foreground="{ThemeResource MutedTextBrush}" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="Night Mode" Style="{StaticResource Body1TextStyle}" VerticalAlignment="Center" />
+                <ToggleSwitch Grid.Column="2" IsOn="{x:Bind ViewModel.NightModeEnabled, Mode=TwoWay}" OffContent="" OnContent="" />
+              </Grid>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <!-- Log out (open question #6 default: last row in Settings) -->
+        <Button Style="{StaticResource SecondaryOutlineButtonStyle}" Content="Log out" Command="{x:Bind ViewModel.LogOutCommand}" />
+
+        <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" Style="{StaticResource CaptionTextStyle}" Foreground="{ThemeResource SuccessBrush}" />
+
+      </StackPanel>
+    </ScrollViewer>
+
+    <Border Grid.Row="2" Padding="16,12,16,16">
+      <Button Style="{StaticResource PrimaryCtaButtonStyle}" Content="Save Changes" Command="{x:Bind ViewModel.SaveCommand}" />
+    </Border>
+  </Grid>
+</UserControl>

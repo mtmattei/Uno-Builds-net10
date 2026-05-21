@@ -1,0 +1,83 @@
+<Page x:Class="ChefsTest2.Presentation.NotificationsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:m="using:ChefsTest2.Models"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource BackgroundBrush}"
+      NavigationCacheMode="Required">
+
+  <Grid utu:SafeArea.Insets="VisibleBounds">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <Grid Grid.Row="0" Padding="20,16,20,8">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <Button Grid.Column="0" Background="{ThemeResource SecondaryContainerBrush}"
+              Foreground="{ThemeResource OnSecondaryContainerBrush}"
+              CornerRadius="20" Padding="10,6"
+              Command="{x:Bind ViewModel.CloseCommand}"
+              AutomationProperties.AutomationId="NotificationsClose">
+        <FontIcon Glyph="&#xE711;" FontSize="18" />
+      </Button>
+      <TextBlock Grid.Column="1" Text="Notifications" Style="{StaticResource ChefsTitleLarge}"
+                 VerticalAlignment="Center" Margin="12,0,0,0"
+                 Foreground="{ThemeResource OnBackgroundBrush}" />
+    </Grid>
+
+    <utu:TabBar Grid.Row="1" Style="{StaticResource ColoredTopTabBarStyle}"
+                Padding="20,0,20,8"
+                SelectedIndex="{x:Bind ViewModel.SelectedSegment, Mode=TwoWay}"
+                AutomationProperties.AutomationId="NotificationsSegments">
+      <utu:TabBarItem Content="All" />
+      <utu:TabBarItem Content="Unread" />
+      <utu:TabBarItem Content="Read" />
+    </utu:TabBar>
+
+    <Grid Grid.Row="2">
+      <Grid Visibility="{x:Bind ViewModel.Filtered.Count, Mode=OneWay, Converter={StaticResource EmptyToVisibility}}"
+            HorizontalAlignment="Center" VerticalAlignment="Center"
+            AutomationProperties.AutomationId="NotificationsEmpty">
+        <StackPanel Spacing="12" HorizontalAlignment="Center">
+          <FontIcon Glyph="&#xEA8F;" FontSize="64" Foreground="{ThemeResource OutlineBrush}" />
+          <TextBlock Text="You're all caught up" Style="{StaticResource ChefsTitleMedium}"
+                     TextAlignment="Center" Foreground="{ThemeResource OnBackgroundBrush}" />
+        </StackPanel>
+      </Grid>
+      <ScrollViewer Visibility="{x:Bind ViewModel.Filtered.Count, Mode=OneWay, Converter={StaticResource HasItemsToVisibility}}">
+        <ItemsRepeater ItemsSource="{x:Bind ViewModel.Filtered, Mode=OneWay}"
+                       Margin="20,0,20,16">
+          <ItemsRepeater.Layout>
+            <StackLayout Spacing="10" />
+          </ItemsRepeater.Layout>
+          <ItemsRepeater.ItemTemplate>
+            <DataTemplate x:DataType="m:Notification">
+              <Border CornerRadius="12" Padding="14"
+                      Background="{ThemeResource SurfaceBrush}">
+                <StackPanel Spacing="6">
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{x:Bind Title}" FontWeight="SemiBold"
+                               Foreground="{ThemeResource OnSurfaceBrush}" />
+                    <TextBlock Grid.Column="1" Text="{x:Bind Date, Converter={StaticResource RelativeDate}}"
+                               FontSize="12" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+                  </Grid>
+                  <TextBlock Text="{x:Bind Description}" TextWrapping="Wrap"
+                             Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+                </StackPanel>
+              </Border>
+            </DataTemplate>
+          </ItemsRepeater.ItemTemplate>
+        </ItemsRepeater>
+      </ScrollViewer>
+    </Grid>
+  </Grid>
+</Page>

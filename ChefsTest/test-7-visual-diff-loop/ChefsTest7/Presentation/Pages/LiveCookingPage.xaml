@@ -1,0 +1,65 @@
+<Page x:Class="ChefsTest7.Presentation.Pages.LiveCookingPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:models="using:ChefsTest7.Models"
+      Background="{ThemeResource BackgroundBrush}">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <utu:NavigationBar Grid.Row="0" Content="{x:Bind ViewModel.Recipe.Name, Mode=OneWay, FallbackValue=Cooking}"
+                       Background="{ThemeResource SurfaceInverseBrush}"
+                       Foreground="{ThemeResource OnSurfaceInverseBrush}" />
+    <Border Grid.Row="1" Height="220" Background="Black">
+      <Grid>
+        <Image Source="{x:Bind ViewModel.Recipe.ImageUrl, Mode=OneWay}" Stretch="UniformToFill" Opacity="0.55"/>
+        <TextBlock Text="▶" FontSize="64" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Grid VerticalAlignment="Bottom" Background="#88000000" Padding="12,8">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          <TextBlock Grid.Column="0" Text="0:00" Foreground="White" Style="{ThemeResource LabelMedium}" VerticalAlignment="Center"/>
+          <Slider Grid.Column="1" Margin="12,0" Value="20"/>
+          <TextBlock Grid.Column="2" Text="2:30" Foreground="White" Style="{ThemeResource LabelMedium}" VerticalAlignment="Center"/>
+        </Grid>
+      </Grid>
+    </Border>
+    <ScrollViewer Grid.Row="2" Padding="16">
+      <Border Background="{ThemeResource SurfaceVariantBrush}" CornerRadius="12" Padding="16">
+        <StackPanel Spacing="12">
+          <TextBlock Text="{x:Bind ViewModel.CurrentStep.Name, Mode=OneWay, FallbackValue=Step}"
+                     Style="{ThemeResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}"/>
+          <TextBlock Text="Ingredients for this step" Style="{ThemeResource LabelLarge}" Foreground="{ThemeResource OnSurfaceVariantBrush}"/>
+          <ItemsControl ItemsSource="{x:Bind ViewModel.CurrentStep.Ingredients, Mode=OneWay}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="x:String">
+                <CheckBox Content="{x:Bind}" Foreground="{ThemeResource OnSurfaceBrush}"/>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+          <TextBlock Text="{x:Bind ViewModel.CurrentStep.Description, Mode=OneWay, FallbackValue=''}"
+                     TextWrapping="Wrap" Style="{ThemeResource BodyMedium}" Foreground="{ThemeResource OnSurfaceBrush}"/>
+        </StackPanel>
+      </Border>
+    </ScrollViewer>
+    <Grid Grid.Row="3" Padding="16" Background="{ThemeResource SurfaceBrush}">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Button Grid.Column="0" Content="Previous" HorizontalAlignment="Stretch" Margin="0,0,8,0"
+              Style="{ThemeResource OutlinedButtonStyle}"
+              IsEnabled="{x:Bind ViewModel.CanGoPrevious, Mode=OneWay}"
+              Command="{x:Bind ViewModel.PreviousCommand}"/>
+      <Button Grid.Column="1" Content="Next" HorizontalAlignment="Stretch" Margin="8,0,0,0"
+              Style="{ThemeResource FilledButtonStyle}"
+              Command="{x:Bind ViewModel.NextStepCommand}"/>
+    </Grid>
+  </Grid>
+</Page>

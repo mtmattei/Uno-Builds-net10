@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "DOTNET_ENVIRONMENT": "Development"
+  },
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Platform006/OneDrive - Uno Platform/Desktop/unOS/AI-builds/ChefsFT-test/results/**)",
+      "Read(//c/Users/Platform006/OneDrive - Uno Platform/Desktop/unOS/AI-builds/ChefsFT-test/reference/**)",
+      "mcp__uno__uno_platform_agent_rules_init",
+      "mcp__uno__uno_platform_usage_rules_init",
+      "Bash(start \"\" \"ChefsTest4/bin/Debug/net10.0-desktop/ChefsTest4.exe\")",
+      "mcp__uno-app__uno_app_get_runtime_info",
+      "Bash(powershell -Command \"Stop-Process -Name 'ChefsTest4' -Force -ErrorAction SilentlyContinue; Write-Host done\")",
+      "mcp__uno-app__uno_app_close",
+      "Bash(\"C:/Users/Platform006/.nuget/packages/microsoft.windowsappsdk/1.7.250909003/tools/net472/XamlCompiler.exe\" \"obj/Debug/net10.0-windows10.0.26100/input.json\" \"obj/Debug/net10.0-windows10.0.26100/output.json\")",
+      "Bash(cmd //c '\"C:\\\\Users\\\\Platform006\\\\.nuget\\\\packages\\\\microsoft.windowsappsdk\\\\1.7.250909003\\\\tools\\\\net472\\\\XamlCompiler.exe\" \"obj\\\\Debug\\\\net10.0-windows10.0.26100\\\\input.json\" \"obj\\\\Debug\\\\net10.0-windows10.0.26100\\\\output.json\" 2>&1')",
+      "Bash(\"/c/Users/Platform006/.nuget/packages/microsoft.windowsappsdk/1.7.250909003/tools/net472/XamlCompiler.exe\" \"obj/Debug/net10.0-windows10.0.26100/input.json\" \"obj/Debug/net10.0-windows10.0.26100/output.json\")",
+      "mcp__uno-app__uno_app_start",
+      "mcp__uno-app__uno_app_get_screenshot",
+      "mcp__uno-app__uno_app_pointer_click",
+      "mcp__uno-app__uno_app_visualtree_snapshot",
+      "mcp__uno-app__uno_app_element_peer_default_action",
+      "Bash(powershell *)",
+      "mcp__uno-app__uno_app_element_peer_action"
+    ]
+  }
+}

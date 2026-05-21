@@ -1,0 +1,1765 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ChefsFT — what 7 AI methodologies actually proved</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" />
+<style>
+  :root {
+    --paper: oklch(97.5% 0.008 80);
+    --paper-deep: oklch(94% 0.012 75);
+    --ink: oklch(18% 0.018 30);
+    --ink-soft: oklch(38% 0.015 30);
+    --ink-mute: oklch(58% 0.012 40);
+    --rule: oklch(82% 0.012 60);
+    --pink: oklch(60% 0.205 14);
+    --pink-deep: oklch(40% 0.170 16);
+    --pink-wash: oklch(94% 0.040 14);
+    --olive: oklch(82% 0.040 95);
+    --olive-deep: oklch(55% 0.055 95);
+    --gold: oklch(78% 0.140 80);
+    --silver: oklch(76% 0.010 80);
+    --bronze: oklch(62% 0.105 50);
+    --shadow: 0 1px 0 oklch(0% 0 0 / 0.04), 0 24px 60px -32px oklch(20% 0.04 30 / 0.18);
+
+    --display: "Fraunces", "Times New Roman", serif;
+    --body: "Newsreader", Georgia, serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--paper); color: var(--ink); }
+  body {
+    font-family: var(--body);
+    font-size: 17px;
+    line-height: 1.55;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
+  }
+
+  .deck {
+    position: fixed; inset: 0;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute; inset: 0;
+    padding: clamp(40px, 5vw, 88px) clamp(32px, 6vw, 112px);
+    display: grid;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 600ms cubic-bezier(.2,.7,.2,1), transform 600ms cubic-bezier(.2,.7,.2,1);
+    pointer-events: none;
+    overflow: auto;
+  }
+  .slide.active { opacity: 1; transform: none; pointer-events: auto; }
+  .slide.exit { transform: translateY(-12px); }
+
+  /* ---------- frame ---------- */
+  .frame {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 50;
+  }
+  .frame::before, .frame::after {
+    content: "";
+    position: absolute;
+    background: var(--ink);
+    opacity: 0.85;
+  }
+  .frame::before { top: 0; left: 0; right: 0; height: 1px; }
+  .frame::after { bottom: 0; left: 0; right: 0; height: 1px; }
+
+  .meta {
+    position: fixed;
+    top: clamp(16px, 2vw, 28px);
+    left: clamp(24px, 3vw, 48px);
+    right: clamp(24px, 3vw, 48px);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    z-index: 60;
+    pointer-events: none;
+  }
+  .meta b { color: var(--ink); font-weight: 500; }
+  .progress {
+    position: fixed;
+    bottom: clamp(16px, 2vw, 28px);
+    left: clamp(24px, 3vw, 48px);
+    right: clamp(24px, 3vw, 48px);
+    display: flex;
+    gap: 4px;
+    z-index: 60;
+    pointer-events: none;
+  }
+  .progress span {
+    flex: 1;
+    height: 2px;
+    background: var(--rule);
+    transition: background 400ms;
+  }
+  .progress span.done { background: var(--ink); }
+  .progress span.now { background: var(--pink); }
+
+  /* ---------- typography ---------- */
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--pink);
+    margin-bottom: 18px;
+  }
+  .display {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 144, "wght" 380, "SOFT" 30;
+    font-size: clamp(48px, 7.4vw, 132px);
+    line-height: 0.92;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+  }
+  .display em {
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "wght" 320, "SOFT" 80;
+    color: var(--pink-deep);
+  }
+  h2.title {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 96, "wght" 420, "SOFT" 30;
+    font-size: clamp(36px, 4.4vw, 68px);
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+  }
+  h2.title em { font-style: italic; font-variation-settings: "opsz" 96, "wght" 360, "SOFT" 80; color: var(--pink-deep); }
+  h3.sub {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 36, "wght" 500;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+  .lede {
+    font-family: var(--body);
+    font-size: clamp(18px, 1.7vw, 24px);
+    line-height: 1.45;
+    color: var(--ink-soft);
+    max-width: 60ch;
+  }
+  .lede em { font-style: italic; color: var(--pink-deep); }
+  .body { color: var(--ink-soft); max-width: 60ch; }
+  .body p + p { margin-top: 0.7em; }
+  .pullquote {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 144, "wght" 320, "SOFT" 100;
+    font-style: italic;
+    font-size: clamp(28px, 3vw, 44px);
+    line-height: 1.15;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+  }
+  .mono { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; }
+  .small {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .num {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 144, "wght" 280, "SOFT" 0;
+    font-size: clamp(64px, 9vw, 160px);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    color: var(--pink);
+    font-feature-settings: "lnum", "tnum";
+  }
+
+  /* ---------- slide 1: title ---------- */
+  .s-title {
+    grid-template-columns: 1fr;
+    align-content: center;
+    gap: 32px;
+  }
+  .s-title .super {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    display: flex;
+    gap: 24px;
+    align-items: baseline;
+  }
+  .s-title .super .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--pink);
+    display: inline-block;
+  }
+  .s-title .display { max-width: 16ch; }
+  .s-title .footer {
+    margin-top: 64px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    border-top: 1px solid var(--rule);
+    padding-top: 20px;
+    max-width: 980px;
+  }
+  .s-title .footer dt { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 6px; }
+  .s-title .footer dd { font-family: var(--display); font-variation-settings: "opsz" 36, "wght" 500; font-size: 18px; line-height: 1.2; }
+
+  /* ---------- slide 2: rankings ---------- */
+  .s-rank {
+    grid-template-columns: minmax(280px, 0.7fr) 1.3fr;
+    grid-template-rows: auto 1fr;
+    gap: 48px 64px;
+    align-content: start;
+  }
+  .s-rank header { grid-column: 1 / -1; }
+  .s-rank ol.ranking {
+    list-style: none;
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 64px;
+    align-self: start;
+  }
+  .s-rank li {
+    display: grid;
+    grid-template-columns: 56px 80px 1fr auto;
+    align-items: baseline;
+    gap: 18px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .s-rank .rk {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 144, "wght" 280;
+    font-size: 40px;
+    line-height: 1;
+    color: var(--ink);
+    font-feature-settings: "lnum", "tnum";
+  }
+  .s-rank li.gold .rk { color: var(--gold); font-variation-settings: "opsz" 144, "wght" 480, "SOFT" 60; }
+  .s-rank li.silver .rk { color: var(--silver); }
+  .s-rank li.bronze .rk { color: var(--bronze); }
+  .s-rank .test {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .s-rank .name {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 36, "wght" 480;
+    font-size: 19px;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+  .s-rank .name em { font-style: italic; font-variation-settings: "opsz" 36, "wght" 380, "SOFT" 80; color: var(--ink-soft); display: block; font-size: 14px; margin-top: 3px; }
+  .s-rank .grade {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 96, "wght" 540;
+    font-size: 28px;
+    color: var(--pink-deep);
+    letter-spacing: -0.01em;
+  }
+
+  /* ---------- slide 3: scorecard ---------- */
+  .s-score {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    align-content: start;
+  }
+  .s-score header { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 32px; }
+  .s-score header p { max-width: 36ch; }
+  .scoretable {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+  .scoretable th, .scoretable td {
+    text-align: left;
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: middle;
+  }
+  .scoretable th {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-weight: 500;
+  }
+  .scoretable th:first-child { width: 18%; }
+  .scoretable td.bar {
+    position: relative;
+    padding-right: 56px;
+    font-feature-settings: "tnum";
+  }
+  .scoretable td.bar::before {
+    content: "";
+    position: absolute;
+    left: 8px; right: 60px; bottom: 6px;
+    height: 1px;
+    background: var(--rule);
+  }
+  .scoretable td.bar::after {
+    content: "";
+    position: absolute;
+    left: 8px;
+    bottom: 6px;
+    height: 4px;
+    background: var(--pink);
+    width: var(--w, 0%);
+  }
+  .scoretable .scoreval {
+    position: absolute;
+    right: 8px; bottom: 0;
+    font-family: var(--display);
+    font-variation-settings: "opsz" 36, "wght" 500;
+    font-size: 18px;
+    color: var(--ink);
+    font-feature-settings: "tnum";
+  }
+  .scoretable .grd {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 36, "wght" 540;
+    font-size: 18px;
+    color: var(--pink-deep);
+    letter-spacing: -0.01em;
+  }
+  .scoretable .name { font-family: var(--display); font-variation-settings: "opsz" 36, "wght" 460; font-size: 16px; color: var(--ink); }
+
+  /* ---------- slide 4: pass-bar ---------- */
+  .s-pass {
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .pass-grid {
+    display: grid;
+    grid-template-columns: 18ch repeat(7, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .pass-grid > div {
+    padding: 14px 6px;
+    border-bottom: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+  .pass-grid > div:nth-child(8n+1) {
+    justify-content: flex-start;
+    font-family: var(--display);
+    font-variation-settings: "opsz" 36, "wght" 480;
+    font-size: 14px;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink);
+  }
+  .pass-grid > .head {
+    font-family: var(--mono) !important;
+    font-size: 11px !important;
+    letter-spacing: 0.14em !important;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    border-bottom: 1px solid var(--ink) !important;
+  }
+  .pass-grid .pass { background: var(--olive); color: var(--ink); }
+  .pass-grid .fail { background: var(--pink-wash); color: var(--pink-deep); }
+  .pass-grid .partial { background: transparent; color: var(--ink-soft); }
+
+  /* ---------- generic 2-col layouts ---------- */
+  .two {
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .two header { grid-column: 1; }
+  .two .col-r { grid-column: 2; }
+
+  /* ---------- list pattern ---------- */
+  ol.numbered, ul.bulleted {
+    list-style: none;
+    counter-reset: it;
+    display: grid;
+    gap: 22px;
+  }
+  ol.numbered li, ul.bulleted li {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 16px;
+    align-items: baseline;
+  }
+  ol.numbered li::before {
+    counter-increment: it;
+    content: counter(it, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--pink);
+    border-top: 1px solid var(--ink);
+    padding-top: 6px;
+  }
+  ul.bulleted li::before {
+    content: "—";
+    font-family: var(--display);
+    color: var(--pink);
+    font-size: 22px;
+    line-height: 1;
+  }
+  ol.numbered .it-title, ul.bulleted .it-title {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 36, "wght" 500;
+    font-size: 18px;
+    line-height: 1.25;
+    color: var(--ink);
+    border-top: 1px solid var(--ink);
+    padding-top: 6px;
+    margin-bottom: 8px;
+  }
+  ol.numbered .it-body, ul.bulleted .it-body {
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    line-height: 1.55;
+  }
+  ol.numbered .it-body code, ul.bulleted .it-body code,
+  .body code, .lede code {
+    font-family: var(--mono);
+    font-size: 0.86em;
+    background: var(--paper-deep);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--pink-deep);
+  }
+
+  /* ---------- spotlight slides ---------- */
+  .s-spot {
+    grid-template-columns: 1.05fr 0.95fr;
+    grid-template-rows: auto 1fr;
+    gap: 48px 80px;
+    align-items: start;
+  }
+  .s-spot .ribbon {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--pink);
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .s-spot .ribbon::before {
+    content: "";
+    width: 32px; height: 1px; background: var(--pink);
+  }
+  .s-spot .quote {
+    border-left: 2px solid var(--pink);
+    padding-left: 24px;
+    margin-top: 20px;
+  }
+  .s-spot .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 32px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+  }
+  .s-spot .stat dt {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 4px;
+  }
+  .s-spot .stat dd {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 96, "wght" 380;
+    font-size: 36px;
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    font-feature-settings: "lnum", "tnum";
+  }
+  .s-spot .stat dd em { font-style: italic; color: var(--pink-deep); font-variation-settings: "opsz" 96, "wght" 320, "SOFT" 80; }
+
+  /* ---------- color matrix ---------- */
+  .s-color {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    align-content: start;
+  }
+  .swatches {
+    display: grid;
+    grid-template-columns: 18ch repeat(7, 1fr);
+    border-top: 1px solid var(--ink);
+  }
+  .swatches > div {
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.3;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .swatches > div:nth-child(8n+1) {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 36, "wght" 480;
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .swatches > .head {
+    font-family: var(--mono) !important;
+    font-size: 10px !important;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    border-bottom: 1px solid var(--ink) !important;
+  }
+  .chip {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 1px solid oklch(0% 0 0 / 0.08);
+    flex-shrink: 0;
+  }
+  .swatches .miss {
+    color: var(--ink-mute);
+    font-style: italic;
+  }
+
+  /* ---------- finding (recommendation) ---------- */
+  .s-rec {
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .s-rec .stamp {
+    border: 1px solid var(--ink);
+    padding: 28px 32px;
+    background: var(--pink-wash);
+    transform: rotate(-1.4deg);
+    box-shadow: var(--shadow);
+    max-width: 380px;
+  }
+  .s-rec .stamp .small { color: var(--pink-deep); margin-bottom: 8px; }
+  .s-rec .stamp h3 {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 96, "wght" 480;
+    font-size: 32px;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+  .s-rec .stamp .add {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--pink-deep);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--pink-deep);
+  }
+
+  /* ---------- closing ---------- */
+  .s-close {
+    grid-template-columns: 1fr;
+    align-content: center;
+    gap: 48px;
+    text-align: left;
+  }
+  .s-close .openq {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 56px;
+    margin-top: 24px;
+    max-width: 1100px;
+  }
+  .s-close .openq div {
+    border-top: 1px solid var(--ink);
+    padding-top: 10px;
+    font-family: var(--display);
+    font-variation-settings: "opsz" 36, "wght" 380;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  /* ---------- antipatterns ---------- */
+  .ap-grid {
+    display: grid;
+    grid-template-columns: 1.6fr repeat(7, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--ink);
+  }
+  .ap-grid > div {
+    padding: 11px 8px;
+    border-bottom: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 11px;
+    text-align: center;
+    color: var(--ink-soft);
+  }
+  .ap-grid > div:nth-child(8n+1) {
+    text-align: left;
+    font-family: var(--display);
+    font-variation-settings: "opsz" 36, "wght" 460;
+    font-size: 14px;
+    color: var(--ink);
+  }
+  .ap-grid > .head {
+    font-family: var(--mono) !important;
+    font-size: 10px !important;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute) !important;
+    border-bottom: 1px solid var(--ink) !important;
+  }
+  .ap-grid .ok { color: var(--olive-deep); }
+  .ap-grid .bad { color: var(--pink); font-weight: 500; }
+  .ap-grid .warn { color: var(--bronze); }
+
+  /* ---------- mcp finding ---------- */
+  .s-mcp {
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 64px;
+    align-items: start;
+  }
+  .mcp-track {
+    display: grid;
+    grid-template-rows: repeat(7, auto);
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .mcp-track .row {
+    display: grid;
+    grid-template-columns: 8ch 1fr auto;
+    gap: 16px;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .mcp-track .lbl { color: var(--ink-mute); }
+  .mcp-track .bar {
+    height: 18px;
+    background: var(--paper-deep);
+    border-radius: 1px;
+    position: relative;
+  }
+  .mcp-track .bar.fault { background: var(--pink-wash); }
+  .mcp-track .bar.fault::after {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      var(--pink) 0,
+      var(--pink) 2px,
+      transparent 2px,
+      transparent 6px
+    );
+    width: var(--fault, 50%);
+    left: var(--start, 0);
+  }
+  .mcp-track .bar.clean::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--olive);
+  }
+  .mcp-track .verdict { font-size: 11px; color: var(--ink-soft); }
+
+  /* ---------- gotchas tier list ---------- */
+  .tier-list { display: grid; gap: 14px; }
+  .tier {
+    border: 1px solid var(--rule);
+    padding: 16px 20px 18px;
+    background: var(--paper-deep);
+  }
+  .tier-head {
+    display: flex; gap: 16px; align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .tier-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 4px 8px;
+  }
+  .tier h4 {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 36, "wght" 500;
+    font-size: 18px;
+    color: var(--ink);
+  }
+  .tier ul { list-style: none; display: grid; gap: 4px; margin-top: 6px; }
+  .tier ul li {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+    padding-left: 14px;
+    position: relative;
+  }
+  .tier ul li::before { content: "›"; position: absolute; left: 0; color: var(--pink); }
+
+  /* ---------- patterns slide ---------- */
+  .s-patterns header { grid-column: 1 / -1; }
+  .pattern-stack { display: grid; gap: 18px; align-content: start; }
+  .pattern {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px 24px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: baseline;
+  }
+  .pattern h5 {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 36, "wght" 500;
+    font-size: 17px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .pattern h5 code { font-family: var(--mono); font-size: 13px; background: var(--paper-deep); padding: 1px 6px; color: var(--pink-deep); }
+  .pattern p { color: var(--ink-soft); font-size: 14px; line-height: 1.5; max-width: 56ch; }
+  .pattern .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--pink);
+  }
+
+  /* ---------- nav arrows ---------- */
+  .nav {
+    position: fixed;
+    bottom: 36px;
+    right: clamp(24px, 3vw, 48px);
+    display: flex;
+    gap: 6px;
+    z-index: 80;
+  }
+  .nav button {
+    width: 36px; height: 36px;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 200ms, color 200ms;
+  }
+  .nav button:hover { background: var(--ink); color: var(--paper); }
+
+  /* ---------- entrance stagger ---------- */
+  .slide.active .stagger > * {
+    animation: rise 720ms cubic-bezier(.2,.7,.2,1) backwards;
+  }
+  .slide.active .stagger > *:nth-child(1) { animation-delay: 60ms; }
+  .slide.active .stagger > *:nth-child(2) { animation-delay: 140ms; }
+  .slide.active .stagger > *:nth-child(3) { animation-delay: 220ms; }
+  .slide.active .stagger > *:nth-child(4) { animation-delay: 300ms; }
+  .slide.active .stagger > *:nth-child(5) { animation-delay: 380ms; }
+  .slide.active .stagger > *:nth-child(6) { animation-delay: 460ms; }
+  .slide.active .stagger > *:nth-child(7) { animation-delay: 540ms; }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* ---------- kickoff prompts slide ---------- */
+  .s-prompts {
+    display: block !important;
+    grid-template-columns: none !important;
+    gap: 0 !important;
+  }
+  .s-prompts > header { margin-bottom: 36px; max-width: none; }
+  .s-prompts > header > .eyebrow { display: block; margin-bottom: 18px; }
+  .s-prompts > header > h2.title { display: block; max-width: 22ch; }
+  .s-prompts > header > p.lede { display: block; margin-top: 18px; max-width: 70ch; }
+  .prompt-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 32px 56px;
+    align-items: start;
+  }
+  .prompt-card {
+    border: 1px solid var(--ink);
+    background: var(--paper-deep);
+    padding: 22px 24px 24px;
+    position: relative;
+  }
+  .prompt-card.addendum {
+    background: var(--pink-wash);
+    border-color: var(--pink-deep);
+  }
+  .prompt-card .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+  }
+  .prompt-card.addendum .label { color: var(--pink-deep); border-bottom-color: var(--pink-deep); }
+  .prompt-card .label .runs {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 36, "wght" 480;
+    font-style: italic;
+    font-size: 13px;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ink);
+  }
+  .prompt-card.addendum .label .runs { color: var(--pink-deep); }
+  .prompt-card pre {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--ink);
+    white-space: pre-wrap;
+    word-break: normal;
+    overflow-wrap: break-word;
+    margin: 0;
+  }
+  .prompt-card .meta-row {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--rule);
+    font-family: var(--display);
+    font-style: italic;
+    font-variation-settings: "opsz" 36, "wght" 380, "SOFT" 80;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--ink-soft);
+  }
+  .prompt-card.addendum .meta-row { border-top-color: var(--pink-deep); color: var(--pink-deep); }
+
+  .s-prompts .meta-points {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    align-content: start;
+    padding-top: 4px;
+  }
+  .s-prompts .meta-points .pt {
+    border-top: 1px solid var(--ink);
+    padding-top: 10px;
+  }
+  .s-prompts .meta-points .pt .num {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--pink);
+    display: block;
+    margin-bottom: 6px;
+    font-feature-settings: "lnum", "tnum";
+  }
+  .s-prompts .meta-points .pt h4 {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 36, "wght" 500;
+    font-size: 17px;
+    line-height: 1.3;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .s-prompts .meta-points .pt p {
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 1100px) {
+    .prompt-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- stacked slides (header on top, 2-col body below)
+        NOTE: this layout deliberately uses block + CSS multi-column instead of grid.
+        Earlier grid attempts collapsed columns to one-word width because grid items
+        with inline <code> children resolved to min-content. Multi-column doesn't
+        have that failure mode. ---------- */
+  .slide.stack {
+    display: block !important;
+    grid-template-columns: none !important;
+    gap: 0 !important;
+  }
+  .slide.stack > header {
+    display: block;
+    width: 100%;
+    max-width: none;
+    margin-bottom: 48px;
+  }
+  .slide.stack > header > .eyebrow { display: block; margin-bottom: 18px; }
+  .slide.stack > header > h2.title { display: block; max-width: 22ch; }
+  .slide.stack > header > p.lede { display: block; margin-top: 18px !important; max-width: 70ch; }
+
+  .slide.stack ol.numbered {
+    display: block !important;
+    width: 100%;
+    max-width: none;
+    column-count: 2;
+    column-gap: 72px;
+    column-fill: balance;
+  }
+  .slide.stack ol.numbered li {
+    display: block !important;
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    position: relative;
+    padding-left: 56px;
+    margin-bottom: 28px;
+    min-height: 1px;
+  }
+  .slide.stack ol.numbered li::before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 40px;
+    text-align: left;
+    border-top: 1px solid var(--ink);
+    padding-top: 6px;
+    /* counter content + font already inherited from base ol.numbered li::before */
+  }
+  .slide.stack ol.numbered li > span:first-child {
+    /* the empty <span> placeholder used by the grid version is harmless here */
+    display: none;
+  }
+  .slide.stack ol.numbered .it-title {
+    font-family: var(--display);
+    font-variation-settings: "opsz" 36, "wght" 500;
+    font-size: 18px;
+    line-height: 1.3;
+    color: var(--ink);
+    border-top: 1px solid var(--ink);
+    padding-top: 6px;
+    margin-bottom: 8px;
+  }
+  .slide.stack ol.numbered .it-body {
+    color: var(--ink-soft);
+    font-size: 15px;
+    line-height: 1.55;
+    max-width: none;
+  }
+  .slide.stack ol.numbered code {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  @media (max-width: 900px) {
+    .slide.stack ol.numbered { column-count: 1; }
+  }
+
+  /* summary slide accent colors (worked / didn't / learned) */
+  .summary .eyebrow.worked-eb { color: var(--olive-deep); }
+  .summary .eyebrow.didnt-eb  { color: var(--pink); }
+  .summary .eyebrow.learned-eb { color: var(--ink); }
+  .summary header h2.title em { color: var(--pink-deep); }
+  .summary.worked  header h2.title em { color: var(--olive-deep); }
+  .summary.didnt   header h2.title em { color: var(--pink); }
+  .summary.learned header h2.title em { color: var(--ink); font-style: italic; font-variation-settings: "opsz" 96, "wght" 380, "SOFT" 100; }
+  .summary ol.numbered li::before {
+    border-top-color: var(--ink);
+  }
+  .summary.worked  ol.numbered li::before { color: var(--olive-deep); }
+  .summary.didnt   ol.numbered li::before { color: var(--pink); }
+  .summary.learned ol.numbered li::before { color: var(--ink); }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 1080px) {
+    .two, .s-rec, .s-mcp, .s-spot { grid-template-columns: 1fr; gap: 32px; }
+    .s-rank ol.ranking { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+
+  /* selection */
+  ::selection { background: var(--pink); color: var(--paper); }
+</style>
+</head>
+<body>
+
+<div class="frame"></div>
+
+<div class="meta">
+  <div><b>ChefsFT</b> &nbsp;·&nbsp; matrix presentation</div>
+  <div>compiled <b>2026-04-28</b> &nbsp;·&nbsp; 7 runs reported</div>
+</div>
+
+<div class="deck" id="deck">
+
+  <!-- 1. TITLE -->
+  <section class="slide s-title active" data-title="Cover">
+    <div class="stagger">
+      <div class="super"><span class="dot"></span> ChefsFT methodology study · <span>2026</span></div>
+      <h1 class="display">
+        Seven<br />methodologies,<br /><em>one app,</em><br />what shipped.
+      </h1>
+      <p class="lede" style="max-width:54ch;margin-top:24px;">
+        A 2-axis comparison — input modality × process modality — measured against the canonical
+        <em>Uno Chefs</em> repo. Same pass-bar for every run. Different fingerprints on what failed.
+      </p>
+      <dl class="footer">
+        <div><dt>Pass bar</dt><dd>5 builds · 20 pages · ≥ 75% visual</dd></div>
+        <div><dt>Runs reported</dt><dd>7 of 7 (incl. 2 re-runs)</dd></div>
+        <div><dt>Cleanest run</dt><dd>test-3 · A− · 85 / 100</dd></div>
+        <div><dt>Recommendation</dt><dd>Stitch DESIGN.md + iter loop</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 2. WHAT WORKED -->
+  <section class="slide stack summary worked" data-title="What worked">
+    <header class="stagger">
+      <div class="eyebrow worked-eb">Summary · what worked</div>
+      <h2 class="title">What <em>worked.</em></h2>
+      <p class="lede" style="margin-top:18px;">Four findings the seven runs put real evidence behind.</p>
+    </header>
+    <ol class="numbered stagger">
+      <li><span></span><div>
+        <div class="it-title">A clean LLM-generated <code>DESIGN.md</code> beat every other one-shot input.</div>
+        <div class="it-body">test-3 was the cleanest run on every measured axis — 5/5 builds first-try, 0 manual corrections, 20/20 pages reachable, 0 anti-patterns shipped. <strong>A−, 85/100.</strong></div>
+      </div></li>
+      <li><span></span><div>
+        <div class="it-title">An iter-1 walk-through caught what one-shot would have shipped silently.</div>
+        <div class="it-body">test-7's first iteration found empty <code>Region.Navigator</code> regions and a silent <code>TimeSpan</code> deserialization failure. Both compile clean. Both render empty. <strong>Two root-cause fixes in ~4 minutes.</strong></div>
+      </div></li>
+      <li><span></span><div>
+        <div class="it-title">Skill discipline at session start dropped fix-passes <strong>23 → 2.</strong></div>
+        <div class="it-body">test-6's re-run with proper rules-init + <code>Skill</code> tool calls produced the biggest delta in the experiment. Same blind PRD, same MD3-default fidelity — 21 fewer fix passes. Discipline state dominates the FP curve.</div>
+      </div></li>
+      <li><span></span><div>
+        <div class="it-title">A working 20-page Uno app ships even with zero visual input.</div>
+        <div class="it-body">The negative control held. test-6 produced functional structure end-to-end with only a PRD — visual fidelity collapsed predictably to MD3 defaults. <em>Visual input is the load-bearing variable for brand fidelity, not for functional structure.</em></div>
+      </div></li>
+    </ol>
+  </section>
+
+  <!-- 3. WHAT DIDN'T WORK -->
+  <section class="slide stack summary didnt" data-title="What didn't work">
+    <header class="stagger">
+      <div class="eyebrow didnt-eb">Summary · what didn't</div>
+      <h2 class="title">What <em>didn't.</em></h2>
+      <p class="lede" style="margin-top:18px;">Five things the runs proved are not as good as their pitch.</p>
+    </header>
+    <ol class="numbered stagger">
+      <li><span></span><div>
+        <div class="it-title">Figma MCP at View-seat is structurally insufficient.</div>
+        <div class="it-body">Rate-limited after ~5 calls in test-2 (4 of ~30 frames retrieved). Rate-limited on the very <em>first</em> call in test-5 (0 frames). For a 20-page app, this is a methodology-level blocker, not a fidelity-level one.</div>
+      </div></li>
+      <li><span></span><div>
+        <div class="it-title">The Figma + screenshots hybrid collapsed at minute 0.</div>
+        <div class="it-body">test-5 fell back to screenshots-only on the first Figma call, then lost the screenshot validation pass to a mid-session <code>uno-app</code> MCP disconnect. Pass-bar not cleared. <em>The expected "hybrid &gt; pixels-only" delta did not materialize.</em></div>
+      </div></li>
+      <li><span></span><div>
+        <div class="it-title">The iterative diff loop has a fidelity ceiling.</div>
+        <div class="it-body">test-7 plateaued at ~73% avg in iter-2. Iter-3 lifted it to ~76% — but only by replacing non-rendering primitives with simpler fallbacks, not by the diff mechanism closing fidelity gaps. <strong>Budget the loop for structural fixes, not fidelity convergence.</strong></div>
+      </div></li>
+      <li><span></span><div>
+        <div class="it-title"><code>uno-app</code> MCP fragility took out 4 of 7 runs.</div>
+        <div class="it-body">Mid-session disconnects (test-1, test-5), at-session-start failure (test-6), deferred-schema friction (test-3). The single biggest delivery risk in the experiment, capping criterion-3 measurement on three runs.</div>
+      </div></li>
+      <li><span></span><div>
+        <div class="it-title">More spec didn't beat cleaner spec.</div>
+        <div class="it-body">test-4's 1,749-line custom visual-breakdown DESIGN.md gave the best implementation-skill discipline of any run — and shipped a deprecated <code>Pivot</code> pattern that crashed Windows-XamlCompiler silently. <em>Spec quality matters more than spec volume.</em></div>
+      </div></li>
+    </ol>
+  </section>
+
+  <!-- 4. WHAT WE LEARNED -->
+  <section class="slide stack summary learned" data-title="What we learned">
+    <header class="stagger">
+      <div class="eyebrow learned-eb">Summary · what we learned</div>
+      <h2 class="title">What we <em>learned.</em></h2>
+      <p class="lede" style="margin-top:18px;">Five cross-cutting findings the matrix leaves behind for the next study.</p>
+    </header>
+    <ol class="numbered stagger">
+      <li><span></span><div>
+        <div class="it-title">Visual-input modality changes <em>which</em> dimension fails, not <em>whether</em> a run passes.</div>
+        <div class="it-body">Screenshots → deep nav fails. DESIGN.md → builds clean, criterion 3 needs out-of-session validation. Blind PRD → visual collapses to framework defaults but functional structure holds.</div>
+      </div></li>
+      <li><span></span><div>
+        <div class="it-title">Every methodology drops MVUX, Auth, Localization, and the Toolkit composites.</div>
+        <div class="it-body">7 of 7 ran on MVVM despite upstream MVUX. <code>utu:AutoLayout</code> (30+ uses upstream) → 0 uses. Same for <code>uer:FeedView</code>, <code>uen:Region.Attached</code>, <code>uen:Navigation.Request</code>. Invisible to every methodology unless explicitly named.</div>
+      </div></li>
+      <li><span></span><div>
+        <div class="it-title">Discipline state dominates the FP curve more than input modality.</div>
+        <div class="it-body">Same blind PRD, 23 FPs → 2 FPs after proper rules-init. The methodology controls fix-pass volume more than what kind of visual input the agent sees. <em>This is the load-bearing finding from the re-runs.</em></div>
+      </div></li>
+      <li><span></span><div>
+        <div class="it-title">"First-try build success" is a brittle proxy for run quality.</div>
+        <div class="it-body">test-1's original 5/5-first-try claim was a methodology artifact. The discipline-clean re-run produced 0/5 first-try because FP #1 was always real. <strong>Fix-pass volume after rules-init discriminates discipline state more cleanly.</strong></div>
+      </div></li>
+      <li><span></span><div>
+        <div class="it-title">The iterative loop's load-bearing value is structural debugging, not fidelity polish.</div>
+        <div class="it-body">Iter-1 catches what compiles clean and renders empty (regions, deserialization). Iter-2+ plateaus once gaps need infrastructure work (asset re-export, native controls). Two different jobs — measure them separately.</div>
+      </div></li>
+    </ol>
+  </section>
+
+  <!-- 5. KICKOFF PROMPTS -->
+  <section class="slide s-prompts" data-title="Kickoff prompts">
+    <header class="stagger">
+      <div class="eyebrow">§00 — Methodology</div>
+      <h2 class="title">The kickoff prompt was <em>~10 lines.</em></h2>
+      <p class="lede">The same short prompt across every test — only the test number changed. Variation lived in the SPEC and the input set, not in the agent's instructions.</p>
+    </header>
+
+    <div class="prompt-grid stagger">
+      <div class="prompt-card">
+        <div class="label">
+          <span>Standard prompt — verbatim</span>
+          <span class="runs">used by tests 2 · 3 · 4 · 5 · 8</span>
+        </div>
+<pre>Read ./SPEC.md and ../SPEC.md. Verify pre-session prep is
+complete (starter-kit files in place, ChefsTestN/ scaffold
+exists, reference assets copied into ChefsTestN/Assets/).
+Run this test end-to-end. Log to ../results/test-N.md and
+../results/test-N.log. Do not read anything in the forbidden
+lists of either SPEC. Before declaring done, complete every
+step in ../SPEC.md §"Pre-handoff verification" and paste
+the per-page checklist into the result file.</pre>
+        <div class="meta-row">Identical for every non-discipline run. The methodology lives in the two SPEC files the prompt points at — not in the prompt itself.</div>
+      </div>
+
+      <div class="meta-points">
+        <div class="pt">
+          <span class="num">01</span>
+          <h4>The prompt is methodology-agnostic.</h4>
+          <p>It tells the agent <em>where</em> to look (<code>./SPEC.md</code>, <code>../SPEC.md</code>), not <em>what</em> to do. Every test's behavioral difference comes from its inputs and SPEC, not its prompt wording.</p>
+        </div>
+        <div class="pt">
+          <span class="num">02</span>
+          <h4>Forbidden inputs are enforced by the SPEC.</h4>
+          <p>The prompt's "do not read anything in the forbidden lists" line delegates to per-test SPEC sections. test-3 can't read screenshots; test-1 can't read DESIGN.md; test-6 can't read any visual input at all.</p>
+        </div>
+        <div class="pt">
+          <span class="num">03</span>
+          <h4>The discipline preamble is the only delta.</h4>
+          <p>Tests 1, 6, and 7 — the runs flagged for failure mode #1 or #2 — got an extra paragraph naming both failure modes verbatim. Re-runs were the only place prompt wording mattered.</p>
+        </div>
+      </div>
+
+      <div class="prompt-card addendum" style="grid-column: 1 / -1;">
+        <div class="label">
+          <span>Discipline preamble — added for re-runs</span>
+          <span class="runs">added to tests 1 · 6 · 7</span>
+        </div>
+<pre>… pay close attention to ../SPEC.md §"Skill-usage discipline"
+including the two named failure modes and the self-audit gate.
+This is a re-run because the prior run hit failure mode #1
+(no Skill tool calls). Do NOT repeat that, and do NOT fall
+into failure mode #2 (writing SKILL-USE log lines without
+matching Skill tool calls). The Skill tool call comes first,
+the code comes second, the SKILL-USE log line comes third
+with a tool-call-summary referencing what the skill returned.</pre>
+        <div class="meta-row">Even with this preamble, test-7 still hit failure mode #2 — the trap is sticky. The fix in the SPEC was a self-audit gate at workflow step 10.5 cross-checking transcript invocations against logged claims.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. RANKINGS -->
+  <section class="slide s-rank" data-title="Headline rankings">
+    <header class="stagger">
+      <div class="eyebrow">§01 — Verdict</div>
+      <h2 class="title">Headline <em>rankings.</em></h2>
+      <p class="lede" style="margin-top:18px;">Letter grades against the upstream benchmark. Build, navigation, visual fidelity and shipped anti-patterns are pass-bar load-bearing; pattern fit and skill discipline are descriptive.</p>
+    </header>
+    <ol class="ranking stagger">
+      <li class="gold">
+        <span class="rk">1</span>
+        <span class="test">test-3</span>
+        <span class="name">Google Stitch DESIGN.md<em>cleanest run on every measured axis</em></span>
+        <span class="grade">A−</span>
+      </li>
+      <li class="silver">
+        <span class="rk">2</span>
+        <span class="test">test-7</span>
+        <span class="name">Iterative visual-diff loop<em>~76% avg fidelity post iter-3</em></span>
+        <span class="grade">B+</span>
+      </li>
+      <li class="bronze">
+        <span class="rk">3</span>
+        <span class="test">test-6</span>
+        <span class="name">Blind PRD · negative control<em>2 fix passes (re-run; was 23)</em></span>
+        <span class="grade">C+</span>
+      </li>
+      <li>
+        <span class="rk">4</span>
+        <span class="test">test-1</span>
+        <span class="name">Screenshots-only<em>discipline-clean re-run</em></span>
+        <span class="grade">C</span>
+      </li>
+      <li>
+        <span class="rk">5</span>
+        <span class="test">test-2</span>
+        <span class="name">Figma MCP only<em>rate-limited at View seat</em></span>
+        <span class="grade">C</span>
+      </li>
+      <li>
+        <span class="rk">6</span>
+        <span class="test">test-4</span>
+        <span class="name">Custom visual-breakdown skill<em>Windows + nav blocked</em></span>
+        <span class="grade">C−</span>
+      </li>
+      <li>
+        <span class="rk">7</span>
+        <span class="test">test-5</span>
+        <span class="name">Figma + screenshots hybrid<em>methodology collapsed at minute 0</em></span>
+        <span class="grade">D</span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- 3. SCORECARD -->
+  <section class="slide s-score" data-title="Scorecard">
+    <header class="stagger">
+      <div>
+        <div class="eyebrow">§02 — Score bar</div>
+        <h2 class="title">100-point <em>scorecard.</em></h2>
+      </div>
+      <p class="lede">Weighted sum of axis grades on a 4-point scale, plus a 5-point anchor for "shipped a thing that compiled at all." Visual fidelity is calibrated to the high-signal brand tokens, not the full 36-token palette.</p>
+    </header>
+    <table class="scoretable stagger">
+      <thead>
+        <tr><th>Run</th><th>Methodology</th><th colspan="2">Score</th><th>Grade</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="name">test-3</td>
+          <td>Google Stitch DESIGN.md</td>
+          <td colspan="2" class="bar" style="--w:85%;"><span class="scoreval">85</span></td>
+          <td class="grd">A−</td>
+          <td>cleanest run</td>
+        </tr>
+        <tr>
+          <td class="name">test-7</td>
+          <td>Iterative visual-diff loop · post iter-3</td>
+          <td colspan="2" class="bar" style="--w:78%;"><span class="scoreval">78</span></td>
+          <td class="grd">B+</td>
+          <td>🔁 skill failure mode #2</td>
+        </tr>
+        <tr>
+          <td class="name">test-6</td>
+          <td>Blind PRD · negative control · re-run</td>
+          <td colspan="2" class="bar" style="--w:65%;"><span class="scoreval">65</span></td>
+          <td class="grd">C+</td>
+          <td>+12 vs original</td>
+        </tr>
+        <tr>
+          <td class="name">test-1</td>
+          <td>Screenshots-only · re-run</td>
+          <td colspan="2" class="bar" style="--w:60%;"><span class="scoreval">60</span></td>
+          <td class="grd">C</td>
+          <td>discipline clean</td>
+        </tr>
+        <tr>
+          <td class="name">test-2</td>
+          <td>Figma MCP only</td>
+          <td colspan="2" class="bar" style="--w:58%;"><span class="scoreval">58</span></td>
+          <td class="grd">C</td>
+          <td>🔁 skill failure mode #1</td>
+        </tr>
+        <tr>
+          <td class="name">test-4</td>
+          <td>Custom visual-breakdown skill</td>
+          <td colspan="2" class="bar" style="--w:55%;"><span class="scoreval">55</span></td>
+          <td class="grd">C−</td>
+          <td>Windows + nav blocked</td>
+        </tr>
+        <tr>
+          <td class="name">test-5</td>
+          <td>Figma + screenshots hybrid → screenshots-only</td>
+          <td colspan="2" class="bar" style="--w:40%;"><span class="scoreval">40</span></td>
+          <td class="grd">D</td>
+          <td>methodology collapsed</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 4. PASS BAR -->
+  <section class="slide two s-pass" data-title="Pass bar">
+    <header class="stagger">
+      <div class="eyebrow">§03 — Pass bar</div>
+      <h2 class="title">Who cleared <em>what.</em></h2>
+      <p class="lede" style="margin-top:18px;">Three criteria. Three different fingerprints of failure. Builds correlate weakly with passing — test-1 had 5/5 first-try and didn't clear; test-6 had 0/5 first-try and did.</p>
+      <p class="body" style="margin-top:24px;">Visual fidelity (criterion 3) was measurable in only one run. Three of the others lost it to <code>uno-app</code> MCP outages — a confirmed cross-cutting methodology cost.</p>
+    </header>
+    <div class="col-r stagger">
+      <div class="pass-grid">
+        <div class="head"></div>
+        <div class="head">test-1</div><div class="head">test-2</div><div class="head">test-3</div><div class="head">test-4</div><div class="head">test-5</div><div class="head">test-6</div><div class="head">test-7</div>
+
+        <div>1 · Builds 5/5</div>
+        <div class="pass">✓</div><div class="pass">✓</div><div class="pass">✓</div><div class="fail">4/5</div><div class="fail">1/5</div><div class="pass">✓</div><div class="pass">✓</div>
+
+        <div>2 · 20 pages reachable</div>
+        <div class="partial">code</div><div class="partial">17/20</div><div class="pass">✓</div><div class="fail">~6/20</div><div class="fail">1/20</div><div class="partial">code</div><div class="pass">✓</div>
+
+        <div>3 · Visual ≥ 75%</div>
+        <div class="partial">n/m</div><div class="partial">n/m</div><div class="partial">n/m</div><div class="partial">n/m</div><div class="partial">n/m</div><div class="partial">n/a</div><div class="pass">76%</div>
+
+        <div>Cleared</div>
+        <div class="partial">⚠</div><div class="partial">⚠</div><div class="partial">⚠</div><div class="fail">✗</div><div class="fail">✗</div><div class="pass">✓</div><div class="partial">⚠</div>
+      </div>
+      <p class="small" style="margin-top:18px;">n/m = not measurable in-run · n/a = not required for negative control · code = routes registered &amp; data-bound at code level, runtime walk blocked by MCP outage</p>
+    </div>
+  </section>
+
+  <!-- 5. FIVE THINGS -->
+  <section class="slide stack" data-title="Cross-cutting patterns">
+    <header class="stagger">
+      <div class="eyebrow">§04 — What every run did the same</div>
+      <h2 class="title">Five <em>load-bearing</em> patterns.</h2>
+      <p class="lede" style="margin-top:18px;">Across seven different inputs and seven different processes, these five substitutions happened every single time.</p>
+    </header>
+    <ol class="numbered stagger">
+      <li><span></span><div><div class="it-title">MVUX → MVVM, every run</div><div class="it-body">Operator default plus the absence of MVUX-only inputs steered all seven runs to <code>CommunityToolkit.Mvvm</code> despite the canonical app calling <code>UseMvux()</code>.</div></div></li>
+      <li><span></span><div><div class="it-title">Authentication + Localization, dropped</div><div class="it-body">Auth → demo bypass on every run. <code>Strings/{loc}/Resources.resw</code> for en/es/fr/pt-BR never shipped.</div></div></li>
+      <li><span></span><div><div class="it-title"><code>utu:AutoLayout</code> → <code>Grid</code> + <code>StackPanel</code></div><div class="it-body">30+ uses on RecipeDetailsPage upstream → <strong>0 uses across all 7 tests.</strong> Same for <code>uer:FeedView</code>, <code>utu:TabBar TopTabBarStyle</code>, <code>uen:Region.Attached</code>, <code>uen:Navigation.Request</code>. The Toolkit composite library is invisible to every methodology unless explicitly named.</div></div></li>
+      <li><span></span><div><div class="it-title">Real interactive components, dropped</div><div class="it-body"><code>Mapsui.Uno.WinUI</code> + <code>LiveChartsCore</code> for Map and the nutrition donut → placeholder rectangles + stacked <code>Ellipse</code> strokes. Across all 7.</div></div></li>
+      <li><span></span><div><div class="it-title">Framework drift went unflagged</div><div class="it-body">Every run targeted <code>net10.0-*</code> while the canonical app targets <code>net9.0-*</code>. Real framework drift; only test-4 surfaced it as a downstream Windows-XamlCompiler crash.</div></div></li>
+    </ol>
+  </section>
+
+  <!-- 6. METHODOLOGY COSTS -->
+  <section class="slide s-mcp" data-title="MCP fragility">
+    <header class="stagger">
+      <div class="eyebrow">§05 — Methodology cost #1</div>
+      <h2 class="title"><code style="background:transparent;padding:0;color:var(--pink-deep);font-family:var(--mono);font-size:0.65em;letter-spacing:-0.02em;">uno-app</code> MCP fragility<br />is the <em>single biggest</em><br />delivery risk.</h2>
+      <p class="lede" style="margin-top:24px;">Mid-session disconnects, at-session-start failures, lazy schemas. <strong>4 of 7 runs hit it.</strong> The runs that achieved clean visual measurement (test-3 by accident, test-7 by skill) are the outliers.</p>
+    </header>
+    <div class="col-r stagger">
+      <div class="small" style="margin-bottom:20px;">MCP availability across runs (← session start &nbsp;·&nbsp; session end →)</div>
+      <div class="mcp-track">
+        <div class="row"><span class="lbl">test-1</span><div class="bar fault" style="--start:48%;--fault:52%;"></div><span class="verdict">went down mid-run</span></div>
+        <div class="row"><span class="lbl">test-2</span><div class="bar clean"></div><span class="verdict">stable (Figma cost dominated)</span></div>
+        <div class="row"><span class="lbl">test-3</span><div class="bar fault" style="--start:0%;--fault:18%;"></div><span class="verdict">deferred-schema friction (resolved)</span></div>
+        <div class="row"><span class="lbl">test-4</span><div class="bar clean"></div><span class="verdict">stable</span></div>
+        <div class="row"><span class="lbl">test-5</span><div class="bar fault" style="--start:14%;--fault:86%;"></div><span class="verdict">disconnected after Onboarding</span></div>
+        <div class="row"><span class="lbl">test-6</span><div class="bar fault" style="--start:0%;--fault:100%;"></div><span class="verdict">unavailable at session start</span></div>
+        <div class="row"><span class="lbl">test-7</span><div class="bar clean"></div><span class="verdict">clean throughout</span></div>
+      </div>
+      <p class="body" style="margin-top:32px;font-size:14px;">Only test-7 had clean MCP-driven visual validation throughout. <em>The headline rankings reflect this — methodology, not implementation, set the criterion-3 ceiling.</em></p>
+    </div>
+  </section>
+
+  <!-- 7. SPOTLIGHT TEST-3 -->
+  <section class="slide s-spot" data-title="test-3 spotlight">
+    <header class="stagger">
+      <div class="ribbon">Spotlight · test-3 · A−</div>
+      <h2 class="title">The cleanest <em>one-shot input.</em></h2>
+    </header>
+    <div class="stagger">
+      <p class="pullquote">"A clean LLM-generated <code style="font-family:var(--mono);font-size:0.6em;background:var(--paper-deep);padding:2px 8px;color:var(--pink-deep);letter-spacing:0;">DESIGN.md</code> is the lowest-friction one-shot input modality — full stop."</p>
+      <div class="quote">
+        <p class="body" style="font-size:15px;">A Stitch-generated DESIGN.md normalizes tokens, ASCII layout maps and component tables before the coding agent sees them. Visual ambiguity is pre-resolved upstream — and it shows up as 0 manual corrections, 5/5 builds first-try, every page reachable end-to-end by tap.</p>
+      </div>
+    </div>
+    <dl class="stats stagger" style="grid-column: 1 / -1;">
+      <div class="stat"><dt>Wall-clock</dt><dd>1<em>h</em> 19<em>m</em></dd></div>
+      <div class="stat"><dt>First-try builds</dt><dd>5 / 5</dd></div>
+      <div class="stat"><dt>Manual corrections</dt><dd>0</dd></div>
+      <div class="stat"><dt>Pages navigable</dt><dd>20 / 20</dd></div>
+      <div class="stat"><dt>Anti-patterns shipped</dt><dd>0</dd></div>
+      <div class="stat"><dt>Ceiling</dt><dd><em>per-combo visual</em></dd></div>
+    </dl>
+  </section>
+
+  <!-- 8. SPOTLIGHT TEST-7 -->
+  <section class="slide s-spot" data-title="test-7 spotlight">
+    <header class="stagger">
+      <div class="ribbon">Spotlight · test-7 · B+</div>
+      <h2 class="title">The loop's value is <em>structural debugging,</em> not fidelity polish.</h2>
+    </header>
+    <div class="stagger">
+      <p class="pullquote">"Iter-1 caught empty <code style="font-family:var(--mono);font-size:0.6em;background:var(--paper-deep);padding:2px 8px;color:var(--pink-deep);letter-spacing:0;">Region.Navigator</code> regions and a silent <code style="font-family:var(--mono);font-size:0.6em;background:var(--paper-deep);padding:2px 8px;color:var(--pink-deep);letter-spacing:0;">TimeSpan</code> deser failure that one-shot would have shipped silently."</p>
+      <div class="quote">
+        <p class="body" style="font-size:15px;">Iter-2 plateaued at ~73% avg fidelity. Iter-3 lifted it to ~76% by replacing 3 non-rendering SVGs and fixing dark-theme propagation — but those were <em>workarounds</em>, not the diff loop closing fidelity gaps. The ceiling thesis holds.</p>
+      </div>
+    </div>
+    <dl class="stats stagger" style="grid-column: 1 / -1;">
+      <div class="stat"><dt>Wall-clock (with iter-3)</dt><dd>~90<em>m</em></dd></div>
+      <div class="stat"><dt>Avg measured fidelity</dt><dd>~76%</dd></div>
+      <div class="stat"><dt>Pages still &lt; 75%</dt><dd>3 of 20</dd></div>
+      <div class="stat"><dt>Fix passes</dt><dd>17</dd></div>
+      <div class="stat"><dt>First-try builds</dt><dd>5 / 5</dd></div>
+      <div class="stat"><dt>Status</dt><dd><em>🔁 re-run</em></dd></div>
+    </dl>
+  </section>
+
+  <!-- 9. SPOTLIGHT TEST-6 -->
+  <section class="slide s-spot" data-title="test-6 spotlight">
+    <header class="stagger">
+      <div class="ribbon">Spotlight · test-6 · C+ · negative control</div>
+      <h2 class="title">Zero visual input still <em>compiles</em> — and that is the point.</h2>
+    </header>
+    <div class="stagger">
+      <p class="pullquote">"Discipline state, not pure scaffolding luck, dominates the fix-pass curve."</p>
+      <div class="quote">
+        <p class="body" style="font-size:15px;">Same blind-PRD methodology as the original test-6, same MD3-default visual fidelity. <strong>2 fix passes vs the original's 23.</strong> Proper rules-init + skill calls at session start prevented 21 of those. The negative control is now the most informative discipline data point in the matrix.</p>
+      </div>
+    </div>
+    <dl class="stats stagger" style="grid-column: 1 / -1;">
+      <div class="stat"><dt>Original FPs</dt><dd style="color:var(--pink-deep);">23</dd></div>
+      <div class="stat"><dt>Re-run FPs</dt><dd>2</dd></div>
+      <div class="stat"><dt>Pages routed + bound</dt><dd>20 / 20</dd></div>
+      <div class="stat"><dt>Visual fidelity</dt><dd><em>MD3 default</em></dd></div>
+      <div class="stat"><dt>Brand tokens shipped</dt><dd>0 / 36</dd></div>
+      <div class="stat"><dt>Predicted profile</dt><dd><em>confirmed</em></dd></div>
+    </dl>
+  </section>
+
+  <!-- 10. COLOR MATRIX -->
+  <section class="slide s-color" data-title="Color matrix">
+    <header class="stagger" style="display:grid;grid-template-columns:1fr auto;gap:48px;align-items:end;">
+      <div>
+        <div class="eyebrow">§06 — Brand fidelity</div>
+        <h2 class="title">Chef-pink, <em>across runs.</em></h2>
+      </div>
+      <p class="lede" style="max-width:48ch;">Upstream defines 36 color tokens. Every run took Material defaults for ~25 of them. Below are the four high-signal brand tokens the pass bar actually measures.</p>
+    </header>
+    <div class="stagger">
+      <div class="swatches">
+        <div class="head">Token (light)</div>
+        <div class="head">Upstream</div>
+        <div class="head">test-1</div>
+        <div class="head">test-2</div>
+        <div class="head">test-3</div>
+        <div class="head">test-4</div>
+        <div class="head">test-5</div>
+        <div class="head">test-6</div>
+
+        <div>PrimaryColor</div>
+        <div><span class="chip" style="background:#ED3F64"></span> #ED3F64</div>
+        <div><span class="chip" style="background:#E8455C"></span> #E8455C</div>
+        <div><span class="chip" style="background:#E8455C"></span> #E8455C</div>
+        <div><span class="chip" style="background:#FF1F5A"></span> #FF1F5A</div>
+        <div><span class="chip" style="background:#E91E63"></span> #E91E63</div>
+        <div><span class="chip" style="background:#E8455C"></span> #E8455C</div>
+        <div class="miss"><span class="chip" style="background:#6750A4"></span> MD3</div>
+
+        <div>SecondaryColor</div>
+        <div><span class="chip" style="background:#C5C2A8"></span> #C5C2A8</div>
+        <div><span class="chip" style="background:#EAE3D6"></span> #EAE3D6</div>
+        <div><span class="chip" style="background:#EAE3D6"></span> #EAE3D6</div>
+        <div><span class="chip" style="background:#EAE3D6"></span> #EAE3D6</div>
+        <div><span class="chip" style="background:#EDE4D3"></span> #EDE4D3</div>
+        <div><span class="chip" style="background:#EAE3D6"></span> #EAE3D6</div>
+        <div class="miss"><span class="chip" style="background:#E7E0EC"></span> MD3</div>
+
+        <div>BackgroundColor</div>
+        <div><span class="chip" style="background:#F5F8FD"></span> #F5F8FD</div>
+        <div class="miss"><span class="chip" style="background:#FFFFFF"></span> default</div>
+        <div><span class="chip" style="background:#F5F8FD"></span> #F5F8FD</div>
+        <div class="miss"><span class="chip" style="background:#FFFFFF"></span> default</div>
+        <div class="miss"><span class="chip" style="background:#FFFFFF"></span> default</div>
+        <div class="miss"><span class="chip" style="background:#FFFFFF"></span> default</div>
+        <div class="miss"><span class="chip" style="background:#FFFBFE"></span> MD3</div>
+
+        <div>SurfaceInverseColor</div>
+        <div><span class="chip" style="background:#313033"></span> #313033</div>
+        <div><span class="chip" style="background:#2D2D2D"></span> #2D2D2D</div>
+        <div><span class="chip" style="background:#2D2D2D"></span> #2D2D2D</div>
+        <div><span class="chip" style="background:#2D2D2D"></span> #2D2D2D</div>
+        <div><span class="chip" style="background:#2B2B2E"></span> #2B2B2E</div>
+        <div><span class="chip" style="background:#2D2D2D"></span> #2D2D2D</div>
+        <div class="miss"><span class="chip" style="background:#322F35"></span> MD3</div>
+
+        <div>Token-match score</div>
+        <div>36 / 36 ✦</div>
+        <div>~6 ✓ / ~5 ≈</div>
+        <div><strong style="color:var(--pink-deep);">~12 ✓</strong> / ~3 ≈</div>
+        <div>~5 ✓ / ~5 ≈</div>
+        <div>~9 ✓ / ~5 ≈</div>
+        <div>~5 ✓ / ~5 ≈</div>
+        <div class="miss">0 / 0</div>
+      </div>
+      <p class="small" style="margin-top:18px;">test-2's Figma MCP, in the 4 frames it retrieved before the rate-limit, produced the closest dark-theme primary match (<code style="font-family:var(--mono);background:var(--paper-deep);padding:2px 6px;letter-spacing:0;">#FFA3B7</code>). test-6's negative-control behavior — pure MD3 purple — is exactly the predicted profile.</p>
+    </div>
+  </section>
+
+  <!-- 11. PATTERNS -->
+  <section class="slide s-patterns" data-title="Toolkit invisibility">
+    <header class="stagger" style="grid-column:1 / -1;">
+      <div class="eyebrow">§07 — Component-library substitution</div>
+      <h2 class="title" style="max-width:18ch;">The Toolkit composites are <em>invisible</em> to every methodology.</h2>
+      <p class="lede" style="margin-top:18px;max-width:60ch;">Upstream uses these pervasively. Every test reaches for primitives instead. <strong>Zero uses across seven runs</strong> — unless an input names them explicitly.</p>
+    </header>
+    <div class="pattern-stack stagger" style="grid-column:1 / -1;">
+      <div class="pattern">
+        <div>
+          <h5><code>utu:AutoLayout</code> → <code>Grid</code> + <code>StackPanel</code></h5>
+          <p>30+ uses on RecipeDetailsPage alone. Every run reached for <code>Grid + StackPanel + Padding/Margin</code> instead.</p>
+        </div>
+        <span class="tag">7 / 7 dropped</span>
+      </div>
+      <div class="pattern">
+        <div>
+          <h5><code>uer:FeedView</code> → raw <code>ItemsControl</code> + <code>HasItems</code> bool</h5>
+          <p>6+ uses across HomePage + RecipeDetailsPage. Every run reimplemented async-data display from scratch.</p>
+        </div>
+        <span class="tag">7 / 7 dropped</span>
+      </div>
+      <div class="pattern">
+        <div>
+          <h5><code>utu:TabBar TopTabBarStyle</code> → <code>Pivot</code> or hand-rolled buttons</h5>
+          <p>Recipe Details 4-tab pattern. Tests reached for deprecated <code>Pivot</code> (which crashed Win-XAML in test-4) or <code>Button[]</code> + <code>Visibility</code>.</p>
+        </div>
+        <span class="tag">7 / 7 dropped</span>
+      </div>
+      <div class="pattern">
+        <div>
+          <h5><code>uen:Region.Attached</code> + <code>Region.Navigator="Visibility"</code></h5>
+          <p>MainPage tab content + RecipeDetails tab content. Tests used flat content swaps and Bool-to-Visibility — losing region context to the navigator.</p>
+        </div>
+        <span class="tag">7 / 7 dropped</span>
+      </div>
+      <div class="pattern">
+        <div>
+          <h5><code>uen:Navigation.Request</code> markup ext → <code>Command</code> binding</h5>
+          <p>Canonical card-tap pattern. Every run wired <code>Command="{Binding OpenRecipeCommand}"</code> instead — broke at runtime in test-1 and test-4.</p>
+        </div>
+        <span class="tag">7 / 7 dropped</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. TOOLKIT INVISIBILITY — THE WHY -->
+  <section class="slide stack" data-title="Why the toolkit is invisible">
+    <header class="stagger">
+      <div class="eyebrow">§07 — continued · the why</div>
+      <h2 class="title">Why the toolkit is <em>invisible.</em></h2>
+      <p class="lede" style="margin-top:18px;">Five compounding mechanisms behind the substitution. <em>Telling the agent to "use the toolkit harder" doesn't fix any of them.</em></p>
+    </header>
+    <ol class="numbered stagger">
+      <li><span></span><div>
+        <div class="it-title">Inputs don't name them.</div>
+        <div class="it-body">Every visual input format — screenshots, Stitch DESIGN.md, visual-skill DESIGN.md, PRD, Figma frames — describes <em>what to render</em>, not <em>which Uno control to use</em>. Agents fill the gap with primitives they're confident about (<code>Grid</code>, <code>StackPanel</code>, <code>Border</code>, <code>ItemsRepeater</code>) because those work on every target out of the box.</div>
+      </div></li>
+      <li><span></span><div>
+        <div class="it-title">Pretraining priors dominate.</div>
+        <div class="it-body">Orders of magnitude more WPF / WinUI / UWP examples online use <code>Grid + StackPanel</code> than Uno-specific examples using Toolkit composites. When an agent infers "vertical container with consistent spacing," its default reach is <code>StackPanel Spacing="12"</code>, not <code>utu:AutoLayout</code>. The primitive pattern is statistically dominant.</div>
+      </div></li>
+      <li><span></span><div>
+        <div class="it-title">The <code>uno-toolkit</code> skill loads docs, it doesn't refactor.</div>
+        <div class="it-body">test-4 invoked <code>uno-toolkit</code> seven times and still shipped <code>Grid + StackPanel</code> for layout primitives. The skill confirms <code>utu:TabBar</code> exists and validates <code>BottomTabBarStyle</code> — but it doesn't surface "your <code>StackPanel</code> above should be <code>utu:AutoLayout</code>." <strong>Skills load knowledge; they don't refactor in-progress code.</strong></div>
+      </div></li>
+      <li><span></span><div>
+        <div class="it-title"><code>uer:FeedView</code> is structurally MVUX-shaped.</div>
+        <div class="it-body">It expects <code>IFeed&lt;T&gt;</code> / <code>IState&lt;T&gt;</code>. All 7 runs went MVVM (operator default + absent MVUX inputs). On an <code>ObservableCollection</code>, FeedView loses its reactive plumbing — the equivalent MVVM pattern is <code>ItemsRepeater + HasItems</code> + empty branch, exactly what every run shipped. <em>The MVUX→MVVM substitution propagates downstream into "no FeedView."</em></div>
+      </div></li>
+      <li><span></span><div>
+        <div class="it-title"><code>uen:Region.Attached</code> has a runtime trap.</div>
+        <div class="it-body">test-7 (FP #3/#4) and test-4 (Blocker #2) both tried the canonical <code>IsDefault: true</code> + <code>Region.Navigator="Visibility"</code> pattern, hit empty regions on Skia desktop, and pivoted to flat routing. <strong>Once that lesson lands in shared memory or docs, future runs avoid the canonical pattern preemptively.</strong> The framework's own runtime gap is making the substitution stickier across runs.</div>
+      </div></li>
+    </ol>
+    <p class="body" style="margin-top:32px;max-width:80ch;font-size:15px;border-top:1px solid var(--ink);padding-top:18px;">
+      <strong>The fix isn't telling the agent to use the toolkit harder.</strong> It's seeding inputs (DESIGN.md, PRD, Figma component map) with explicit Uno control mappings — or running a follow-up "Toolkit composites" experiment that <em>does</em> name them in the input set. That experiment is already logged as an open question.
+    </p>
+  </section>
+
+  <!-- 13. ANTI-PATTERNS -->
+  <section class="slide s-color" data-title="Anti-patterns">
+    <header class="stagger" style="display:grid;grid-template-columns:1fr auto;gap:48px;align-items:end;">
+      <div>
+        <div class="eyebrow">§08 — Anti-patterns shipping live at end</div>
+        <h2 class="title">What <em>actually shipped.</em></h2>
+      </div>
+      <p class="lede" style="max-width:48ch;">test-3 shipped zero anti-patterns. test-6 caught and fixed nine. test-5 shipped five.</p>
+    </header>
+    <div class="stagger">
+      <div class="ap-grid">
+        <div class="head">Anti-pattern</div>
+        <div class="head">test-1</div><div class="head">test-2</div><div class="head">test-3</div><div class="head">test-4</div><div class="head">test-5</div><div class="head">test-6</div><div class="head">test-7</div>
+
+        <div>Cards-without-tap</div>
+        <div class="bad">live</div><div class="ok">avoided</div><div class="ok">avoided</div><div class="bad">live</div><div class="bad">live</div><div class="ok">avoided</div><div class="warn">caught + fixed</div>
+
+        <div>Stub commands (no-op RelayCommand)</div>
+        <div class="bad">live</div><div class="warn">in-mem</div><div class="ok">avoided</div><div class="warn">read-only</div><div class="bad">live</div><div class="warn">2 fixed</div><div class="ok">avoided</div>
+
+        <div>Identical tablet layout</div>
+        <div class="bad">stretch</div><div class="bad">phone-only</div><div class="bad">phone-only</div><div class="bad">deferred</div><div class="bad">phone-only</div><div class="ok">shipped responsive</div><div class="bad">phone-only</div>
+
+        <div>Asset 404s / silent fails</div>
+        <div class="warn">⚠</div><div class="warn">SVG transparent</div><div class="warn">ingredient icons</div><div class="warn">ingredient icons</div><div class="bad">8 SVGs miss</div><div class="warn">ingredient icons</div><div class="warn">6 SVGs miss</div>
+
+        <div>Toggle state-only (no propagation)</div>
+        <div>n/a</div><div class="warn">unverified</div><div>n/a</div><div>n/a</div><div class="warn">unverified</div><div>n/a</div><div class="bad">theme race</div>
+
+        <div>Theme dead-spots</div>
+        <div class="warn">unverified</div><div class="warn">nav-bar</div><div class="ok">propagates</div><div class="warn">not propagated</div><div class="warn">unverified</div><div class="ok">propagates</div><div class="warn">titlebar</div>
+
+        <div>Routed-but-empty</div>
+        <div class="bad">Home re-render</div><div class="ok">avoided</div><div class="ok">avoided</div><div class="ok">avoided</div><div>—</div><div class="warn">caught + fixed</div><div class="warn">caught + fixed</div>
+
+        <div><strong>Total live at end</strong></div>
+        <div class="bad">3</div><div class="bad">4</div><div class="ok"><strong>0</strong></div><div class="bad">2</div><div class="bad">5</div><div class="ok"><strong>0</strong></div><div class="bad">2</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13. GOTCHAS -->
+  <section class="slide two" data-title="Engineering cliffs">
+    <header class="stagger">
+      <div class="eyebrow">§09 — Cliffs</div>
+      <h2 class="title">The cliffs the next test <em>shouldn't</em> rediscover.</h2>
+      <p class="lede" style="margin-top:18px;">Adding these as up-front checklist items removes ~5–15 minutes of fix-loop per run and unblocks failures that bit multiple runs blindly.</p>
+    </header>
+    <div class="col-r tier-list stagger">
+      <div class="tier">
+        <div class="tier-head"><span class="tier-tag">Tier A</span><h4>Universal · bit every run that touched the path</h4></div>
+        <ul>
+          <li><code>Svg;</code> not in default <code>UnoFeatures</code> even with <code>SkiaRenderer</code></li>
+          <li><code>TimeSpan</code> is two-encoded in fixtures — <code>{ticks:N}</code> + <code>"00:10:00"</code></li>
+          <li><code>dotnet run</code> returns exit 0 within seconds — looks like crash, isn't</li>
+          <li>Image refs that don't resolve don't error — verify pre-grep on <code>Assets/</code></li>
+          <li>Cards in <code>ItemsRepeater</code>/<code>ListView</code> need a focusable root (<code>Button</code>)</li>
+          <li><code>Region.Attached</code> + <code>Region.Navigator="Visibility"</code> doesn't auto-instantiate (new from t-7)</li>
+        </ul>
+      </div>
+      <div class="tier">
+        <div class="tier-head"><span class="tier-tag">Tier B</span><h4>MVUX-only · bit test-6, dodged by 1/3/4/7 going MVVM</h4></div>
+        <ul>
+          <li><code>KE0001</code> — every record with <code>Id</code> must be <code>partial</code></li>
+          <li><code>IFeed&lt;ImmutableList&lt;T&gt;&gt;</code> ≠ <code>IFeed&lt;IImmutableList&lt;T&gt;&gt;</code> — invariant</li>
+          <li><code>Feed.Select(async ...)</code> doesn't compile — use <code>SelectAsync</code></li>
+        </ul>
+      </div>
+      <div class="tier">
+        <div class="tier-head"><span class="tier-tag">Tier C</span><h4>Navigation · split by methodology</h4></div>
+        <ul>
+          <li><code>NavigateDataAsync</code> has no <code>route:</code> param — use <code>NavigateRouteAsync</code></li>
+          <li><code>ViewMap&lt;Page, Model&gt;</code> silently drops <code>data:</code> args — use <code>DataViewMap</code></li>
+          <li>Region-based with <code>IsDefault: true</code> renders empty regions on Skia desktop</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14. RECOMMENDATION -->
+  <section class="slide s-rec" data-title="Recommendation">
+    <header class="stagger">
+      <div class="eyebrow">§10 — Recommendation</div>
+      <h2 class="title">For the public stunt.</h2>
+      <p class="lede" style="margin-top:24px;max-width:42ch;">The highest-leverage one-shot input plus the iteration loop's actual load-bearing job — <em>structural debugging</em>, not fidelity polish.</p>
+      <p class="body" style="margin-top:24px;font-size:15px;">test-3 didn't carry a re-run flag. test-7's iter-1 caught what one-shot would have shipped silently. They compose.</p>
+    </header>
+    <div class="stamp stagger">
+      <div class="small">recommendation · 2026-04-28</div>
+      <h3>Ship test-3 methodology as the primary.</h3>
+      <p style="font-size:15px;color:var(--ink-soft);">Google Stitch DESIGN.md is the highest-leverage one-shot input, the cleanest run, and the only one without a re-run flag.</p>
+      <div class="add">+ Add the iter-1 walk-through (test-7) as a post-build verification step. Its structural-debugging value is real even when iter-2+ fidelity convergence plateaus.</div>
+    </div>
+  </section>
+
+  <!-- 15. CLOSING -->
+  <section class="slide s-close" data-title="Open questions">
+    <div class="stagger">
+      <div class="eyebrow">§11 — Open questions</div>
+      <h2 class="title">What's still <em>unresolved.</em></h2>
+      <p class="lede" style="margin-top:24px;max-width:64ch;">The matrix is at "all 7 runs reported." It is not yet at "ready to publish." These are the questions remaining before it can become a public summary.</p>
+
+      <div class="openq">
+        <div>When does test-2's retroactive-skill-invocation gap get re-run, and test-7's failure-mode #2 get re-run with real <code>Skill</code> tool calls?</div>
+        <div>Who runs the out-of-session validator pass so criterion 3 stops being "unmeasured" on test-3 / test-1 re-run / test-6 re-run?</div>
+        <div>Is the systematic MVUX → MVVM substitution worth flagging as its own experiment axis (input-format vs default-pattern bias)?</div>
+        <div>Should there be a follow-up "Toolkit composites" experiment that explicitly seeds inputs with <code>utu:AutoLayout</code> / <code>uer:FeedView</code> / <code>uen:Navigation.Request</code> examples?</div>
+        <div>Is the iterative loop's structural-debugging contribution worth its own experiment axis — measured separately from fidelity convergence?</div>
+        <div>Is the <code>IsDefault: true</code> + <code>Region.Navigator="Visibility"</code> empty-regions failure Skia-desktop-only, or does it reproduce on WASM / Android / iOS?</div>
+      </div>
+
+      <p class="pullquote stagger" style="margin-top:48px;font-size:clamp(22px,2.4vw,32px);max-width:48ch;">"Discipline state, not pure scaffolding luck, dominates the FP curve." <span style="display:block;font-style:normal;font-family:var(--mono);font-size:11px;letter-spacing:0.18em;color:var(--ink-mute);text-transform:uppercase;margin-top:14px;">— observation 16, post re-runs</span></p>
+    </div>
+  </section>
+
+</div>
+
+<div class="progress" id="progress"></div>
+
+<div class="nav">
+  <button id="prev" aria-label="previous">←</button>
+  <button id="next" aria-label="next">→</button>
+</div>
+
+<script>
+  const deck = document.getElementById('deck');
+  const slides = [...deck.querySelectorAll('.slide')];
+  const progress = document.getElementById('progress');
+  let i = 0;
+
+  // build progress
+  slides.forEach(() => {
+    const s = document.createElement('span');
+    progress.appendChild(s);
+  });
+  const dots = [...progress.children];
+
+  function render() {
+    slides.forEach((s, idx) => {
+      s.classList.remove('active', 'exit');
+      if (idx === i) s.classList.add('active');
+      else if (idx < i) s.classList.add('exit');
+    });
+    dots.forEach((d, idx) => {
+      d.classList.toggle('done', idx < i);
+      d.classList.toggle('now', idx === i);
+    });
+  }
+
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    render();
+  }
+
+  document.getElementById('prev').onclick = () => go(i - 1);
+  document.getElementById('next').onclick = () => go(i + 1);
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); go(i + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+    if (e.key === 'Home') go(0);
+    if (e.key === 'End') go(slides.length - 1);
+  });
+
+  // dot click
+  dots.forEach((d, idx) => d.addEventListener('click', () => go(idx), { passive: true }));
+  dots.forEach((d) => d.style.pointerEvents = 'auto');
+  progress.style.pointerEvents = 'auto';
+
+  render();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "DOTNET_ENVIRONMENT": "Development"
+  },
+  "permissions": {
+    "allow": [
+      "mcp__uno__uno_platform_agent_rules_init",
+      "mcp__uno__uno_platform_usage_rules_init",
+      "Bash(rm -f Presentation/MainPage.xaml Presentation/MainPage.xaml.cs Presentation/MainViewModel.cs Presentation/SecondPage.xaml Presentation/SecondPage.xaml.cs Presentation/SecondViewModel.cs)",
+      "Bash(mkdir -p ViewModels)",
+      "mcp__uno-app__uno_app_get_runtime_info",
+      "mcp__uno-app__uno_app_get_screenshot",
+      "mcp__uno-app__uno_app_visualtree_snapshot",
+      "mcp__uno-app__uno_app_element_peer_default_action",
+      "mcp__uno-app__uno_app_close",
+      "Bash([ -s \"C:\\\\\\\\Users\\\\\\\\PLATFO~1\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\claude\\\\\\\\C--Users-Platform006-OneDrive---Uno-Platform-Desktop-unOS-AI-builds-ChefsFT-test-test-7-visual-diff-loop\\\\\\\\60ae2cf9-f4ea-4518-a815-d13a6119a79a\\\\\\\\tasks\\\\\\\\brtqe3jke.output\" ])",
+      "mcp__uno-app__uno_app_element_peer_action",
+      "mcp__uno-app__uno_app_pointer_click"
+    ]
+  }
+}

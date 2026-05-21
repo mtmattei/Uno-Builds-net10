@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "DOTNET_ENVIRONMENT": "Development"
+  },
+  "permissions": {
+    "allow": [
+      "mcp__uno__uno_platform_agent_rules_init",
+      "mcp__uno__uno_platform_usage_rules_init",
+      "mcp__figma__get_variable_defs",
+      "mcp__figma__get_design_context",
+      "mcp__figma__get_screenshot",
+      "mcp__uno__uno_platform_docs_search",
+      "mcp__uno__uno_platform_docs_fetch",
+      "Bash(tasklist)",
+      "Bash(powershell *)",
+      "mcp__uno-app__uno_app_start",
+      "mcp__uno-app__uno_app_get_runtime_info",
+      "mcp__uno-app__uno_app_get_screenshot",
+      "mcp__uno-app__uno_app_visualtree_snapshot",
+      "mcp__uno-app__uno_app_element_peer_default_action",
+      "mcp__uno-app__uno_app_element_peer_action",
+      "mcp__uno-app__uno_app_pointer_click",
+      "mcp__uno-app__uno_app_key_press",
+      "mcp__uno-app__uno_app_close",
+      "Bash(rm -v 01-onboarding-launch.png 14-back-from-cookbook-detail.png 14b-after-escape.png 14c-after-alt-left.png 14d-back-via-main-command.png 14e-retry.png 15-profile-retry.png 15-profile-retry2.png 15-profile.png Favorites.png Filters.png Home.png Notifications.png Onboarding.png Profile.png)",
+      "Bash(mv -v \"15-profile-via-ps.png\" \"15-profile.png\")"
+    ]
+  }
+}

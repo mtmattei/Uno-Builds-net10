@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(mv test-1.md test-1.first-run.md)",
+      "Bash(mv test-1.log test-1.first-run.log)",
+      "Bash(mv test-6.md test-6.first-run.md)",
+      "Bash(mv test-6.log test-6.first-run.log)",
+      "Bash(mv test-1 *)",
+      "Bash(mv test-6 *)",
+      "Bash(cp -r ../claude-code-uno-starter-kit/project-level/. .)",
+      "Bash(cp ../test-1-screenshots.first-run/SPEC.md .)",
+      "Bash(cp ../test-6-blind-prd.first-run/SPEC.md .)",
+      "Bash(start *)",
+      "Bash(cmd *)"
+    ]
+  }
+}

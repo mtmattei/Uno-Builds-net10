@@ -1,0 +1,45 @@
+<ResourceDictionary
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key="Light">
+      <SolidColorBrush x:Key="ChefPinkBrush" Color="#E8455C" />
+      <SolidColorBrush x:Key="ChefPinkSoftBrush" Color="#FFD9DE" />
+      <SolidColorBrush x:Key="ChefCreamBrush" Color="#EAE3D6" />
+      <SolidColorBrush x:Key="ChefAppBarBrush" Color="#2D2D2D" />
+      <SolidColorBrush x:Key="ChefAppBarForegroundBrush" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="ChefAppBarSubtleBrush" Color="#9C9CA0" />
+      <SolidColorBrush x:Key="ChefSurfaceBrush" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="ChefBackgroundBrush" Color="#F4F5F8" />
+      <SolidColorBrush x:Key="ChefBodyBrush" Color="#1C1B1F" />
+      <SolidColorBrush x:Key="ChefMutedBrush" Color="#737074" />
+      <SolidColorBrush x:Key="ChefDividerBrush" Color="#E5E3E8" />
+      <SolidColorBrush x:Key="ChefHeartActiveBrush" Color="#E8455C" />
+      <SolidColorBrush x:Key="ChefHeartInactiveBrush" Color="#1C1B1F" />
+      <SolidColorBrush x:Key="ChefRatingActiveBrush" Color="#E8455C" />
+      <SolidColorBrush x:Key="ChefRatingInactiveBrush" Color="#D2D0D5" />
+      <SolidColorBrush x:Key="ChefPipActiveBrush" Color="#E8455C" />
+      <SolidColorBrush x:Key="ChefPipInactiveBrush" Color="#FFD9DE" />
+    </ResourceDictionary>
+    <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="ChefPinkBrush" Color="#FFB1BC" />
+      <SolidColorBrush x:Key="ChefPinkSoftBrush" Color="#7E2A3B" />
+      <SolidColorBrush x:Key="ChefCreamBrush" Color="#4F4940" />
+      <SolidColorBrush x:Key="ChefAppBarBrush" Color="#1A1A1A" />
+      <SolidColorBrush x:Key="ChefAppBarForegroundBrush" Color="#FFFFFF" />
+      <SolidColorBrush x:Key="ChefAppBarSubtleBrush" Color="#7C7C80" />
+      <SolidColorBrush x:Key="ChefSurfaceBrush" Color="#26262B" />
+      <SolidColorBrush x:Key="ChefBackgroundBrush" Color="#191A1F" />
+      <SolidColorBrush x:Key="ChefBodyBrush" Color="#E6E1E5" />
+      <SolidColorBrush x:Key="ChefMutedBrush" Color="#B4B0BB" />
+      <SolidColorBrush x:Key="ChefDividerBrush" Color="#3A3A3F" />
+      <SolidColorBrush x:Key="ChefHeartActiveBrush" Color="#FFB1BC" />
+      <SolidColorBrush x:Key="ChefHeartInactiveBrush" Color="#E6E1E5" />
+      <SolidColorBrush x:Key="ChefRatingActiveBrush" Color="#FFB1BC" />
+      <SolidColorBrush x:Key="ChefRatingInactiveBrush" Color="#3A3A3F" />
+      <SolidColorBrush x:Key="ChefPipActiveBrush" Color="#FFB1BC" />
+      <SolidColorBrush x:Key="ChefPipInactiveBrush" Color="#7E2A3B" />
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

@@ -1,0 +1,88 @@
+<Page x:Class="ChefsTest6.Presentation.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:ChefsTest6.Presentation"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      NavigationCacheMode="Required"
+      Background="{ThemeResource BackgroundBrush}">
+  <Page.Resources>
+    <local:BoolToVisibilityConverter x:Key="BoolToVis" />
+  </Page.Resources>
+
+  <Grid x:Name="PageRoot"
+        utu:SafeArea.Insets="VisibleBounds">
+    <Grid.RowDefinitions>
+      <RowDefinition />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+
+    <utu:TabBar Grid.Column="0"
+                Grid.RowSpan="2"
+                Style="{StaticResource VerticalTabBarStyle}"
+                SelectedIndex="{Binding SelectedTab, Mode=TwoWay}"
+                Visibility="{utu:Responsive Narrowest=Collapsed, Narrow=Collapsed, Normal=Visible, Wide=Visible, Widest=Visible}">
+      <utu:TabBarItem Content="Home" AutomationProperties.AutomationId="TabHomeRail">
+        <utu:TabBarItem.Icon>
+          <SymbolIcon Symbol="Home" />
+        </utu:TabBarItem.Icon>
+      </utu:TabBarItem>
+      <utu:TabBarItem Content="Search" AutomationProperties.AutomationId="TabSearchRail">
+        <utu:TabBarItem.Icon>
+          <SymbolIcon Symbol="Find" />
+        </utu:TabBarItem.Icon>
+      </utu:TabBarItem>
+      <utu:TabBarItem Content="Favorites" AutomationProperties.AutomationId="TabFavoritesRail">
+        <utu:TabBarItem.Icon>
+          <SymbolIcon Symbol="Favorite" />
+        </utu:TabBarItem.Icon>
+      </utu:TabBarItem>
+      <utu:TabBarItem Content="Profile" AutomationProperties.AutomationId="TabProfileRail">
+        <utu:TabBarItem.Icon>
+          <SymbolIcon Symbol="Contact" />
+        </utu:TabBarItem.Icon>
+      </utu:TabBarItem>
+    </utu:TabBar>
+
+    <Grid Grid.Column="1" Grid.Row="0">
+      <local:HomeView DataContext="{Binding Home}"
+                      Visibility="{Binding ElementName=PageRoot, Path=DataContext.IsHomeTab, Converter={StaticResource BoolToVis}}" />
+      <local:SearchView DataContext="{Binding Search}"
+                        Visibility="{Binding ElementName=PageRoot, Path=DataContext.IsSearchTab, Converter={StaticResource BoolToVis}}" />
+      <local:FavoritesView DataContext="{Binding Favorites}"
+                           Visibility="{Binding ElementName=PageRoot, Path=DataContext.IsFavoritesTab, Converter={StaticResource BoolToVis}}" />
+      <local:ProfileView DataContext="{Binding Profile}"
+                         Visibility="{Binding ElementName=PageRoot, Path=DataContext.IsProfileTab, Converter={StaticResource BoolToVis}}" />
+    </Grid>
+
+    <utu:TabBar Grid.Column="1"
+                Grid.Row="1"
+                Style="{StaticResource BottomTabBarStyle}"
+                SelectedIndex="{Binding SelectedTab, Mode=TwoWay}"
+                Visibility="{utu:Responsive Narrowest=Visible, Narrow=Visible, Normal=Collapsed, Wide=Collapsed, Widest=Collapsed}">
+      <utu:TabBarItem Content="Home" AutomationProperties.AutomationId="TabHome">
+        <utu:TabBarItem.Icon>
+          <SymbolIcon Symbol="Home" />
+        </utu:TabBarItem.Icon>
+      </utu:TabBarItem>
+      <utu:TabBarItem Content="Search" AutomationProperties.AutomationId="TabSearch">
+        <utu:TabBarItem.Icon>
+          <SymbolIcon Symbol="Find" />
+        </utu:TabBarItem.Icon>
+      </utu:TabBarItem>
+      <utu:TabBarItem Content="Favorites" AutomationProperties.AutomationId="TabFavorites">
+        <utu:TabBarItem.Icon>
+          <SymbolIcon Symbol="Favorite" />
+        </utu:TabBarItem.Icon>
+      </utu:TabBarItem>
+      <utu:TabBarItem Content="Profile" AutomationProperties.AutomationId="TabProfile">
+        <utu:TabBarItem.Icon>
+          <SymbolIcon Symbol="Contact" />
+        </utu:TabBarItem.Icon>
+      </utu:TabBarItem>
+    </utu:TabBar>
+  </Grid>
+</Page>

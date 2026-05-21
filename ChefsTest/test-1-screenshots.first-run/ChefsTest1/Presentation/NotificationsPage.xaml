@@ -1,0 +1,82 @@
+<Page x:Class="ChefsTest1.Presentation.NotificationsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:ChefsTest1.Presentation"
+      xmlns:models="using:ChefsTest1.Models"
+      Background="{ThemeResource ScreenBackgroundBrush}">
+  <Page.Resources>
+    <local:BoolToVisibilityConverter x:Key="BoolVisible" />
+    <local:BoolToVisibilityConverter x:Key="BoolVisibleInverted" Inverted="True" />
+  </Page.Resources>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <Grid Grid.Row="0" Padding="20,16">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <Button Grid.Column="0" Background="Transparent" BorderThickness="0" Margin="0,0,12,0" Command="{x:Bind ViewModel.CloseCommand}">
+        <FontIcon Glyph="&#xE711;" FontSize="20" />
+      </Button>
+      <TextBlock Grid.Column="1" Text="Notifications" FontSize="22" FontWeight="Bold" VerticalAlignment="Center" />
+    </Grid>
+
+    <Grid Grid.Row="1" Padding="20,8,20,0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <local:RecipeTabHeader Grid.Column="0" Label="All" IsActive="{x:Bind ViewModel.IsAllTab, Mode=OneWay}" Command="{x:Bind ViewModel.ShowAllCommand}" />
+      <local:RecipeTabHeader Grid.Column="1" Label="Unread" IsActive="{x:Bind ViewModel.IsUnreadTab, Mode=OneWay}" Command="{x:Bind ViewModel.ShowUnreadCommand}" />
+      <local:RecipeTabHeader Grid.Column="2" Label="Read" IsActive="{x:Bind ViewModel.IsReadTab, Mode=OneWay}" Command="{x:Bind ViewModel.ShowReadCommand}" />
+    </Grid>
+    <Border Grid.Row="1" Height="1" Background="{ThemeResource DividerBrush}" VerticalAlignment="Bottom" />
+
+    <Grid Grid.Row="2">
+      <ScrollViewer Visibility="{x:Bind ViewModel.IsEmpty, Mode=OneWay, Converter={StaticResource BoolVisibleInverted}}">
+        <ItemsControl ItemsSource="{x:Bind ViewModel.Notifications, Mode=OneWay}" Padding="20,16">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="models:NotificationData">
+              <Border Background="{ThemeResource SurfaceBrush}" CornerRadius="12" Padding="16,12" Margin="0,0,0,12">
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <FontIcon Grid.Column="0" Glyph="&#xEA8F;" FontSize="20" Foreground="{ThemeResource PrimaryBrush}" Margin="0,2,14,0" />
+                  <StackPanel Grid.Column="1" Spacing="4">
+                    <TextBlock Text="{x:Bind Title}" FontWeight="SemiBold" FontSize="14" />
+                    <TextBlock Text="{x:Bind Description}" Foreground="{ThemeResource MutedTextBrush}" FontSize="13" TextWrapping="Wrap" />
+                  </StackPanel>
+                </Grid>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+
+      <StackPanel Visibility="{x:Bind ViewModel.IsEmpty, Mode=OneWay, Converter={StaticResource BoolVisible}}"
+                  HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="14" MaxWidth="320" Padding="20">
+        <Border Width="120" Height="120" CornerRadius="60" Background="{ThemeResource SurfaceVariantBrush}" HorizontalAlignment="Center">
+          <FontIcon Glyph="&#xEA8F;" FontSize="48" Foreground="{ThemeResource MutedTextBrush}" />
+        </Border>
+        <TextBlock Text="No Notifications Yet" FontWeight="Bold" FontSize="20" HorizontalAlignment="Center" />
+        <TextBlock Text="Notifications about your activity, updates, and community interactions will appear here. Stay tuned for recipe inspiration, comments, likes, and more as you engage with the community."
+                   TextWrapping="Wrap" TextAlignment="Center"
+                   Foreground="{ThemeResource MutedTextBrush}" FontSize="14" />
+        <Button Background="{ThemeResource SocialButtonBrush}" Foreground="{ThemeResource OnSurfaceBrush}" CornerRadius="8" Padding="14,8" HorizontalAlignment="Center" Command="{x:Bind ViewModel.CloseCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <FontIcon Glyph="&#xE711;" FontSize="14" />
+            <TextBlock Text="Close" />
+          </StackPanel>
+        </Button>
+      </StackPanel>
+    </Grid>
+  </Grid>
+</Page>

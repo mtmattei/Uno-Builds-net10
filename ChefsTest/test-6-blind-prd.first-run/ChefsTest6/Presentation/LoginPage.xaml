@@ -1,0 +1,88 @@
+<Page x:Class="ChefsTest6.Presentation.LoginPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:ChefsTest6.Presentation"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource BackgroundBrush}">
+  <Page.Resources>
+    <local:NotNullToVisibilityConverter x:Key="NotNullToVis" />
+  </Page.Resources>
+
+  <ScrollViewer>
+    <Grid utu:SafeArea.Insets="VisibleBounds"
+          Padding="24,32,24,32"
+          MaxWidth="480"
+          HorizontalAlignment="Center">
+      <StackPanel Spacing="20">
+        <TextBlock Text="Welcome back"
+                   Style="{ThemeResource DisplaySmallTextBlockStyle}"
+                   TextWrapping="Wrap" />
+        <TextBlock Text="Sign in to continue cooking with us."
+                   Style="{ThemeResource BodyLargeTextBlockStyle}"
+                   Opacity="0.8"
+                   TextWrapping="Wrap" />
+
+        <TextBox Header="Username"
+                 Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 PlaceholderText="you@example.com" />
+        <PasswordBox Header="Password"
+                     Password="{Binding Password, Mode=TwoWay}"
+                     PlaceholderText="•••" />
+
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <CheckBox Content="Remember me"
+                    IsChecked="{Binding RememberMe, Mode=TwoWay}" />
+          <HyperlinkButton Grid.Column="1"
+                          Content="Forgot password?"
+                          Command="{Binding ForgotCommand}"
+                          AutomationProperties.AutomationId="ForgotPassword" />
+        </Grid>
+
+        <TextBlock Text="{Binding ErrorMessage}"
+                   Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                   Visibility="{Binding ErrorMessage, Converter={StaticResource NotNullToVis}}"
+                   TextWrapping="Wrap" />
+
+        <Button Content="Login"
+                Command="{Binding SignInCommand}"
+                Style="{ThemeResource ElevatedButtonStyle}"
+                HorizontalAlignment="Stretch" />
+
+        <TextBlock Text="or continue with"
+                   HorizontalAlignment="Center"
+                   Opacity="0.6" />
+
+        <StackPanel Orientation="Horizontal"
+                    Spacing="12"
+                    HorizontalAlignment="Stretch">
+          <Button Content="Apple"
+                  Command="{Binding SocialCommand}"
+                  CommandParameter="Apple"
+                  Style="{ThemeResource OutlinedButtonStyle}"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Center"
+                  Width="200" />
+          <Button Content="Google"
+                  Command="{Binding SocialCommand}"
+                  CommandParameter="Google"
+                  Style="{ThemeResource OutlinedButtonStyle}"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Center"
+                  Width="200" />
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Spacing="6">
+          <TextBlock Text="No account?" />
+          <HyperlinkButton Content="Register"
+                           Command="{Binding GoToRegisterCommand}" />
+        </StackPanel>
+      </StackPanel>
+    </Grid>
+  </ScrollViewer>
+</Page>

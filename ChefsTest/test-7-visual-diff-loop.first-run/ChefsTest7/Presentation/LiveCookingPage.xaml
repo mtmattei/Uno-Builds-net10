@@ -1,0 +1,79 @@
+<Page x:Class="ChefsTest7.Presentation.LiveCookingPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource BackgroundBrush}">
+  <Grid utu:SafeArea.Insets="VisibleBounds">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <Grid Grid.Row="0" Background="{ThemeResource AppBarFillBrush}" Padding="8,8" ColumnSpacing="8">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Button Grid.Column="0" Content="←" FontSize="20" Background="Transparent" Foreground="{ThemeResource OnAppBarBrush}" Command="{Binding BackCommand}"/>
+      <TextBlock Grid.Column="1" VerticalAlignment="Center" FontSize="18" FontWeight="Bold" Foreground="{ThemeResource OnAppBarBrush}">
+        <Run Text="Making "/><Run Text="{Binding Recipe.Name}"/>
+      </TextBlock>
+    </Grid>
+
+    <ScrollViewer Grid.Row="1">
+      <StackPanel Spacing="12">
+        <!-- Media player -->
+        <Border Background="Black" Height="220">
+          <Grid>
+            <Image Source="{Binding Recipe.ImageUrl}" Stretch="UniformToFill" Opacity="0.85"/>
+            <Border Background="#80000000" Width="64" Height="64" CornerRadius="32" HorizontalAlignment="Center" VerticalAlignment="Center">
+              <TextBlock Text="▶" Foreground="White" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <Grid VerticalAlignment="Bottom" Padding="12,8" Background="#60000000">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <ProgressBar Grid.Column="0" Value="35" Maximum="100" Foreground="{ThemeResource PrimaryBrush}" VerticalAlignment="Center"/>
+              <TextBlock Grid.Column="1" Text="01:12 / 03:00" Foreground="White" FontSize="12" Margin="8,0,0,0"/>
+            </Grid>
+          </Grid>
+        </Border>
+
+        <!-- Step card -->
+        <Border Background="{ThemeResource SurfaceBrush}" CornerRadius="12" Margin="16" Padding="16">
+          <StackPanel Spacing="10">
+            <TextBlock Text="{Binding CurrentStep.Name}" FontWeight="SemiBold" FontSize="16" Foreground="{ThemeResource OnSurfaceBrush}"/>
+            <ItemsControl ItemsSource="{Binding CurrentStep.Ingredients}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <Grid Padding="0,4">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="Auto"/>
+                      <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Grid.Column="0"/>
+                    <TextBlock Grid.Column="1" Text="{Binding}" VerticalAlignment="Center" Foreground="{ThemeResource OnSurfaceBrush}"/>
+                  </Grid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock Text="{Binding CurrentStep.Description}" Foreground="{ThemeResource OnSurfaceVariantBrush}" TextWrapping="Wrap" FontSize="13"/>
+          </StackPanel>
+        </Border>
+
+        <PipsPager NumberOfPages="{Binding Steps.Count}" SelectedPageIndex="{Binding CurrentStepIndex, Mode=TwoWay}" HorizontalAlignment="Center"/>
+      </StackPanel>
+    </ScrollViewer>
+
+    <Grid Grid.Row="2" Padding="16,12" ColumnSpacing="12" Background="{ThemeResource SurfaceBrush}" BorderBrush="{ThemeResource OutlineBrush}" BorderThickness="0,1,0,0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Button Grid.Column="0" Content="Previous" HorizontalAlignment="Stretch" Style="{ThemeResource OutlinedButtonStyle}" Command="{Binding PreviousCommand}"/>
+      <Button Grid.Column="1" Content="Next" HorizontalAlignment="Stretch" Background="{ThemeResource PrimaryBrush}" Foreground="{ThemeResource OnPrimaryBrush}" Command="{Binding NextCommand}"/>
+    </Grid>
+  </Grid>
+</Page>

@@ -1,0 +1,388 @@
+<Page x:Class="ChefsTest6.Presentation.RecipeDetailPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:ChefsTest6.Presentation"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:models="using:ChefsTest6.Models"
+      Background="{ThemeResource BackgroundBrush}">
+  <Page.Resources>
+    <local:BoolToVisibilityConverter x:Key="BoolToVis" />
+    <local:BoolToVisibilityConverter x:Key="InvBoolToVis" Invert="True" />
+    <local:BoolToBrushConverter x:Key="BoolToBrush" />
+
+    <DataTemplate x:Key="IngredientTemplate" x:DataType="models:Ingredient">
+      <Grid Padding="0,8,0,8" ColumnSpacing="12">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="48" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Image Source="{x:Bind UrlIcon}" Width="40" Height="40" Stretch="Uniform" />
+        <TextBlock Grid.Column="1"
+                   Text="{x:Bind Name}"
+                   VerticalAlignment="Center"
+                   Style="{ThemeResource BodyLargeTextBlockStyle}" />
+        <Border Grid.Column="2"
+                Background="{ThemeResource SurfaceContainerLowBrush}"
+                CornerRadius="12"
+                Padding="10,4,10,4">
+          <TextBlock Text="{x:Bind Quantity}"
+                     Style="{ThemeResource LabelMediumTextBlockStyle}" />
+        </Border>
+      </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="StepRowTemplate" x:DataType="models:CookingStep">
+      <Grid Padding="0,12,0,12" RowSpacing="4">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock>
+          <Run Text="Step " />
+          <Run Text="{x:Bind Number}" />
+          <Run Text=": " />
+          <Run Text="{x:Bind Name}" FontWeight="SemiBold" />
+        </TextBlock>
+        <TextBlock Grid.Row="1"
+                   Text="{x:Bind Description}"
+                   TextWrapping="Wrap"
+                   Style="{ThemeResource BodyMediumTextBlockStyle}"
+                   Opacity="0.85" />
+      </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ReviewTemplate" x:DataType="models:Review">
+      <Grid Padding="0,12,0,12" ColumnSpacing="12" RowSpacing="6">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="40" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Ellipse Width="40" Height="40">
+          <Ellipse.Fill>
+            <ImageBrush ImageSource="{x:Bind UrlAuthorImage}" Stretch="UniformToFill" />
+          </Ellipse.Fill>
+        </Ellipse>
+        <TextBlock Grid.Column="1"
+                   Text="{x:Bind PublisherName}"
+                   Style="{ThemeResource TitleSmallTextBlockStyle}"
+                   VerticalAlignment="Center" />
+        <TextBlock Grid.Row="1" Grid.ColumnSpan="2"
+                   Text="{x:Bind Description}"
+                   TextWrapping="Wrap"
+                   Style="{ThemeResource BodyMediumTextBlockStyle}" />
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="2"
+                    Orientation="Horizontal"
+                    Spacing="8">
+          <Button Style="{ThemeResource TextButtonStyle}"
+                  Command="{Binding DataContext.ToggleLikeCommand, ElementName=RecipeDetailRoot}"
+                  CommandParameter="{Binding}">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+              <SymbolIcon Symbol="Like" />
+              <TextBlock Text="{x:Bind LikeCount, Mode=OneWay}" />
+            </StackPanel>
+          </Button>
+          <Button Style="{ThemeResource TextButtonStyle}"
+                  Command="{Binding DataContext.ToggleDislikeCommand, ElementName=RecipeDetailRoot}"
+                  CommandParameter="{Binding}">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+              <SymbolIcon Symbol="Dislike" />
+              <TextBlock Text="{x:Bind DislikeCount, Mode=OneWay}" />
+            </StackPanel>
+          </Button>
+        </StackPanel>
+      </Grid>
+    </DataTemplate>
+  </Page.Resources>
+
+  <Grid x:Name="RecipeDetailRoot"
+        utu:SafeArea.Insets="VisibleBounds">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <utu:NavigationBar Content="{Binding Recipe.Name}"
+                       AutomationProperties.AutomationId="RecipeDetailNav">
+      <utu:NavigationBar.MainCommand>
+        <AppBarButton Icon="Back" Command="{Binding BackCommand}" />
+      </utu:NavigationBar.MainCommand>
+    </utu:NavigationBar>
+
+    <ScrollViewer Grid.Row="1">
+      <Grid x:Name="DetailLayout" Padding="16,8,16,16">
+        <VisualStateManager.VisualStateGroups>
+          <VisualStateGroup x:Name="LayoutStates">
+            <VisualState x:Name="NarrowLayout">
+              <VisualState.StateTriggers>
+                <AdaptiveTrigger MinWindowWidth="0" />
+              </VisualState.StateTriggers>
+            </VisualState>
+            <VisualState x:Name="WideLayout">
+              <VisualState.StateTriggers>
+                <AdaptiveTrigger MinWindowWidth="1024" />
+              </VisualState.StateTriggers>
+              <VisualState.Setters>
+                <Setter Target="DetailLayout.ColumnDefinitions[0].Width" Value="400" />
+                <Setter Target="DetailLayout.ColumnDefinitions[1].Width" Value="*" />
+                <Setter Target="DetailLayout.RowDefinitions[1].Height" Value="0" />
+                <Setter Target="HeroPanel.(Grid.Column)" Value="0" />
+                <Setter Target="HeroPanel.(Grid.RowSpan)" Value="2" />
+                <Setter Target="HeroPanel.Margin" Value="0,0,16,0" />
+                <Setter Target="ContentPanel.(Grid.Column)" Value="1" />
+                <Setter Target="ContentPanel.(Grid.Row)" Value="0" />
+              </VisualState.Setters>
+            </VisualState>
+          </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="0" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel x:Name="HeroPanel"
+                    Grid.Column="0"
+                    Grid.Row="0"
+                    Spacing="16">
+          <Grid Height="220" CornerRadius="12">
+            <Image Source="{Binding Recipe.ImageUrl}" Stretch="UniformToFill" />
+            <Border Width="40" Height="40"
+                    CornerRadius="20"
+                    Background="{ThemeResource SurfaceBrush}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Margin="0,8,8,0">
+              <Button Style="{ThemeResource TextButtonStyle}"
+                      Padding="0"
+                      Width="40" Height="40"
+                      Command="{Binding ToggleFavoriteCommand}">
+                <SymbolIcon Symbol="Favorite" />
+              </Button>
+            </Border>
+            <Border Width="40" Height="40"
+                    CornerRadius="20"
+                    Background="{ThemeResource SurfaceBrush}"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Margin="0,8,56,0">
+              <Button Style="{ThemeResource TextButtonStyle}"
+                      Padding="0"
+                      Width="40" Height="40">
+                <SymbolIcon Symbol="Share" />
+                <Button.Flyout>
+                  <Flyout>
+                    <TextBlock Text="Sharing isn't available in this build."
+                               MaxWidth="240"
+                               TextWrapping="Wrap" />
+                  </Flyout>
+                </Button.Flyout>
+              </Button>
+            </Border>
+          </Grid>
+
+          <Grid ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="48" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Ellipse Width="40" Height="40">
+              <Ellipse.Fill>
+                <ImageBrush ImageSource="{Binding AuthorAvatar}" Stretch="UniformToFill" />
+              </Ellipse.Fill>
+            </Ellipse>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+              <TextBlock Style="{ThemeResource LabelMediumTextBlockStyle}"
+                         Opacity="0.7"
+                         Text="By" />
+              <TextBlock Text="{Binding AuthorName}"
+                         Style="{ThemeResource TitleSmallTextBlockStyle}" />
+            </StackPanel>
+          </Grid>
+
+          <Grid CornerRadius="12"
+                Background="{ThemeResource SurfaceContainerLowBrush}"
+                Padding="12">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel HorizontalAlignment="Center">
+              <TextBlock Text="{Binding CookTimeText}"
+                         Style="{ThemeResource TitleMediumTextBlockStyle}"
+                         HorizontalAlignment="Center" />
+              <TextBlock Text="Cook time" Opacity="0.7" HorizontalAlignment="Center" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+              <TextBlock Text="{Binding DifficultyText}"
+                         Style="{ThemeResource TitleMediumTextBlockStyle}"
+                         HorizontalAlignment="Center" />
+              <TextBlock Text="Difficulty" Opacity="0.7" HorizontalAlignment="Center" />
+            </StackPanel>
+            <StackPanel Grid.Column="2" HorizontalAlignment="Center">
+              <TextBlock Text="{Binding CaloriesText}"
+                         Style="{ThemeResource TitleMediumTextBlockStyle}"
+                         HorizontalAlignment="Center" />
+              <TextBlock Text="Calories" Opacity="0.7" HorizontalAlignment="Center" />
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+
+        <StackPanel x:Name="ContentPanel"
+                    Grid.Column="0"
+                    Grid.Row="1"
+                    Spacing="16"
+                    Margin="0,16,0,0">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+          <Button Content="Ingredients"
+                  Command="{Binding SelectIngredientsCommand}"
+                  Style="{ThemeResource OutlinedButtonStyle}"
+                  Background="{Binding IsIngredientsTab, Converter={StaticResource BoolToBrush}, ConverterParameter=PrimaryBrush|TransparentBrush}"
+                  Foreground="{Binding IsIngredientsTab, Converter={StaticResource BoolToBrush}, ConverterParameter=OnPrimaryBrush|PrimaryBrush}"
+                  AutomationProperties.AutomationId="TabIngredients" />
+          <Button Content="Steps"
+                  Command="{Binding SelectStepsCommand}"
+                  Style="{ThemeResource OutlinedButtonStyle}"
+                  Background="{Binding IsStepsTab, Converter={StaticResource BoolToBrush}, ConverterParameter=PrimaryBrush|TransparentBrush}"
+                  Foreground="{Binding IsStepsTab, Converter={StaticResource BoolToBrush}, ConverterParameter=OnPrimaryBrush|PrimaryBrush}"
+                  AutomationProperties.AutomationId="TabSteps" />
+          <Button Content="Reviews"
+                  Command="{Binding SelectReviewsCommand}"
+                  Style="{ThemeResource OutlinedButtonStyle}"
+                  Background="{Binding IsReviewsTab, Converter={StaticResource BoolToBrush}, ConverterParameter=PrimaryBrush|TransparentBrush}"
+                  Foreground="{Binding IsReviewsTab, Converter={StaticResource BoolToBrush}, ConverterParameter=OnPrimaryBrush|PrimaryBrush}"
+                  AutomationProperties.AutomationId="TabReviews" />
+          <Button Content="Nutrition"
+                  Command="{Binding SelectNutritionCommand}"
+                  Style="{ThemeResource OutlinedButtonStyle}"
+                  Background="{Binding IsNutritionTab, Converter={StaticResource BoolToBrush}, ConverterParameter=PrimaryBrush|TransparentBrush}"
+                  Foreground="{Binding IsNutritionTab, Converter={StaticResource BoolToBrush}, ConverterParameter=OnPrimaryBrush|PrimaryBrush}"
+                  AutomationProperties.AutomationId="TabNutrition" />
+        </StackPanel>
+
+        <Grid>
+          <StackPanel Visibility="{Binding IsIngredientsTab, Converter={StaticResource BoolToVis}}"
+                      Spacing="8">
+            <TextBlock Text="{Binding IngredientsCountText}"
+                       Style="{ThemeResource TitleSmallTextBlockStyle}" />
+            <ItemsControl ItemsSource="{Binding Recipe.Ingredients}"
+                          ItemTemplate="{StaticResource IngredientTemplate}" />
+          </StackPanel>
+          <StackPanel Visibility="{Binding IsStepsTab, Converter={StaticResource BoolToVis}}"
+                      Spacing="8">
+            <TextBlock Text="{Binding StepsCountText}"
+                       Style="{ThemeResource TitleSmallTextBlockStyle}" />
+            <ItemsControl ItemsSource="{Binding Recipe.Steps}"
+                          ItemTemplate="{StaticResource StepRowTemplate}" />
+          </StackPanel>
+          <StackPanel Visibility="{Binding IsReviewsTab, Converter={StaticResource BoolToVis}}"
+                      Spacing="8">
+            <TextBlock Text="{Binding ReviewsCountText}"
+                       Style="{ThemeResource TitleSmallTextBlockStyle}" />
+            <Grid Visibility="{Binding HasReviews, Converter={StaticResource InvBoolToVis}}">
+              <StackPanel HorizontalAlignment="Center" Padding="0,32,0,0" Spacing="8">
+                <TextBlock Text="📝" FontSize="48" HorizontalAlignment="Center" />
+                <TextBlock Text="No reviews yet" HorizontalAlignment="Center" />
+                <TextBlock Text="Be the first to share your thoughts." Opacity="0.7" HorizontalAlignment="Center" />
+              </StackPanel>
+            </Grid>
+            <ItemsControl ItemsSource="{Binding Reviews}"
+                          ItemTemplate="{StaticResource ReviewTemplate}"
+                          Visibility="{Binding HasReviews, Converter={StaticResource BoolToVis}}" />
+          </StackPanel>
+          <StackPanel Visibility="{Binding IsNutritionTab, Converter={StaticResource BoolToVis}}"
+                      Spacing="16">
+            <TextBlock Text="Intake per serving" Style="{ThemeResource TitleSmallTextBlockStyle}" />
+            <Grid Background="{ThemeResource SurfaceContainerLowBrush}"
+                  CornerRadius="12"
+                  Padding="16">
+              <StackPanel Spacing="4" HorizontalAlignment="Center">
+                <TextBlock Text="{Binding CaloriesText}"
+                           Style="{ThemeResource DisplaySmallTextBlockStyle}"
+                           HorizontalAlignment="Center" />
+                <TextBlock Text="Calories" Opacity="0.7" HorizontalAlignment="Center" />
+              </StackPanel>
+            </Grid>
+            <StackPanel Spacing="8">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="80" />
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Protein" VerticalAlignment="Center" />
+                <ProgressBar Grid.Column="1"
+                             Value="{Binding NutritionProtein}"
+                             Maximum="{Binding NutritionProteinMax}"
+                             Foreground="{ThemeResource PrimaryBrush}"
+                             VerticalAlignment="Center"
+                             Margin="8,0,8,0" />
+                <TextBlock Grid.Column="2"
+                           Text="{Binding ProteinLabel}"
+                           VerticalAlignment="Center" />
+              </Grid>
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="80" />
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Carbs" VerticalAlignment="Center" />
+                <ProgressBar Grid.Column="1"
+                             Value="{Binding NutritionCarbs}"
+                             Maximum="{Binding NutritionCarbsMax}"
+                             Foreground="{ThemeResource SecondaryBrush}"
+                             VerticalAlignment="Center"
+                             Margin="8,0,8,0" />
+                <TextBlock Grid.Column="2"
+                           Text="{Binding CarbsLabel}"
+                           VerticalAlignment="Center" />
+              </Grid>
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="80" />
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Fat" VerticalAlignment="Center" />
+                <ProgressBar Grid.Column="1"
+                             Value="{Binding NutritionFat}"
+                             Maximum="{Binding NutritionFatMax}"
+                             Foreground="{ThemeResource TertiaryBrush}"
+                             VerticalAlignment="Center"
+                             Margin="8,0,8,0" />
+                <TextBlock Grid.Column="2"
+                           Text="{Binding FatLabel}"
+                           VerticalAlignment="Center" />
+              </Grid>
+            </StackPanel>
+          </StackPanel>
+        </Grid>
+        </StackPanel>
+      </Grid>
+    </ScrollViewer>
+
+    <Border Grid.Row="2"
+            Background="{ThemeResource SurfaceBrush}"
+            BorderBrush="{ThemeResource OutlineVariantBrush}"
+            BorderThickness="0,1,0,0"
+            Padding="16,12,16,16">
+      <Button Content="Start Cooking!"
+              Command="{Binding StartCookingCommand}"
+              Style="{ThemeResource ElevatedButtonStyle}"
+              HorizontalAlignment="Stretch"
+              AutomationProperties.AutomationId="StartCooking" />
+    </Border>
+  </Grid>
+</Page>

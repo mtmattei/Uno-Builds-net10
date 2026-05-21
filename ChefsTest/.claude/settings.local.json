@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:stitch.withgoogle.com)",
+      "WebFetch(domain:paper.design)",
+      "mcp__uno__uno_platform_docs_search",
+      "mcp__uno__uno_platform_docs_fetch",
+      "Bash(cmd //c \"rd /s /q .scaffold-A-quarantine && rd /s /q UnoChefs\")",
+      "Bash(find . -maxdepth 3 -name \"*.sln\")",
+      "Bash(cmd //c \"rd /s /q UnoChefs\")",
+      "Bash(cmd //c \"rd /s /q src\")",
+      "Bash(cp -r ../claude-code-uno-starter-kit/project-level/. .)"
+    ]
+  }
+}

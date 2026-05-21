@@ -1,0 +1,40 @@
+<Page x:Class="ChefsTest1.Presentation.RegisterPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:ChefsTest1.Presentation"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      Background="{ThemeResource ScreenBackgroundBrush}"
+      mc:Ignorable="d">
+  <ScrollViewer>
+    <StackPanel Padding="32,48,32,32" Spacing="20" MaxWidth="480" HorizontalAlignment="Center">
+      <TextBlock HorizontalAlignment="Center" FontSize="36" FontWeight="Bold" Margin="0,32,0,32">
+        <Run Text="uno" />
+        <Run Text="Chefs" FontStyle="Italic" Foreground="{ThemeResource PrimaryBrush}" />
+      </TextBlock>
+
+      <TextBox PlaceholderText="Username"
+               Text="{x:Bind ViewModel.Username, Mode=TwoWay}"
+               Style="{StaticResource FormInputStyle}" />
+      <TextBox PlaceholderText="Email"
+               Text="{x:Bind ViewModel.Email, Mode=TwoWay}"
+               Style="{StaticResource FormInputStyle}" />
+      <PasswordBox PlaceholderText="Password"
+                   Password="{x:Bind ViewModel.Password, Mode=TwoWay}"
+                   MinHeight="56"
+                   CornerRadius="10"
+                   FontSize="15"
+                   Padding="12,8" />
+
+      <Button Style="{StaticResource PrimaryCtaButtonStyle}"
+              Content="Sign Up"
+              Margin="0,12,0,0"
+              Command="{x:Bind ViewModel.SignUpCommand}" />
+
+      <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center" Margin="0,16,0,0">
+        <TextBlock Text="Already a member?" Foreground="{ThemeResource MutedTextBrush}" />
+        <HyperlinkButton Content="Login Now" Foreground="{ThemeResource PrimaryBrush}" Command="{x:Bind ViewModel.BackToLoginCommand}" Padding="0" />
+      </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
+</Page>

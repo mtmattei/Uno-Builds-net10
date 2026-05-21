@@ -1,0 +1,54 @@
+<UserControl
+    x:Class="ChefsTest3.Presentation.BottomNavBar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ChefsTest3.Presentation"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    mc:Ignorable="d">
+
+    <Grid x:Name="Root"
+          Background="{ThemeResource CardBackgroundBrush}"
+          BorderBrush="{ThemeResource DividerBrush}"
+          BorderThickness="0,1,0,0"
+          Padding="0,8,0,12">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Button x:Name="HomeBtn" Grid.Column="0"
+                Background="Transparent" BorderThickness="0"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                Click="OnHomeClick">
+            <StackPanel HorizontalAlignment="Center">
+                <TextBlock x:Name="HomeIcon" Text="🏠" FontSize="22" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="HomeLabel" Text="Home" FontSize="11" HorizontalAlignment="Center"
+                           Foreground="{ThemeResource TextSecondaryBrush}"/>
+            </StackPanel>
+        </Button>
+
+        <Button x:Name="SearchBtn" Grid.Column="1"
+                Background="Transparent" BorderThickness="0"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                Click="OnSearchClick">
+            <StackPanel HorizontalAlignment="Center">
+                <TextBlock x:Name="SearchIcon" Text="🔍" FontSize="22" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="SearchLabel" Text="Search" FontSize="11" HorizontalAlignment="Center"
+                           Foreground="{ThemeResource TextSecondaryBrush}"/>
+            </StackPanel>
+        </Button>
+
+        <Button x:Name="FavoritesBtn" Grid.Column="2"
+                Background="Transparent" BorderThickness="0"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                Click="OnFavoritesClick">
+            <StackPanel HorizontalAlignment="Center">
+                <TextBlock x:Name="FavIcon" Text="♡" FontSize="22" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="FavLabel" Text="Favorites" FontSize="11" HorizontalAlignment="Center"
+                           Foreground="{ThemeResource TextSecondaryBrush}"/>
+            </StackPanel>
+        </Button>
+    </Grid>
+</UserControl>

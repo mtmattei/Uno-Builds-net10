@@ -1,0 +1,245 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Brushes that follow the inversion pattern from DESIGN.md.
+         Light theme: dark app-bar bg + white content; Dark theme: white app-bar bg + dark content. -->
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Light">
+            <SolidColorBrush x:Key="AppBarBackgroundBrush" Color="#2D2D2D"/>
+            <SolidColorBrush x:Key="AppBarForegroundBrush" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="AppBarMutedBrush" Color="#B0B0B0"/>
+
+            <SolidColorBrush x:Key="ScreenBackgroundBrush" Color="#F8F9FB"/>
+            <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="CardBorderBrush" Color="#E0E0E0"/>
+            <SolidColorBrush x:Key="DividerBrush" Color="#E0E0E0"/>
+
+            <SolidColorBrush x:Key="TextPrimaryBrush" Color="#2D2D2D"/>
+            <SolidColorBrush x:Key="TextSecondaryBrush" Color="#666666"/>
+            <SolidColorBrush x:Key="TextTertiaryBrush" Color="#999999"/>
+            <SolidColorBrush x:Key="TextOnPrimaryBrush" Color="#FFFFFF"/>
+
+            <SolidColorBrush x:Key="PrimaryBrush" Color="#FF1F5A"/>
+            <SolidColorBrush x:Key="PrimarySoftBrush" Color="#FFD9E1"/>
+            <SolidColorBrush x:Key="FavoriteBrush" Color="#FF1F5A"/>
+
+            <SolidColorBrush x:Key="SocialLoginBackgroundBrush" Color="#EAE3D6"/>
+            <SolidColorBrush x:Key="SocialLoginForegroundBrush" Color="#2D2D2D"/>
+
+            <SolidColorBrush x:Key="SearchBarBackgroundBrush" Color="#F2F2F5"/>
+            <SolidColorBrush x:Key="FormInputBackgroundBrush" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="FormInputBorderBrush" Color="#E0E0E0"/>
+
+            <SolidColorBrush x:Key="ChipUnselectedBrush" Color="#F2F2F5"/>
+            <SolidColorBrush x:Key="ChipUnselectedTextBrush" Color="#666666"/>
+
+            <SolidColorBrush x:Key="MapSurfaceBrush" Color="#E6EAF0"/>
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush x:Key="AppBarBackgroundBrush" Color="#FFFFFF"/>
+            <SolidColorBrush x:Key="AppBarForegroundBrush" Color="#2D2D2D"/>
+            <SolidColorBrush x:Key="AppBarMutedBrush" Color="#666666"/>
+
+            <SolidColorBrush x:Key="ScreenBackgroundBrush" Color="#121212"/>
+            <SolidColorBrush x:Key="CardBackgroundBrush" Color="#1E1E1E"/>
+            <SolidColorBrush x:Key="CardBorderBrush" Color="#333333"/>
+            <SolidColorBrush x:Key="DividerBrush" Color="#333333"/>
+
+            <SolidColorBrush x:Key="TextPrimaryBrush" Color="#F5F5F5"/>
+            <SolidColorBrush x:Key="TextSecondaryBrush" Color="#B0B0B0"/>
+            <SolidColorBrush x:Key="TextTertiaryBrush" Color="#757575"/>
+            <SolidColorBrush x:Key="TextOnPrimaryBrush" Color="#FFFFFF"/>
+
+            <SolidColorBrush x:Key="PrimaryBrush" Color="#FF1F5A"/>
+            <SolidColorBrush x:Key="PrimarySoftBrush" Color="#5A0021"/>
+            <SolidColorBrush x:Key="FavoriteBrush" Color="#FF1F5A"/>
+
+            <SolidColorBrush x:Key="SocialLoginBackgroundBrush" Color="#3A3328"/>
+            <SolidColorBrush x:Key="SocialLoginForegroundBrush" Color="#F5F5F5"/>
+
+            <SolidColorBrush x:Key="SearchBarBackgroundBrush" Color="#2A2A2A"/>
+            <SolidColorBrush x:Key="FormInputBackgroundBrush" Color="#1E1E1E"/>
+            <SolidColorBrush x:Key="FormInputBorderBrush" Color="#333333"/>
+
+            <SolidColorBrush x:Key="ChipUnselectedBrush" Color="#2A2A2A"/>
+            <SolidColorBrush x:Key="ChipUnselectedTextBrush" Color="#B0B0B0"/>
+
+            <SolidColorBrush x:Key="MapSurfaceBrush" Color="#1A1A1A"/>
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+    <!-- Typography (DESIGN.md §Typography). Roboto via Material toolkit default. -->
+    <Style x:Key="H1Style" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}"/>
+        <Setter Property="LineHeight" Value="32"/>
+    </Style>
+    <Style x:Key="H2Style" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}"/>
+        <Setter Property="LineHeight" Value="24"/>
+    </Style>
+    <Style x:Key="BodyLargeStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}"/>
+    </Style>
+    <Style x:Key="BodyRegularStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}"/>
+    </Style>
+    <Style x:Key="BodySecondaryStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Foreground" Value="{ThemeResource TextSecondaryBrush}"/>
+    </Style>
+    <Style x:Key="CaptionStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Foreground" Value="{ThemeResource TextSecondaryBrush}"/>
+    </Style>
+
+    <!-- Buttons -->
+    <Style x:Key="PrimaryCtaButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="{ThemeResource PrimaryBrush}"/>
+        <Setter Property="Foreground" Value="{ThemeResource TextOnPrimaryBrush}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="MinHeight" Value="48"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="16,12"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Root"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Foreground="{TemplateBinding Foreground}"/>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="Root.Opacity" Value="0.9"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="Root.Opacity" Value="0.8"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="Root.Opacity" Value="0.5"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SecondaryCtaButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryCtaButtonStyle}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{ThemeResource PrimaryBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource PrimaryBrush}"/>
+    </Style>
+
+    <Style x:Key="SocialLoginButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="{ThemeResource SocialLoginBackgroundBrush}"/>
+        <Setter Property="Foreground" Value="{ThemeResource SocialLoginForegroundBrush}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="MinHeight" Value="48"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="16,12"/>
+    </Style>
+
+    <Style x:Key="AppBarIconButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{ThemeResource AppBarForegroundBrush}"/>
+        <Setter Property="MinWidth" Value="40"/>
+        <Setter Property="MinHeight" Value="40"/>
+        <Setter Property="Padding" Value="8"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="CornerRadius" Value="20"/>
+    </Style>
+
+    <!-- Input fields -->
+    <Style x:Key="FormInputStyle" TargetType="TextBox">
+        <Setter Property="Background" Value="{ThemeResource FormInputBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource FormInputBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}"/>
+        <Setter Property="MinHeight" Value="48"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+    <Style x:Key="FormPasswordStyle" TargetType="PasswordBox">
+        <Setter Property="Background" Value="{ThemeResource FormInputBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource FormInputBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}"/>
+        <Setter Property="MinHeight" Value="48"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <Style x:Key="SearchBarStyle" TargetType="TextBox">
+        <Setter Property="Background" Value="{ThemeResource SearchBarBackgroundBrush}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="CornerRadius" Value="25"/>
+        <Setter Property="Foreground" Value="{ThemeResource TextPrimaryBrush}"/>
+        <Setter Property="MinHeight" Value="48"/>
+        <Setter Property="Padding" Value="20,8"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+
+    <!-- Cards (subtle border in lieu of shadow per DESIGN.md "soft shadow or subtle border") -->
+    <Style x:Key="RecipeCardStyle" TargetType="Border">
+        <Setter Property="Background" Value="{ThemeResource CardBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource CardBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="12"/>
+    </Style>
+    <Style x:Key="CategoryCardStyle" TargetType="Border">
+        <Setter Property="Background" Value="{ThemeResource CardBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource CardBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="12"/>
+    </Style>
+    <Style x:Key="SectionCardStyle" TargetType="Border">
+        <Setter Property="Background" Value="{ThemeResource CardBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource CardBorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="16"/>
+    </Style>
+
+</ResourceDictionary>

@@ -1,0 +1,61 @@
+<Page x:Class="ChefsTest5.Presentation.OnboardingPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:mux="using:Microsoft.UI.Xaml.Controls"
+      Background="{ThemeResource ChefBackgroundBrush}">
+  <Grid utu:SafeArea.Insets="VisibleBounds">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <FlipView x:Name="Pager"
+              ItemsSource="{x:Bind ViewModel.Frames}"
+              SelectedIndex="{x:Bind ViewModel.SelectedIndex, Mode=TwoWay}"
+              Background="Transparent">
+      <FlipView.ItemTemplate>
+        <DataTemplate>
+          <Grid Margin="0">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="2.4*" />
+              <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Image Source="{Binding ImageUri}" Stretch="UniformToFill" />
+            <StackPanel Grid.Row="1" Margin="24,16" Spacing="12" VerticalAlignment="Top">
+              <Image Source="ms-appx:///Assets/Images/chefsappsignature_light.svg"
+                     Width="140" Height="40" HorizontalAlignment="Center"/>
+              <TextBlock Text="{Binding Title}" Style="{StaticResource ChefH1}" HorizontalAlignment="Center"/>
+              <TextBlock Text="{Binding Body}" Style="{StaticResource ChefMuted}" TextAlignment="Center"
+                         HorizontalAlignment="Center" MaxWidth="320"/>
+            </StackPanel>
+          </Grid>
+        </DataTemplate>
+      </FlipView.ItemTemplate>
+    </FlipView>
+
+    <StackPanel Grid.Row="1" Margin="24,8,24,32" Spacing="20">
+      <mux:PipsPager NumberOfPages="3"
+                     SelectedPageIndex="{x:Bind ViewModel.SelectedIndex, Mode=TwoWay}"
+                     HorizontalAlignment="Center" />
+      <Grid ColumnSpacing="12">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Button Style="{StaticResource ChefSecondaryButton}"
+                Content="Previous"
+                Command="{x:Bind ViewModel.PreviousCommand}" />
+        <Button Grid.Column="1"
+                Style="{StaticResource ChefPrimaryButton}"
+                Content="{x:Bind ViewModel.NextLabel, Mode=OneWay}"
+                Command="{x:Bind ViewModel.NextCommand}" />
+      </Grid>
+      <HyperlinkButton Content="Skip"
+                       Foreground="{ThemeResource ChefPinkBrush}"
+                       FontWeight="SemiBold"
+                       HorizontalAlignment="Center"
+                       Command="{x:Bind ViewModel.SkipCommand}" />
+    </StackPanel>
+  </Grid>
+</Page>

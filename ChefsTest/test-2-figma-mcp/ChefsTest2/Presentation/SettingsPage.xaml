@@ -1,0 +1,55 @@
+<Page x:Class="ChefsTest2.Presentation.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource BackgroundBrush}"
+      NavigationCacheMode="Required">
+
+  <Grid utu:SafeArea.Insets="VisibleBounds">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <utu:NavigationBar Grid.Row="0" Content="Settings" />
+
+    <ScrollViewer Grid.Row="1">
+      <StackPanel Padding="20" Spacing="22" MaxWidth="600" HorizontalAlignment="Stretch">
+        <StackPanel Spacing="10">
+          <TextBlock Text="Personal Information" Style="{StaticResource ChefsTitleMedium}"
+                     Foreground="{ThemeResource OnBackgroundBrush}" />
+          <TextBox Header="Name" Text="{x:Bind ViewModel.FullName, Mode=TwoWay}"
+                   AutomationProperties.AutomationId="SettingsName" />
+          <TextBox Header="Email" Text="{x:Bind ViewModel.Email, Mode=TwoWay}" />
+          <TextBox Header="Mobile Number" Text="{x:Bind ViewModel.MobileNumber, Mode=TwoWay}" />
+        </StackPanel>
+
+        <StackPanel Spacing="10">
+          <TextBlock Text="Application Settings" Style="{StaticResource ChefsTitleMedium}"
+                     Foreground="{ThemeResource OnBackgroundBrush}" />
+          <ToggleSwitch Header="Notifications"
+                        IsOn="{x:Bind ViewModel.NotificationsEnabled, Mode=TwoWay}" />
+          <ToggleSwitch Header="Night Mode"
+                        IsOn="{x:Bind ViewModel.IsDarkMode, Mode=TwoWay}"
+                        AutomationProperties.AutomationId="SettingsNightMode" />
+        </StackPanel>
+      </StackPanel>
+    </ScrollViewer>
+
+    <Grid Grid.Row="2" Padding="20,12">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <Button Grid.Column="0" Margin="0,0,8,0" HorizontalAlignment="Stretch"
+              Content="Log out" Command="{x:Bind ViewModel.LogOutCommand}"
+              AutomationProperties.AutomationId="SettingsLogOut" />
+      <Button Grid.Column="1" Margin="8,0,0,0" HorizontalAlignment="Stretch"
+              Content="Save Changes"
+              Background="{ThemeResource PrimaryBrush}"
+              Foreground="{ThemeResource OnPrimaryBrush}"
+              Command="{x:Bind ViewModel.SaveCommand}" />
+    </Grid>
+  </Grid>
+</Page>

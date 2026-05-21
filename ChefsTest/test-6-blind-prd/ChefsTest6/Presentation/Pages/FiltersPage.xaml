@@ -1,0 +1,82 @@
+<Page x:Class="ChefsTest6.Presentation.Pages.FiltersPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:m="using:ChefsTest6.Models"
+      xmlns:vm="using:ChefsTest6.ViewModels"
+      x:Name="PageRoot"
+      NavigationCacheMode="Required"
+      Background="{ThemeResource BackgroundBrush}">
+  <utu:SafeArea Insets="VisibleBounds">
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+
+      <utu:NavigationBar Grid.Row="0" Content="Filters">
+        <utu:NavigationBar.PrimaryCommands>
+          <AppBarButton Icon="Cancel" Label="Close" Command="{Binding CancelCommand}" />
+        </utu:NavigationBar.PrimaryCommands>
+      </utu:NavigationBar>
+
+      <ScrollViewer Grid.Row="1">
+        <StackPanel Padding="16" Spacing="20">
+          <TextBlock Text="Category" Style="{StaticResource TitleLarge}" />
+          <ItemsControl ItemsSource="{Binding AllCategories}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <utu:AutoLayout Orientation="Horizontal" Spacing="8" Justify="Stack" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="m:CategoryData">
+                <Button Background="{ThemeResource SurfaceVariantBrush}"
+                        Padding="14,8" CornerRadius="20"
+                        Command="{Binding DataContext.SelectCategoryCommand, ElementName=PageRoot}"
+                        CommandParameter="{x:Bind}">
+                  <TextBlock Text="{x:Bind Name}" />
+                </Button>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+          <TextBlock Text="Cooking time" Style="{StaticResource TitleLarge}" />
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Content="Under 15 min" Style="{StaticResource OutlinedButtonStyle}" Command="{Binding SelectTimeCommand}" CommandParameter="15" />
+            <Button Content="Under 30 min" Style="{StaticResource OutlinedButtonStyle}" Command="{Binding SelectTimeCommand}" CommandParameter="30" />
+            <Button Content="Under 60 min" Style="{StaticResource OutlinedButtonStyle}" Command="{Binding SelectTimeCommand}" CommandParameter="60" />
+          </StackPanel>
+          <TextBlock Text="{Binding MaxMinutes, FallbackValue='No limit'}" Opacity="0.7" />
+
+          <TextBlock Text="Skill level" Style="{StaticResource TitleLarge}" />
+          <ItemsControl ItemsSource="{Binding DifficultyOptions}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="8" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:DifficultyOption">
+                <Button Style="{StaticResource OutlinedButtonStyle}"
+                        Content="{x:Bind Label}"
+                        Command="{Binding DataContext.SelectDifficultyCommand, ElementName=PageRoot}"
+                        CommandParameter="{x:Bind Value}" />
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </ScrollViewer>
+
+      <Grid Grid.Row="2" Padding="16" ColumnSpacing="12">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Button Grid.Column="0" Content="Reset" Style="{StaticResource OutlinedButtonStyle}" HorizontalAlignment="Stretch" Command="{Binding ResetCommand}" />
+        <Button Grid.Column="1" Content="Apply filter" Style="{StaticResource FilledButtonStyle}" HorizontalAlignment="Stretch" Command="{Binding ApplyCommand}" />
+      </Grid>
+    </Grid>
+  </utu:SafeArea>
+</Page>
