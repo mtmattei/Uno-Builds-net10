@@ -41,6 +41,18 @@
     </UnoFeatures>
   </PropertyGroup>
 
+  <!-- Release builds for net10.0-android: disable trimming + Mono AOT.
+       The trimmer pulls Microsoft.NETCore.App.Runtime.Mono.win-x64 10.0.1
+       at restore time, which is not on public NuGet for this Uno.Sdk
+       version. Disabling keeps the APK Release-optimized (JIT) without
+       requiring the missing host runtime pack. Revisit when Uno.Sdk
+       pins runtime packs to a published version. -->
+  <PropertyGroup Condition="'$(Configuration)'=='Release' AND '$(TargetFramework)'=='net10.0-android'">
+    <RunAOTCompilation>false</RunAOTCompilation>
+    <PublishTrimmed>false</PublishTrimmed>
+    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="QuestPDF" />
   </ItemGroup>
