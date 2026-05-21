@@ -1,28 +1,25 @@
+using System.Runtime.CompilerServices;
+
 namespace SalesDashboard.Presentation;
 
 public partial record MainModel
 {
-    private INavigator _navigator;
+    private static readonly TimeSpan SnapshotInterval = TimeSpan.FromSeconds(2);
 
-    public MainModel(
-        IStringLocalizer localizer,
-        IOptions<AppConfig> appInfo,
-        INavigator navigator)
+    public IFeed<SalesSnapshot> Snapshot => Feed.AsyncEnumerable(StreamSnapshots);
+
+    private static async IAsyncEnumerable<SalesSnapshot> StreamSnapshots(
+        [EnumeratorCancellation] CancellationToken ct)
     {
-        _navigator = navigator;
-        Title = "Main";
-        Title += $" - {localizer["ApplicationName"]}";
-        Title += $" - {appInfo?.Value?.Environment}";
+        var random = new Random();
+        var snapshot = SalesSnapshot.Initial;
+        yield return snapshot;
+
+        using var timer = new PeriodicTimer(SnapshotInterval);
+        while (await timer.WaitForNextTickAsync(ct))
+        {
+            snapshot = snapshot.NextRandom(random);
+            yield return snapshot;
+        }
     }
-
-    public string? Title { get; }
-
-    public IState<string> Name => State<string>.Value(this, () => string.Empty);
-
-    public async Task GoToSecond()
-    {
-        var name = await Name;
-        await _navigator.NavigateViewModelAsync<SecondModel>(this, data: new Entity(name!));
-    }
-
 }

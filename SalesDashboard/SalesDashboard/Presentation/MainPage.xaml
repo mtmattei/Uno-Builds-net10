@@ -1,12 +1,25 @@
-<Page xmlns:markup="using:Uno.UI.Markup" x:Class="SalesDashboard.Presentation.MainPage"
+<Page x:Class="SalesDashboard.Presentation.MainPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:local="using:SalesDashboard.Presentation"
+      xmlns:mvux="using:Uno.Extensions.Reactive.UI"
       xmlns:utu="using:Uno.Toolkit.UI"
-      Background="{StaticResource SurfaceVariantColor}">
+      Background="{ThemeResource SurfaceVariantBrush}">
 
     <Grid utu:SafeArea.Insets="All" Padding="24">
-    <local:SalesDashboardWidget HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="400" />
-    <Grid.DataContext><markup:FromJson><markup:FromJson.Source>{}</markup:FromJson.Source></markup:FromJson></Grid.DataContext>
-</Grid>
+        <mvux:FeedView Source="{Binding Snapshot}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+            <mvux:FeedView.ValueTemplate>
+                <DataTemplate>
+                    <local:SalesDashboardWidget MaxWidth="400" Snapshot="{Binding Data}" />
+                </DataTemplate>
+            </mvux:FeedView.ValueTemplate>
+            <mvux:FeedView.ProgressTemplate>
+                <DataTemplate>
+                    <ProgressRing IsActive="True" Width="48" Height="48" />
+                </DataTemplate>
+            </mvux:FeedView.ProgressTemplate>
+        </mvux:FeedView>
+    </Grid>
 </Page>

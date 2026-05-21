@@ -1,14 +1,19 @@
 using Uno.UI.Hosting;
 
-namespace SalesDashboard.iOS;
+namespace FreewriteUno;
 
-public class EntryPoint
+internal class Program
 {
+    [STAThread]
     public static void Main(string[] args)
     {
+
         var host = UnoPlatformHostBuilder.Create()
             .App(() => new App())
-            .UseAppleUIKit()
+            .UseX11()
+            .UseLinuxFrameBuffer()
+            .UseMacOS()
+            .UseWin32()
             .Build();
 
         host.Run();
