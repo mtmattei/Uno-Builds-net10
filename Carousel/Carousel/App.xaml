@@ -1,0 +1,38 @@
+<Application x:Class="CarouselDemo.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:utum="using:Uno.Toolkit.UI.Material">
+
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+        <utum:MaterialToolkitTheme
+          ColorOverrideSource="ms-appx:///Styles/ColorPaletteOverride.xaml" />
+
+        <!-- Carousel control styles -->
+        <ResourceDictionary Source="ms-appx:///Themes/Generic.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+
+      <!-- Carousel Theme Resources -->
+      <Color x:Key="CarouselIndicatorActiveColor">#6750A4</Color>
+      <Color x:Key="CarouselIndicatorInactiveColor">#CAC4D0</Color>
+      <SolidColorBrush x:Key="CarouselIndicatorActiveFill" Color="{StaticResource CarouselIndicatorActiveColor}" />
+      <SolidColorBrush x:Key="CarouselIndicatorInactiveFill" Color="{StaticResource CarouselIndicatorInactiveColor}" />
+
+      <!-- Demo Page Resources -->
+      <Color x:Key="DemoPageBackgroundColor">#1C1B1F</Color>
+      <Color x:Key="DemoSurfaceColor">#2B2930</Color>
+      <Color x:Key="DemoHeadingColor">#E6E1E5</Color>
+      <Color x:Key="DemoBodyColor">#CAC4D0</Color>
+      <Color x:Key="DemoAccentColor">#D0BCFF</Color>
+      <SolidColorBrush x:Key="DemoPageBackgroundBrush" Color="{StaticResource DemoPageBackgroundColor}" />
+      <SolidColorBrush x:Key="DemoSurfaceBrush" Color="{StaticResource DemoSurfaceColor}" />
+      <SolidColorBrush x:Key="DemoHeadingBrush" Color="{StaticResource DemoHeadingColor}" />
+      <SolidColorBrush x:Key="DemoBodyBrush" Color="{StaticResource DemoBodyColor}" />
+      <SolidColorBrush x:Key="DemoAccentBrush" Color="{StaticResource DemoAccentColor}" />
+
+    </ResourceDictionary>
+  </Application.Resources>
+
+</Application>
