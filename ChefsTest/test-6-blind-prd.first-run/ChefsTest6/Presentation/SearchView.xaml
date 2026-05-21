@@ -1,0 +1,140 @@
+<UserControl x:Class="ChefsTest6.Presentation.SearchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:ChefsTest6.Presentation"
+             xmlns:utu="using:Uno.Toolkit.UI"
+             xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+             xmlns:models="using:ChefsTest6.Models"
+             d:DesignHeight="800"
+             d:DesignWidth="400"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+  <UserControl.Resources>
+    <local:BoolToVisibilityConverter x:Key="BoolToVis" />
+    <local:BoolToVisibilityConverter x:Key="InvBoolToVis" Invert="True" />
+    <local:CountToBoolConverter x:Key="CountToBool" />
+
+    <DataTemplate x:Key="ResultGridTemplate" x:DataType="models:Recipe">
+      <Button Padding="0"
+              Margin="8"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Stretch"
+              Background="{ThemeResource SurfaceContainerLowBrush}"
+              BorderThickness="0"
+              CornerRadius="12"
+              Click="OnRecipeClicked">
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="120" />
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
+          <Image Source="{x:Bind ImageUrl}" Stretch="UniformToFill" />
+          <Border Grid.Row="0"
+                  Width="32" Height="32"
+                  CornerRadius="16"
+                  Background="{ThemeResource SurfaceBrush}"
+                  HorizontalAlignment="Right"
+                  VerticalAlignment="Top"
+                  Margin="0,8,8,0">
+            <ToggleButton IsChecked="{x:Bind IsFavorite, Mode=TwoWay}"
+                          Background="Transparent"
+                          BorderThickness="0"
+                          Padding="0"
+                          Width="32" Height="32">
+              <SymbolIcon Symbol="Favorite" />
+            </ToggleButton>
+          </Border>
+          <StackPanel Grid.Row="1"
+                      Padding="12,8,12,12"
+                      Spacing="2">
+            <TextBlock Text="{x:Bind Name}"
+                       Style="{ThemeResource TitleSmallTextBlockStyle}"
+                       TextWrapping="Wrap"
+                       MaxLines="2" />
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <TextBlock Text="{x:Bind CookTimeText}"
+                         Style="{ThemeResource BodySmallTextBlockStyle}"
+                         Opacity="0.7" />
+              <TextBlock Text="·" Opacity="0.5" />
+              <TextBlock Text="{x:Bind Calories}"
+                         Style="{ThemeResource BodySmallTextBlockStyle}"
+                         Opacity="0.7" />
+            </StackPanel>
+          </StackPanel>
+        </Grid>
+      </Button>
+    </DataTemplate>
+  </UserControl.Resources>
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+
+    <Grid Padding="16,12,16,8">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <AutoSuggestBox PlaceholderText="Search recipes..."
+                      QueryIcon="Find"
+                      Text="{Binding Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+      <Button Grid.Column="1"
+              Content="Filters"
+              Command="{Binding OpenFiltersCommand}"
+              Margin="8,0,0,0"
+              Style="{ThemeResource OutlinedButtonStyle}"
+              AutomationProperties.AutomationId="OpenFilters" />
+    </Grid>
+
+    <Grid Grid.Row="1" Padding="16,0,16,8">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <TextBlock Text="{Binding ResultText}"
+                 Style="{ThemeResource BodyMediumTextBlockStyle}"
+                 Opacity="0.8"
+                 VerticalAlignment="Center" />
+      <Button Grid.Column="1"
+              Content="Clear filters"
+              Command="{Binding ClearFiltersCommand}"
+              Visibility="{Binding IsFilterActive, Converter={StaticResource BoolToVis}}"
+              Style="{ThemeResource TextButtonStyle}" />
+    </Grid>
+
+    <Grid Grid.Row="2"
+          Padding="16,4,16,8"
+          Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVis}}">
+      <StackPanel Spacing="8" Padding="0,40,0,0">
+        <TextBlock Text="🍳"
+                   FontSize="48"
+                   HorizontalAlignment="Center" />
+        <TextBlock Text="No recipes found"
+                   Style="{ThemeResource TitleMediumTextBlockStyle}"
+                   HorizontalAlignment="Center" />
+        <TextBlock Text="Try adjusting your search or filters."
+                   Opacity="0.7"
+                   HorizontalAlignment="Center" />
+      </StackPanel>
+    </Grid>
+
+    <ScrollViewer Grid.Row="3"
+                  Padding="8,0,8,16"
+                  Visibility="{Binding IsEmpty, Converter={StaticResource InvBoolToVis}}">
+      <muxc:ItemsRepeater ItemsSource="{Binding Results}"
+                          ItemTemplate="{StaticResource ResultGridTemplate}">
+        <muxc:ItemsRepeater.Layout>
+          <muxc:UniformGridLayout MinItemWidth="220"
+                                  MinItemHeight="220"
+                                  MinRowSpacing="0"
+                                  MinColumnSpacing="0" />
+        </muxc:ItemsRepeater.Layout>
+      </muxc:ItemsRepeater>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

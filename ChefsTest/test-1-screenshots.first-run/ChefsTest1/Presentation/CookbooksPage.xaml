@@ -1,0 +1,6 @@
+<Page x:Class="ChefsTest1.Presentation.CookbooksPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Background="{ThemeResource ScreenBackgroundBrush}">
+  <Grid />
+</Page>

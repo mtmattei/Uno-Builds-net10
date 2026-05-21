@@ -1,0 +1,108 @@
+<ResourceDictionary
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <Style x:Key="ChefH1" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="28" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{ThemeResource ChefBodyBrush}" />
+  </Style>
+
+  <Style x:Key="ChefH2" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="20" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{ThemeResource ChefBodyBrush}" />
+  </Style>
+
+  <Style x:Key="ChefSectionTitle" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="18" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{ThemeResource ChefBodyBrush}" />
+  </Style>
+
+  <Style x:Key="ChefBody" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Foreground" Value="{ThemeResource ChefBodyBrush}" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+  </Style>
+
+  <Style x:Key="ChefMuted" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="12" />
+    <Setter Property="Foreground" Value="{ThemeResource ChefMutedBrush}" />
+    <Setter Property="TextWrapping" Value="Wrap" />
+  </Style>
+
+  <Style x:Key="ChefCaption" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="11" />
+    <Setter Property="Foreground" Value="{ThemeResource ChefMutedBrush}" />
+  </Style>
+
+  <Style x:Key="ChefAppBarTitle" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="20" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{ThemeResource ChefAppBarForegroundBrush}" />
+  </Style>
+
+  <Style x:Key="ChefViewAllLink" TargetType="TextBlock">
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="Foreground" Value="{ThemeResource ChefPinkBrush}" />
+  </Style>
+
+  <Style x:Key="ChefPrimaryButton" TargetType="Button">
+    <Setter Property="Background" Value="{ThemeResource ChefPinkBrush}" />
+    <Setter Property="Foreground" Value="White" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Padding" Value="20,12" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="MinHeight" Value="48" />
+  </Style>
+
+  <Style x:Key="ChefSecondaryButton" TargetType="Button">
+    <Setter Property="Background" Value="{ThemeResource ChefCreamBrush}" />
+    <Setter Property="Foreground" Value="{ThemeResource ChefBodyBrush}" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Padding" Value="20,12" />
+    <Setter Property="HorizontalAlignment" Value="Stretch" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="MinHeight" Value="48" />
+  </Style>
+
+  <Style x:Key="ChefOutlineButton" TargetType="Button">
+    <Setter Property="Background" Value="{ThemeResource ChefSurfaceBrush}" />
+    <Setter Property="Foreground" Value="{ThemeResource ChefPinkBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource ChefPinkBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="FontWeight" Value="SemiBold" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Padding" Value="20,12" />
+    <Setter Property="HorizontalContentAlignment" Value="Center" />
+    <Setter Property="CornerRadius" Value="8" />
+    <Setter Property="MinHeight" Value="48" />
+  </Style>
+
+  <Style x:Key="ChefChip" TargetType="Button">
+    <Setter Property="Background" Value="{ThemeResource ChefSurfaceBrush}" />
+    <Setter Property="Foreground" Value="{ThemeResource ChefBodyBrush}" />
+    <Setter Property="BorderBrush" Value="{ThemeResource ChefDividerBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="CornerRadius" Value="20" />
+    <Setter Property="Padding" Value="14,6" />
+    <Setter Property="FontSize" Value="13" />
+    <Setter Property="MinHeight" Value="36" />
+  </Style>
+
+  <Style x:Key="ChefCard" TargetType="Border">
+    <Setter Property="Background" Value="{ThemeResource ChefSurfaceBrush}" />
+    <Setter Property="CornerRadius" Value="12" />
+    <Setter Property="Padding" Value="0" />
+  </Style>
+
+</ResourceDictionary>

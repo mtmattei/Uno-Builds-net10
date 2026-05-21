@@ -1,0 +1,90 @@
+<Page x:Class="ChefsTest6.Presentation.FiltersPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:ChefsTest6.Presentation"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource BackgroundBrush}">
+  <Page.Resources>
+    <local:BoolToVisibilityConverter x:Key="BoolToVis" />
+  </Page.Resources>
+  <Grid utu:SafeArea.Insets="VisibleBounds">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <Grid Padding="16,12,16,8">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <TextBlock Text="Filters" Style="{ThemeResource HeadlineSmallTextBlockStyle}" />
+      <Button Grid.Column="1"
+              Style="{ThemeResource TextButtonStyle}"
+              Command="{Binding CloseCommand}">
+        <SymbolIcon Symbol="Cancel" />
+      </Button>
+    </Grid>
+
+    <ScrollViewer Grid.Row="1" Padding="16,8,16,16">
+      <StackPanel Spacing="20">
+        <TextBlock Text="Category" Style="{ThemeResource TitleMediumTextBlockStyle}" />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <ToggleButton Content="Popular"
+                        IsChecked="{Binding IsCategoryPopular, Mode=OneWay}"
+                        Command="{Binding SetCategoryPopularCommand}" />
+          <ToggleButton Content="Trending"
+                        IsChecked="{Binding IsCategoryTrending, Mode=OneWay}"
+                        Command="{Binding SetCategoryTrendingCommand}" />
+          <ToggleButton Content="Recent"
+                        IsChecked="{Binding IsCategoryRecent, Mode=OneWay}"
+                        Command="{Binding SetCategoryRecentCommand}" />
+        </StackPanel>
+
+        <TextBlock Text="Cooking Time" Style="{ThemeResource TitleMediumTextBlockStyle}" />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <ToggleButton Content="Under 15 min"
+                        IsChecked="{Binding IsTimeUnder15, Mode=OneWay}"
+                        Command="{Binding SetTimeUnder15Command}" />
+          <ToggleButton Content="Under 30 min"
+                        IsChecked="{Binding IsTimeUnder30, Mode=OneWay}"
+                        Command="{Binding SetTimeUnder30Command}" />
+          <ToggleButton Content="Under 60 min"
+                        IsChecked="{Binding IsTimeUnder60, Mode=OneWay}"
+                        Command="{Binding SetTimeUnder60Command}" />
+        </StackPanel>
+
+        <TextBlock Text="Skill Level" Style="{ThemeResource TitleMediumTextBlockStyle}" />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <ToggleButton Content="Beginner"
+                        IsChecked="{Binding IsSkillBeginner, Mode=OneWay}"
+                        Command="{Binding SetSkillBeginnerCommand}" />
+          <ToggleButton Content="Intermediate"
+                        IsChecked="{Binding IsSkillIntermediate, Mode=OneWay}"
+                        Command="{Binding SetSkillIntermediateCommand}" />
+          <ToggleButton Content="Advanced"
+                        IsChecked="{Binding IsSkillAdvanced, Mode=OneWay}"
+                        Command="{Binding SetSkillAdvancedCommand}" />
+        </StackPanel>
+      </StackPanel>
+    </ScrollViewer>
+
+    <Grid Grid.Row="2" Padding="16,8,16,16">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <Button Content="Reset"
+              Command="{Binding ResetCommand}"
+              Style="{ThemeResource OutlinedButtonStyle}"
+              HorizontalAlignment="Stretch"
+              Margin="0,0,8,0" />
+      <Button Grid.Column="1"
+              Content="Apply filter"
+              Command="{Binding ApplyCommand}"
+              Style="{ThemeResource ElevatedButtonStyle}"
+              HorizontalAlignment="Stretch"
+              Margin="8,0,0,0" />
+    </Grid>
+  </Grid>
+</Page>

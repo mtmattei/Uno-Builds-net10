@@ -1,0 +1,45 @@
+<UserControl x:Class="ChefsTest4.Presentation.Pages.MainShellPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:utu="using:Uno.Toolkit.UI"
+             xmlns:uen="using:Uno.Extensions.Navigation.UI"
+             xmlns:pages="using:ChefsTest4.Presentation.Pages"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Background="{ThemeResource CanvasBrush}">
+  <!-- Region.Navigator='Visibility' toggles visibility of pre-existing named-region containers based on TabBar selection.
+       Inline child pages with DataContext bound to MainShellViewModel sub-VMs (DI-resolved). -->
+  <Grid uen:Region.Attached="True">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Grid Grid.Row="0" uen:Region.Attached="True" uen:Region.Navigator="Visibility">
+      <Grid uen:Region.Name="Home" Visibility="Collapsed">
+        <pages:HomePage DataContext="{x:Bind ViewModel.Home, Mode=OneWay}" />
+      </Grid>
+      <Grid uen:Region.Name="Search" Visibility="Collapsed">
+        <pages:SearchPage DataContext="{x:Bind ViewModel.Search, Mode=OneWay}" />
+      </Grid>
+      <Grid uen:Region.Name="Favorites" Visibility="Collapsed">
+        <pages:FavoritesPage DataContext="{x:Bind ViewModel.Favorites, Mode=OneWay}" />
+      </Grid>
+    </Grid>
+
+    <utu:TabBar Grid.Row="1" Background="{ThemeResource CardBrush}" uen:Region.Attached="True">
+      <utu:TabBarItem uen:Region.Name="Home" IsSelected="True">
+        <utu:TabBarItem.Icon><FontIcon Glyph="&#xE80F;" /></utu:TabBarItem.Icon>
+        <TextBlock Text="Home" FontSize="12" FontWeight="Medium" />
+      </utu:TabBarItem>
+      <utu:TabBarItem uen:Region.Name="Search">
+        <utu:TabBarItem.Icon><FontIcon Glyph="&#xE721;" /></utu:TabBarItem.Icon>
+        <TextBlock Text="Search" FontSize="12" FontWeight="Medium" />
+      </utu:TabBarItem>
+      <utu:TabBarItem uen:Region.Name="Favorites">
+        <utu:TabBarItem.Icon><FontIcon Glyph="&#xEB52;" /></utu:TabBarItem.Icon>
+        <TextBlock Text="Favorites" FontSize="12" FontWeight="Medium" />
+      </utu:TabBarItem>
+    </utu:TabBar>
+  </Grid>
+</UserControl>

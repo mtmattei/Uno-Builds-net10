@@ -1,0 +1,103 @@
+<Page x:Class="ChefsTest3.Presentation.FavoritesMyCookbooksPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:ChefsTest3.Presentation"
+      xmlns:models="using:ChefsTest3.Models"
+      Background="{ThemeResource ScreenBackgroundBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Background="{ThemeResource AppBarBackgroundBrush}"
+              Padding="20,16,20,16">
+            <TextBlock Text="Favorites"
+                       Foreground="{ThemeResource AppBarForegroundBrush}"
+                       FontSize="20" FontWeight="Bold"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Background="{ThemeResource SurfaceVariantColor}" CornerRadius="12"
+              Margin="20,16,20,8" Padding="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Background="Transparent"
+                    Foreground="{ThemeResource TextSecondaryBrush}"
+                    BorderThickness="0" CornerRadius="10" MinHeight="40"
+                    HorizontalAlignment="Stretch"
+                    Command="{x:Bind ViewModel.GoToAllRecipesCommand}">
+                <TextBlock Text="All Recipes" FontWeight="SemiBold"/>
+            </Button>
+            <Button Grid.Column="1" Background="{ThemeResource PrimaryBrush}"
+                    Foreground="{ThemeResource TextOnPrimaryBrush}"
+                    BorderThickness="0" CornerRadius="10" MinHeight="40"
+                    HorizontalAlignment="Stretch">
+                <TextBlock Text="My Cookbooks" FontWeight="SemiBold"/>
+            </Button>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <ScrollViewer Visibility="{x:Bind local:BindableHelpers.BoolToVisibility(ViewModel.HasItems), Mode=OneWay}"
+                          Padding="20,8,20,16">
+                <ItemsControl ItemsSource="{x:Bind ViewModel.Cookbooks}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VariableSizedWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="2"
+                                           ItemWidth="170"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="models:CookbookData">
+                            <Button Background="Transparent" BorderThickness="0" Padding="0" Margin="0,0,12,12"
+                                    Click="OnCookbookClick" Tag="{x:Bind}">
+                                <Border Style="{StaticResource RecipeCardStyle}">
+                                    <StackPanel>
+                                        <Border Height="120" CornerRadius="12,12,0,0"
+                                                Background="{ThemeResource PrimarySoftBrush}">
+                                            <TextBlock Text="📚" FontSize="40"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel Padding="12,10,12,12" Spacing="4">
+                                            <TextBlock Text="{x:Bind Name}"
+                                                       Style="{StaticResource BodyLargeStyle}"
+                                                       TextTrimming="CharacterEllipsis" MaxLines="1"/>
+                                            <TextBlock Style="{StaticResource CaptionStyle}">
+                                                <Run Text="{x:Bind PinsNumber}"/><Run Text=" recipes"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <StackPanel Visibility="{x:Bind local:BindableHelpers.BoolToCollapsed(ViewModel.HasItems), Mode=OneWay}"
+                        VerticalAlignment="Center" HorizontalAlignment="Center"
+                        Spacing="14" Padding="32">
+                <Image Source="ms-appx:///Assets/Images/empty_box_light.svg" Width="160" Height="160"/>
+                <TextBlock Text="No cookbooks yet" Style="{StaticResource H2Style}" TextAlignment="Center"/>
+                <TextBlock Text="Group your favorite recipes into cookbooks."
+                           Style="{StaticResource BodySecondaryStyle}" TextAlignment="Center"
+                           TextWrapping="Wrap" MaxWidth="280"/>
+            </StackPanel>
+
+            <Button HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                    Width="56" Height="56" CornerRadius="28"
+                    Background="{ThemeResource PrimaryBrush}"
+                    Foreground="White" BorderThickness="0"
+                    Margin="0,0,24,24"
+                    Command="{x:Bind ViewModel.CreateCookbookCommand}">
+                <TextBlock Text="+" FontSize="28" FontWeight="Bold"/>
+            </Button>
+        </Grid>
+
+        <local:BottomNavBar Grid.Row="3" ActiveTab="Favorites" TabSelected="OnTabSelected"/>
+    </Grid>
+</Page>

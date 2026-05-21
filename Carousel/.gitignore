@@ -1,0 +1,28 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+## NuGet
+*.nupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+
+## Visual Studio
+.vs/
+*.rsuser
+*.csproj.user
+
+## Rider
+.idea/
+
+## OS files
+.DS_Store
+Thumbs.db
+
+## Uno Platform
+*.stamp

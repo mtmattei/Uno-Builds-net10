@@ -1,0 +1,67 @@
+<Page x:Class="ChefsTest7.Presentation.Pages.OnboardingPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource SurfaceBrush}">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <FlipView x:Name="OnboardingFlip" Grid.Row="0">
+      <FlipViewItem>
+        <Grid Padding="40">
+          <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20">
+            <Border Width="220" Height="220" CornerRadius="12" Background="{ThemeResource PrimaryContainerBrush}">
+              <TextBlock Text="🥑" FontSize="120" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <TextBlock Text="Discover Recipes" Style="{ThemeResource HeadlineMedium}" Foreground="{ThemeResource OnSurfaceBrush}" HorizontalAlignment="Center"/>
+            <TextBlock Text="Find inspiration in trending recipes from chefs around the world."
+                       Style="{ThemeResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}"
+                       TextWrapping="Wrap" TextAlignment="Center" MaxWidth="320"/>
+          </StackPanel>
+        </Grid>
+      </FlipViewItem>
+      <FlipViewItem>
+        <Grid Padding="40">
+          <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20">
+            <Border Width="220" Height="220" CornerRadius="12" Background="{ThemeResource SecondaryContainerBrush}">
+              <TextBlock Text="📖" FontSize="120" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <TextBlock Text="Build Cookbooks" Style="{ThemeResource HeadlineMedium}" Foreground="{ThemeResource OnSurfaceBrush}" HorizontalAlignment="Center"/>
+            <TextBlock Text="Save your favorites and organize them into custom cookbooks."
+                       Style="{ThemeResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}"
+                       TextWrapping="Wrap" TextAlignment="Center" MaxWidth="320"/>
+          </StackPanel>
+        </Grid>
+      </FlipViewItem>
+      <FlipViewItem>
+        <Grid Padding="40">
+          <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20">
+            <Border Width="220" Height="220" CornerRadius="12" Background="{ThemeResource TertiaryContainerBrush}">
+              <TextBlock Text="👨‍🍳" FontSize="120" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <TextBlock Text="Cook Live" Style="{ThemeResource HeadlineMedium}" Foreground="{ThemeResource OnSurfaceBrush}" HorizontalAlignment="Center"/>
+            <TextBlock Text="Step-by-step videos guide you through every recipe."
+                       Style="{ThemeResource BodyMedium}" Foreground="{ThemeResource OnSurfaceVariantBrush}"
+                       TextWrapping="Wrap" TextAlignment="Center" MaxWidth="320"/>
+          </StackPanel>
+        </Grid>
+      </FlipViewItem>
+    </FlipView>
+
+    <Grid Grid.Row="1" Padding="24">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <Button Grid.Column="0" Content="Skip"
+              Style="{ThemeResource TextButtonStyle}"
+              Command="{x:Bind ViewModel.SkipCommand}" />
+      <Button Grid.Column="2" Content="Get Started"
+              Style="{ThemeResource FilledButtonStyle}"
+              Command="{x:Bind ViewModel.GetStartedCommand}" />
+    </Grid>
+  </Grid>
+</Page>

@@ -1,0 +1,67 @@
+<!-- DESIGN.md §8 Color + Theming — chef-pink palette + cool-grey canvas + warm beige + triadic chart accents.
+     Light: charcoal app bar (#2B2B2E) over cool canvas (#F6F7FA). Dark: light app bar (#ECECEC) over near-black canvas (#121212).
+     Inversion rule: app bar always contrasts with canvas. Primary CTA fills with chef-pink #E91E63 light / lighter #F8BBD0 dark. -->
+<ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+  <ResourceDictionary.ThemeDictionaries>
+    <ResourceDictionary x:Key="Light">
+      <Color x:Key="PrimaryColor">#E91E63</Color>
+      <Color x:Key="OnPrimaryColor">#FFFFFF</Color>
+      <Color x:Key="PrimaryContainerColor">#FCE4EC</Color>
+      <Color x:Key="OnPrimaryContainerColor">#4A0E20</Color>
+      <Color x:Key="SecondaryColor">#EDE4D3</Color>
+      <Color x:Key="OnSecondaryColor">#3A2A20</Color>
+      <Color x:Key="SecondaryContainerColor">#F5EFE3</Color>
+      <Color x:Key="OnSecondaryContainerColor">#3A2A20</Color>
+      <Color x:Key="TertiaryColor">#3E8BFA</Color>
+      <Color x:Key="OnTertiaryColor">#FFFFFF</Color>
+      <Color x:Key="TertiaryContainerColor">#D4E4FF</Color>
+      <Color x:Key="OnTertiaryContainerColor">#001D36</Color>
+      <Color x:Key="ErrorColor">#D32F2F</Color>
+      <Color x:Key="ErrorContainerColor">#FDECEA</Color>
+      <Color x:Key="OnErrorColor">#FFFFFF</Color>
+      <Color x:Key="OnErrorContainerColor">#410002</Color>
+      <Color x:Key="BackgroundColor">#F6F7FA</Color>
+      <Color x:Key="OnBackgroundColor">#1A1A1A</Color>
+      <Color x:Key="SurfaceColor">#FFFFFF</Color>
+      <Color x:Key="OnSurfaceColor">#1A1A1A</Color>
+      <Color x:Key="SurfaceVariantColor">#F1F3F8</Color>
+      <Color x:Key="OnSurfaceVariantColor">#6E6E6E</Color>
+      <Color x:Key="OutlineColor">#D0D0D0</Color>
+      <Color x:Key="OnSurfaceInverseColor">#FFFFFF</Color>
+      <Color x:Key="SurfaceInverseColor">#2B2B2E</Color>
+      <Color x:Key="PrimaryInverseColor">#F8BBD0</Color>
+      <Color x:Key="SurfaceTintColor">#E91E63</Color>
+      <Color x:Key="OutlineVariantColor">#E6E8EE</Color>
+    </ResourceDictionary>
+    <ResourceDictionary x:Key="Dark">
+      <Color x:Key="PrimaryColor">#F8BBD0</Color>
+      <Color x:Key="OnPrimaryColor">#4A0E20</Color>
+      <Color x:Key="PrimaryContainerColor">#AD1457</Color>
+      <Color x:Key="OnPrimaryContainerColor">#FCE4EC</Color>
+      <Color x:Key="SecondaryColor">#EDE4D3</Color>
+      <Color x:Key="OnSecondaryColor">#3A2A20</Color>
+      <Color x:Key="SecondaryContainerColor">#3A2A20</Color>
+      <Color x:Key="OnSecondaryContainerColor">#F5EFE3</Color>
+      <Color x:Key="TertiaryColor">#9FCAFF</Color>
+      <Color x:Key="OnTertiaryColor">#003258</Color>
+      <Color x:Key="TertiaryContainerColor">#00497D</Color>
+      <Color x:Key="OnTertiaryContainerColor">#D1E4FF</Color>
+      <Color x:Key="ErrorColor">#FFB4AB</Color>
+      <Color x:Key="ErrorContainerColor">#93000A</Color>
+      <Color x:Key="OnErrorColor">#690005</Color>
+      <Color x:Key="OnErrorContainerColor">#FFDAD6</Color>
+      <Color x:Key="BackgroundColor">#121212</Color>
+      <Color x:Key="OnBackgroundColor">#FFFFFF</Color>
+      <Color x:Key="SurfaceColor">#1E1E1E</Color>
+      <Color x:Key="OnSurfaceColor">#FFFFFF</Color>
+      <Color x:Key="SurfaceVariantColor">#2A2A2A</Color>
+      <Color x:Key="OnSurfaceVariantColor">#BDBDBD</Color>
+      <Color x:Key="OutlineColor">#3A3A3A</Color>
+      <Color x:Key="OnSurfaceInverseColor">#1A1A1A</Color>
+      <Color x:Key="SurfaceInverseColor">#ECECEC</Color>
+      <Color x:Key="PrimaryInverseColor">#E91E63</Color>
+      <Color x:Key="SurfaceTintColor">#F8BBD0</Color>
+      <Color x:Key="OutlineVariantColor">#3A3A3A</Color>
+    </ResourceDictionary>
+  </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

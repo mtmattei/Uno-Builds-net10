@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "DOTNET_ENVIRONMENT": "Development"
+  },
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Platform006/OneDrive - Uno Platform/Desktop/unOS/AI-builds/ChefsFT-test/results/**)",
+      "Bash(mv test-3.md test-3.prior-run-2.md)",
+      "Bash(mv test-3.log test-3.prior-run-2.log)",
+      "Bash(ls test-3*)",
+      "mcp__uno__uno_platform_agent_rules_init",
+      "mcp__uno__uno_platform_usage_rules_init",
+      "mcp__uno-app__uno_app_get_runtime_info",
+      "mcp__uno-app__uno_app_get_screenshot",
+      "Bash(tasklist)",
+      "mcp__uno-app__uno_app_visualtree_snapshot",
+      "mcp__uno-app__uno_app_element_peer_default_action",
+      "Bash(taskkill //PID 12108 //F)",
+      "Bash(taskkill //IM ChefsTest3.exe //F)",
+      "Bash(powershell *)",
+      "Bash(./ChefsTest3.exe)",
+      "mcp__uno-app__uno_app_pointer_click",
+      "Bash(rm -f 13-cookbook-detail.jpg)",
+      "Bash(cp ../test-3-07-filters.png ./07-filters.png)",
+      "Bash(cp ../test-3-17-otherprofile.png ./17-other-profile.png)",
+      "Bash(cp ../test-3-19-notifications.png ./19-notifications.png)",
+      "Bash(cp ../test-3-20-nearme.png ./20-near-me-map.png)"
+    ]
+  }
+}

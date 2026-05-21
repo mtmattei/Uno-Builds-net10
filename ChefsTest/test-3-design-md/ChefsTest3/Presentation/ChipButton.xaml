@@ -1,0 +1,16 @@
+<UserControl
+    x:Class="ChefsTest3.Presentation.ChipButton"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Button x:Name="RootButton"
+            Background="{ThemeResource ChipUnselectedBrush}"
+            Foreground="{ThemeResource ChipUnselectedTextBrush}"
+            CornerRadius="20"
+            BorderThickness="1"
+            BorderBrush="{ThemeResource DividerBrush}"
+            Padding="14,8"
+            Click="OnClick">
+        <TextBlock x:Name="LabelText" Text="Chip" FontSize="13" FontWeight="SemiBold"/>
+    </Button>
+</UserControl>

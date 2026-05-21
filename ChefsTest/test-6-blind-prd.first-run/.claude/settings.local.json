@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "DOTNET_ENVIRONMENT": "Development"
+  },
+  "permissions": {
+    "allow": [
+      "mcp__uno-app__uno_app_get_runtime_info",
+      "mcp__uno-app__uno_app_get_screenshot",
+      "mcp__uno-app__uno_app_visualtree_snapshot",
+      "mcp__uno-app__uno_app_element_peer_default_action",
+      "mcp__uno-app__uno_app_close",
+      "mcp__uno-app__uno_app_pointer_click",
+      "mcp__uno-app__uno_app_type_text",
+      "Bash(taskkill //F //PID 13880)",
+      "Bash(tasklist)",
+      "Bash(taskkill //F //IM ChefsTest6.exe)",
+      "mcp__uno-app__uno_app_start",
+      "mcp__uno-app__uno_app_get_element_datacontext",
+      "mcp__uno__uno_platform_docs_search",
+      "mcp__uno__uno_platform_docs_fetch",
+      "mcp__uno-app__uno_app_key_press",
+      "mcp__uno-app__uno_app_element_peer_action"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "DOTNET_ENVIRONMENT": "Development"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p \"C:/Users/Platform006/OneDrive - Uno Platform/Desktop/unOS/AI-builds/ChefsFT-test/test-1-screenshots/ChefsTest1/Assets/data\")",
+      "Bash(cp \"C:/Users/Platform006/OneDrive - Uno Platform/Desktop/unOS/AI-builds/ChefsFT-test/reference/data/\"*.json \"C:/Users/Platform006/OneDrive - Uno Platform/Desktop/unOS/AI-builds/ChefsFT-test/test-1-screenshots/ChefsTest1/Assets/data/\")",
+      "mcp__uno-app__uno_app_get_runtime_info",
+      "mcp__uno-app__uno_app_get_screenshot",
+      "mcp__uno-app__uno_app_pointer_click",
+      "Bash(tasklist)",
+      "Bash(powershell -Command \"Get-Process ChefsTest1 -ErrorAction SilentlyContinue | Select-Object Id, MainWindowTitle, Responding\")",
+      "Bash(powershell *)",
+      "mcp__uno-app__uno_app_visualtree_snapshot",
+      "mcp__uno-app__uno_app_element_peer_default_action",
+      "mcp__uno__uno_platform_docs_search",
+      "mcp__uno__uno_platform_docs_fetch",
+      "Read(//c/Users/Platform006/OneDrive - Uno Platform/Desktop/unOS/AI-builds/ChefsFT-test/reference/data/**)",
+      "Read(//c/Users/Platform006/OneDrive - Uno Platform/Desktop/unOS/AI-builds/ChefsFT-test/reference/assets/**)",
+      "mcp__uno-app__uno_app_element_peer_action",
+      "mcp__uno-app__uno_app_close"
+    ]
+  }
+}

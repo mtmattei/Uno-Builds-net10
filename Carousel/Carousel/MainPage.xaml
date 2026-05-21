@@ -1,0 +1,398 @@
+<Page x:Class="CarouselDemo.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:CarouselDemo"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{StaticResource DemoPageBackgroundBrush}">
+
+  <ScrollViewer>
+    <StackPanel Spacing="32"
+                Padding="24"
+                MaxWidth="900"
+                HorizontalAlignment="Center">
+
+      <!-- Page Title -->
+      <TextBlock Text="Carousel Control"
+                 Style="{StaticResource DisplaySmall}"
+                 Foreground="{StaticResource DemoHeadingBrush}" />
+
+      <TextBlock Text="A first-class carousel control with looping, indicators, transitions, and auto-play."
+                 Style="{StaticResource BodyLarge}"
+                 Foreground="{StaticResource DemoBodyBrush}"
+                 TextWrapping="Wrap" />
+
+      <!-- Demo 1: Photo Carousel -->
+      <Border Background="{StaticResource DemoSurfaceBrush}"
+              CornerRadius="16"
+              Padding="24">
+        <StackPanel Spacing="16">
+          <TextBlock Text="Photo Carousel"
+                     Style="{StaticResource TitleMedium}"
+                     Foreground="{StaticResource DemoHeadingBrush}" />
+
+          <TextBlock Text="Real images with looping and slide transitions"
+                     Style="{StaticResource BodyMedium}"
+                     Foreground="{StaticResource DemoBodyBrush}" />
+
+          <utu:Carousel x:Name="BasicCarousel"
+                        Height="480"
+                        CornerRadius="12"
+                        IsLoopingEnabled="True">
+            <utu:Carousel.ItemTemplate>
+              <DataTemplate>
+                <Grid>
+                  <Image Source="{Binding ImageUrl}"
+                         Stretch="UniformToFill"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center" />
+                  <!-- Caption overlay -->
+                  <Border VerticalAlignment="Bottom"
+                          Background="#99000000"
+                          Padding="20,12">
+                    <TextBlock Text="{Binding Caption}"
+                               Style="{StaticResource TitleMedium}"
+                               Foreground="White" />
+                  </Border>
+                </Grid>
+              </DataTemplate>
+            </utu:Carousel.ItemTemplate>
+          </utu:Carousel>
+
+          <TextBlock x:Name="BasicCarouselStatus"
+                     Style="{StaticResource BodyMedium}"
+                     Foreground="{StaticResource DemoBodyBrush}"
+                     HorizontalAlignment="Center" />
+
+          <TextBlock Text="Use built-in arrows or swipe to navigate"
+                     Style="{StaticResource BodySmall}"
+                     Foreground="{StaticResource DemoBodyBrush}"
+                     HorizontalAlignment="Center"
+                     Opacity="0.7" />
+        </StackPanel>
+      </Border>
+
+      <!-- Demo 2: Vertical Nature Gallery -->
+      <Border Background="{StaticResource DemoSurfaceBrush}"
+              CornerRadius="16"
+              Padding="24">
+        <StackPanel Spacing="16">
+          <TextBlock Text="Vertical Orientation"
+                     Style="{StaticResource TitleMedium}"
+                     Foreground="{StaticResource DemoHeadingBrush}" />
+
+          <TextBlock Text="Swipe up/down or use arrow keys to navigate"
+                     Style="{StaticResource BodyMedium}"
+                     Foreground="{StaticResource DemoBodyBrush}" />
+
+          <utu:Carousel x:Name="VerticalCarousel"
+                        Height="480"
+                        CornerRadius="12"
+                        Orientation="Vertical"
+                        IsLoopingEnabled="True">
+            <utu:Carousel.ItemTemplate>
+              <DataTemplate>
+                <Grid>
+                  <Image Source="{Binding ImageUrl}"
+                         Stretch="UniformToFill"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center" />
+                  <Border VerticalAlignment="Bottom"
+                          Background="#99000000"
+                          Padding="20,12">
+                    <TextBlock Text="{Binding Caption}"
+                               Style="{StaticResource TitleMedium}"
+                               Foreground="White" />
+                  </Border>
+                </Grid>
+              </DataTemplate>
+            </utu:Carousel.ItemTemplate>
+          </utu:Carousel>
+        </StackPanel>
+      </Border>
+
+      <!-- Demo 3: Custom ItemTemplate with Data Binding -->
+      <Border Background="{StaticResource DemoSurfaceBrush}"
+              CornerRadius="16"
+              Padding="24">
+        <StackPanel Spacing="16">
+          <TextBlock Text="Custom ItemTemplate with Data Binding"
+                     Style="{StaticResource TitleMedium}"
+                     Foreground="{StaticResource DemoHeadingBrush}" />
+
+          <TextBlock Text="Image cards with title, description, and overlay"
+                     Style="{StaticResource BodyMedium}"
+                     Foreground="{StaticResource DemoBodyBrush}" />
+
+          <utu:Carousel x:Name="TemplatedCarousel"
+                        Height="480"
+                        CornerRadius="12"
+                        IsLoopingEnabled="True">
+            <utu:Carousel.ItemTemplate>
+              <DataTemplate>
+                <Grid>
+                  <Image Source="{Binding ImageUrl}"
+                         Stretch="UniformToFill"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center" />
+                  <!-- Gradient overlay at bottom -->
+                  <Border VerticalAlignment="Bottom"
+                          Background="#CC000000"
+                          Padding="24,20">
+                    <StackPanel Spacing="4">
+                      <TextBlock Text="{Binding Title}"
+                                 Style="{StaticResource TitleLarge}"
+                                 Foreground="White" />
+                      <TextBlock Text="{Binding Description}"
+                                 Style="{StaticResource BodyMedium}"
+                                 Foreground="#CCFFFFFF"
+                                 TextWrapping="Wrap" />
+                    </StackPanel>
+                  </Border>
+                </Grid>
+              </DataTemplate>
+            </utu:Carousel.ItemTemplate>
+          </utu:Carousel>
+        </StackPanel>
+      </Border>
+
+      <!-- Demo 4: Auto-Play Slideshow -->
+      <Border Background="{StaticResource DemoSurfaceBrush}"
+              CornerRadius="16"
+              Padding="24">
+        <StackPanel Spacing="16">
+          <TextBlock Text="Auto-Play Slideshow (3s interval)"
+                     Style="{StaticResource TitleMedium}"
+                     Foreground="{StaticResource DemoHeadingBrush}" />
+
+          <TextBlock Text="Pauses on hover, resumes when pointer leaves"
+                     Style="{StaticResource BodyMedium}"
+                     Foreground="{StaticResource DemoBodyBrush}" />
+
+          <utu:Carousel x:Name="AutoPlayCarousel"
+                        Height="480"
+                        CornerRadius="12"
+                        IsLoopingEnabled="True"
+                        IsAutoPlayEnabled="True">
+            <utu:Carousel.ItemTemplate>
+              <DataTemplate>
+                <Image Source="{Binding}"
+                       Stretch="UniformToFill"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+              </DataTemplate>
+            </utu:Carousel.ItemTemplate>
+          </utu:Carousel>
+        </StackPanel>
+      </Border>
+
+      <!-- Demo 5: No Looping -->
+      <Border Background="{StaticResource DemoSurfaceBrush}"
+              CornerRadius="16"
+              Padding="24">
+        <StackPanel Spacing="16">
+          <TextBlock Text="No Looping"
+                     Style="{StaticResource TitleMedium}"
+                     Foreground="{StaticResource DemoHeadingBrush}" />
+
+          <TextBlock Text="Stops at the first and last item instead of wrapping around"
+                     Style="{StaticResource BodyMedium}"
+                     Foreground="{StaticResource DemoBodyBrush}" />
+
+          <utu:Carousel x:Name="NoLoopCarousel"
+                        Height="480"
+                        CornerRadius="12"
+                        IsLoopingEnabled="False">
+            <utu:Carousel.ItemTemplate>
+              <DataTemplate>
+                <Grid>
+                  <Image Source="{Binding ImageUrl}"
+                         Stretch="UniformToFill"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center" />
+                  <Border VerticalAlignment="Bottom"
+                          Background="#99000000"
+                          Padding="20,12">
+                    <TextBlock Text="{Binding Caption}"
+                               Style="{StaticResource TitleMedium}"
+                               Foreground="White" />
+                  </Border>
+                </Grid>
+              </DataTemplate>
+            </utu:Carousel.ItemTemplate>
+          </utu:Carousel>
+        </StackPanel>
+      </Border>
+
+      <!-- Demo 6: Fade Transition -->
+      <Border Background="{StaticResource DemoSurfaceBrush}"
+              CornerRadius="16"
+              Padding="24">
+        <StackPanel Spacing="16">
+          <TextBlock Text="Fade Transition"
+                     Style="{StaticResource TitleMedium}"
+                     Foreground="{StaticResource DemoHeadingBrush}" />
+
+          <TextBlock Text="Cross-fade animation between slides"
+                     Style="{StaticResource BodyMedium}"
+                     Foreground="{StaticResource DemoBodyBrush}" />
+
+          <utu:Carousel x:Name="FadeCarousel"
+                        Height="480"
+                        CornerRadius="12"
+                        IsLoopingEnabled="True">
+            <utu:Carousel.ItemTemplate>
+              <DataTemplate>
+                <Grid>
+                  <Image Source="{Binding ImageUrl}"
+                         Stretch="UniformToFill"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center" />
+                  <Border VerticalAlignment="Bottom"
+                          Background="#99000000"
+                          Padding="20,12">
+                    <TextBlock Text="{Binding Caption}"
+                               Style="{StaticResource TitleMedium}"
+                               Foreground="White" />
+                  </Border>
+                </Grid>
+              </DataTemplate>
+            </utu:Carousel.ItemTemplate>
+          </utu:Carousel>
+
+          <TextBlock Text="Use arrows or swipe to navigate"
+                     Style="{StaticResource BodySmall}"
+                     Foreground="{StaticResource DemoBodyBrush}"
+                     HorizontalAlignment="Center"
+                     Opacity="0.7" />
+        </StackPanel>
+      </Border>
+
+      <!-- Demo 7: Two-Way SelectedIndex Binding -->
+      <Border Background="{StaticResource DemoSurfaceBrush}"
+              CornerRadius="16"
+              Padding="24">
+        <StackPanel Spacing="16">
+          <TextBlock Text="Programmatic Control and Two-Way Binding"
+                     Style="{StaticResource TitleMedium}"
+                     Foreground="{StaticResource DemoHeadingBrush}" />
+
+          <TextBlock Text="Slider and buttons control SelectedIndex via two-way binding"
+                     Style="{StaticResource BodyMedium}"
+                     Foreground="{StaticResource DemoBodyBrush}" />
+
+          <utu:Carousel x:Name="BindingCarousel"
+                        Height="480"
+                        CornerRadius="12"
+                        IsLoopingEnabled="True">
+            <utu:Carousel.ItemTemplate>
+              <DataTemplate>
+                <Grid>
+                  <Image Source="{Binding ImageUrl}"
+                         Stretch="UniformToFill"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center" />
+                  <Border VerticalAlignment="Bottom"
+                          Background="#99000000"
+                          Padding="20,12">
+                    <TextBlock Text="{Binding Caption}"
+                               Style="{StaticResource TitleMedium}"
+                               Foreground="White" />
+                  </Border>
+                </Grid>
+              </DataTemplate>
+            </utu:Carousel.ItemTemplate>
+          </utu:Carousel>
+
+          <StackPanel Spacing="8">
+            <StackPanel Orientation="Horizontal"
+                        Spacing="8"
+                        HorizontalAlignment="Center">
+              <TextBlock Text="Slide to navigate:"
+                         Style="{StaticResource BodyMedium}"
+                         Foreground="{StaticResource DemoBodyBrush}"
+                         VerticalAlignment="Center" />
+              <TextBlock x:Name="BindingIndexText"
+                         Style="{StaticResource BodyMedium}"
+                         Foreground="{StaticResource DemoAccentBrush}"
+                         VerticalAlignment="Center" />
+            </StackPanel>
+
+            <Slider x:Name="BindingSlider"
+                    Minimum="0"
+                    StepFrequency="1"
+                    SnapsTo="StepValues"
+                    HorizontalAlignment="Stretch" />
+
+            <StackPanel Orientation="Horizontal"
+                        Spacing="12"
+                        HorizontalAlignment="Center">
+              <Button Content="Go to First"
+                      Click="OnGoToFirstClicked" />
+              <Button Content="Go to Last"
+                      Click="OnGoToLastClicked" />
+              <Button Content="Go to Random"
+                      Click="OnGoToRandomClicked" />
+            </StackPanel>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <!-- Demo 8: Edge Cases -->
+      <Border Background="{StaticResource DemoSurfaceBrush}"
+              CornerRadius="16"
+              Padding="24">
+        <StackPanel Spacing="16">
+          <TextBlock Text="Edge Cases"
+                     Style="{StaticResource TitleMedium}"
+                     Foreground="{StaticResource DemoHeadingBrush}" />
+
+          <TextBlock Text="Empty and single-item carousels should not crash"
+                     Style="{StaticResource BodyMedium}"
+                     Foreground="{StaticResource DemoBodyBrush}" />
+
+          <!-- Empty Carousel -->
+          <TextBlock Text="Empty (0 items) - no crash, no indicators"
+                     Style="{StaticResource BodySmall}"
+                     Foreground="{StaticResource DemoBodyBrush}"
+                     Opacity="0.7" />
+
+          <utu:Carousel x:Name="EmptyCarousel"
+                        Height="120"
+                        CornerRadius="12"
+                        Background="#1AFFFFFF" />
+
+          <!-- Single-Item Carousel -->
+          <TextBlock Text="Single item - no indicators, nav buttons disabled"
+                     Style="{StaticResource BodySmall}"
+                     Foreground="{StaticResource DemoBodyBrush}"
+                     Opacity="0.7" />
+
+          <utu:Carousel x:Name="SingleItemCarousel"
+                        Height="300"
+                        CornerRadius="12"
+                        IsLoopingEnabled="True">
+            <utu:Carousel.ItemTemplate>
+              <DataTemplate>
+                <Grid>
+                  <Image Source="{Binding ImageUrl}"
+                         Stretch="UniformToFill"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center" />
+                  <Border VerticalAlignment="Bottom"
+                          Background="#99000000"
+                          Padding="20,12">
+                    <TextBlock Text="{Binding Caption}"
+                               Style="{StaticResource TitleMedium}"
+                               Foreground="White" />
+                  </Border>
+                </Grid>
+              </DataTemplate>
+            </utu:Carousel.ItemTemplate>
+          </utu:Carousel>
+        </StackPanel>
+      </Border>
+
+    </StackPanel>
+  </ScrollViewer>
+
+</Page>

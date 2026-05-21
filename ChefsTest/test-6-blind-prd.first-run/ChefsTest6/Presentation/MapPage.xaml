@@ -1,0 +1,104 @@
+<Page x:Class="ChefsTest6.Presentation.MapPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:ChefsTest6.Presentation"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+      xmlns:models="using:ChefsTest6.Models"
+      Background="{ThemeResource BackgroundBrush}">
+  <Page.Resources>
+    <local:NotNullToVisibilityConverter x:Key="NotNullToVis" />
+
+    <DataTemplate x:Key="ChefPinTemplate" x:DataType="models:User">
+      <Grid Margin="6"
+            Padding="12"
+            CornerRadius="12"
+            Background="{ThemeResource SurfaceContainerLowBrush}"
+            ColumnSpacing="12">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="48" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Ellipse Width="48" Height="48">
+          <Ellipse.Fill>
+            <ImageBrush ImageSource="{x:Bind UrlProfileImage}" Stretch="UniformToFill" />
+          </Ellipse.Fill>
+        </Ellipse>
+        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+          <TextBlock Text="{x:Bind FullName}" Style="{ThemeResource TitleSmallTextBlockStyle}" />
+          <TextBlock Style="{ThemeResource BodySmallTextBlockStyle}" Opacity="0.7">
+            <Run Text="{x:Bind Followers}" />
+            <Run Text=" followers" />
+          </TextBlock>
+        </StackPanel>
+      </Grid>
+    </DataTemplate>
+  </Page.Resources>
+  <Grid utu:SafeArea.Insets="VisibleBounds">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <utu:NavigationBar Content="{Binding Title}">
+      <utu:NavigationBar.MainCommand>
+        <AppBarButton Icon="Back" Command="{Binding BackCommand}" />
+      </utu:NavigationBar.MainCommand>
+    </utu:NavigationBar>
+
+    <Grid Grid.Row="1">
+      <Grid Background="{ThemeResource SurfaceContainerLowBrush}">
+        <Border Background="{ThemeResource SurfaceContainerHighestBrush}"
+                Opacity="0.5" />
+        <muxc:ItemsRepeater ItemsSource="{Binding NearbyChefs}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Margin="32">
+          <muxc:ItemsRepeater.Layout>
+            <muxc:UniformGridLayout MinItemWidth="60"
+                                    MinItemHeight="60"
+                                    MinRowSpacing="6"
+                                    MinColumnSpacing="6" />
+          </muxc:ItemsRepeater.Layout>
+          <muxc:ItemsRepeater.ItemTemplate>
+            <DataTemplate x:DataType="models:User">
+              <Border Margin="6"
+                      Padding="6"
+                      CornerRadius="32"
+                      Background="{ThemeResource SurfaceBrush}">
+                <Ellipse Width="48" Height="48">
+                  <Ellipse.Fill>
+                    <ImageBrush ImageSource="{x:Bind UrlProfileImage}" Stretch="UniformToFill" />
+                  </Ellipse.Fill>
+                </Ellipse>
+              </Border>
+            </DataTemplate>
+          </muxc:ItemsRepeater.ItemTemplate>
+        </muxc:ItemsRepeater>
+        <Border Background="{ThemeResource SurfaceBrush}"
+                CornerRadius="999"
+                Padding="12,4,12,4"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Margin="12">
+          <TextBlock Text="{Binding LocationStatus}"
+                     Style="{ThemeResource LabelMediumTextBlockStyle}" />
+        </Border>
+      </Grid>
+    </Grid>
+
+    <Grid Grid.Row="2"
+          Padding="16,8,16,16">
+      <ItemsControl ItemsSource="{Binding NearbyChefs}"
+                    ItemTemplate="{StaticResource ChefPinTemplate}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Orientation="Horizontal" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+      </ItemsControl>
+    </Grid>
+  </Grid>
+</Page>

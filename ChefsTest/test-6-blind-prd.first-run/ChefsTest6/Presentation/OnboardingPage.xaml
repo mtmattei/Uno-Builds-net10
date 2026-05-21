@@ -1,0 +1,79 @@
+<Page x:Class="ChefsTest6.Presentation.OnboardingPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:ChefsTest6.Presentation"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+      Background="{ThemeResource BackgroundBrush}">
+  <Page.Resources>
+    <local:BoolToVisibilityConverter x:Key="BoolToVis" />
+    <local:BoolToVisibilityConverter x:Key="InvBoolToVis" Invert="True" />
+  </Page.Resources>
+  <Grid utu:SafeArea.Insets="VisibleBounds">
+    <Grid.RowDefinitions>
+      <RowDefinition />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <FlipView ItemsSource="{Binding Slides}"
+              SelectedIndex="{Binding CurrentIndex, Mode=TwoWay}">
+      <FlipView.ItemTemplate>
+        <DataTemplate>
+          <Grid Margin="24">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="2*" />
+              <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Image Source="{Binding ImageUrl}"
+                   Stretch="UniformToFill" />
+            <StackPanel Grid.Row="1"
+                        Spacing="12"
+                        Margin="0,24,0,0"
+                        VerticalAlignment="Top">
+              <TextBlock Text="{Binding Title}"
+                         Style="{ThemeResource HeadlineMediumTextBlockStyle}"
+                         TextWrapping="Wrap" />
+              <TextBlock Text="{Binding Body}"
+                         Style="{ThemeResource BodyLargeTextBlockStyle}"
+                         TextWrapping="Wrap"
+                         Opacity="0.8" />
+            </StackPanel>
+          </Grid>
+        </DataTemplate>
+      </FlipView.ItemTemplate>
+    </FlipView>
+
+    <muxc:PipsPager Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    NumberOfPages="3"
+                    SelectedPageIndex="{Binding CurrentIndex, Mode=TwoWay}"
+                    Margin="0,8,0,8" />
+
+    <Grid Grid.Row="2" Padding="24,8,24,24">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+
+      <Button Content="Skip"
+              Command="{Binding SkipCommand}"
+              Style="{ThemeResource TextButtonStyle}" />
+
+      <Button Grid.Column="2"
+              Content="Back"
+              Command="{Binding PreviousCommand}"
+              Visibility="{Binding IsFirstSlide, Converter={StaticResource InvBoolToVis}}"
+              Margin="0,0,8,0"
+              Style="{ThemeResource OutlinedButtonStyle}" />
+
+      <Button Grid.Column="3"
+              Content="{Binding NextLabel}"
+              Command="{Binding NextCommand}"
+              MinWidth="120"
+              Style="{ThemeResource ElevatedButtonStyle}" />
+    </Grid>
+  </Grid>
+</Page>

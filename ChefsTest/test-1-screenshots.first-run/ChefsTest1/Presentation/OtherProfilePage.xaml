@@ -1,0 +1,84 @@
+<Page x:Class="ChefsTest1.Presentation.OtherProfilePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:ChefsTest1.Presentation"
+      xmlns:models="using:ChefsTest1.Models"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource ScreenBackgroundBrush}">
+  <Grid x:Name="RootGrid">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <Border Grid.Row="0" Background="{ThemeResource AppBarBackgroundBrush}" Padding="12,12">
+      <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+        <Button Background="Transparent" BorderThickness="0" Foreground="White" Command="{x:Bind ViewModel.BackCommand}">
+          <FontIcon Glyph="&#xE72B;" FontSize="20" Foreground="White" />
+        </Button>
+        <TextBlock Text="Profile" Foreground="White" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Margin="8,0" />
+      </StackPanel>
+    </Border>
+
+    <Border Grid.Row="1" Background="{ThemeResource SurfaceBrush}" Padding="20,18">
+      <StackPanel Spacing="14" HorizontalAlignment="Center">
+        <Border Width="96" Height="96" CornerRadius="48">
+          <Border.Background>
+            <ImageBrush ImageSource="{x:Bind ViewModel.User.UrlProfileImage, Mode=OneWay}" Stretch="UniformToFill" />
+          </Border.Background>
+        </Border>
+        <TextBlock Text="{x:Bind ViewModel.User.FullName, Mode=OneWay}" FontWeight="SemiBold" FontSize="18" HorizontalAlignment="Center" />
+        <Grid HorizontalAlignment="Center">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <StackPanel Grid.Column="0" Padding="20,0">
+            <TextBlock Text="{x:Bind ViewModel.User.Recipes, Mode=OneWay}" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center" />
+            <TextBlock Text="Recipes" Foreground="{ThemeResource MutedTextBrush}" FontSize="12" HorizontalAlignment="Center" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Padding="20,0">
+            <TextBlock Text="{x:Bind ViewModel.User.Followers, Mode=OneWay}" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center" />
+            <TextBlock Text="Followers" Foreground="{ThemeResource MutedTextBrush}" FontSize="12" HorizontalAlignment="Center" />
+          </StackPanel>
+          <StackPanel Grid.Column="2" Padding="20,0">
+            <TextBlock Text="{x:Bind ViewModel.User.Following, Mode=OneWay}" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center" />
+            <TextBlock Text="Following" Foreground="{ThemeResource MutedTextBrush}" FontSize="12" HorizontalAlignment="Center" />
+          </StackPanel>
+        </Grid>
+      </StackPanel>
+    </Border>
+
+    <ScrollViewer Grid.Row="2">
+      <ItemsRepeater ItemsSource="{x:Bind ViewModel.Recipes, Mode=OneWay}" Margin="16,16"
+                     utu:CommandExtensions.Command="{x:Bind ViewModel.OpenRecipeCommand}">
+        <ItemsRepeater.Layout>
+          <UniformGridLayout MinItemWidth="160" MinItemHeight="220" MinRowSpacing="14" MinColumnSpacing="14" />
+        </ItemsRepeater.Layout>
+        <ItemsRepeater.ItemTemplate>
+          <DataTemplate x:DataType="models:RecipeData">
+            <Border Style="{StaticResource RecipeCardStyle}">
+              <Grid>
+                <Grid.RowDefinitions>
+                  <RowDefinition Height="*" />
+                  <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" CornerRadius="14,14,0,0" Height="120">
+                  <Border.Background>
+                    <ImageBrush ImageSource="{x:Bind ImageUrl}" Stretch="UniformToFill" />
+                  </Border.Background>
+                </Border>
+                <StackPanel Grid.Row="1" Padding="10,8" Spacing="2" HorizontalAlignment="Left">
+                  <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" FontSize="13" TextTrimming="CharacterEllipsis" />
+                  <TextBlock Text="{x:Bind CookTimeAndCalories}" Style="{StaticResource CaptionText}" />
+                </StackPanel>
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ItemsRepeater.ItemTemplate>
+      </ItemsRepeater>
+    </ScrollViewer>
+  </Grid>
+</Page>

@@ -1,0 +1,199 @@
+<UserControl x:Class="ChefsTest5.Presentation.HomeView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:m="using:ChefsTest5.Models">
+  <Grid Background="{ThemeResource ChefBackgroundBrush}">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <Border Grid.Row="0" Background="{ThemeResource ChefAppBarBrush}" Padding="16,12">
+      <Grid>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Image Source="ms-appx:///Assets/Images/chefsappsignature_dark.svg"
+               Width="100" Height="28" HorizontalAlignment="Left" VerticalAlignment="Center" />
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4">
+          <Button Background="Transparent" BorderThickness="0" Padding="8"
+                  Command="{x:Bind ViewModel.GoProfileCommand}">
+            <TextBlock Text="&#xE13D;" FontFamily="Segoe MDL2 Assets" FontSize="20"
+                       Foreground="{ThemeResource ChefAppBarForegroundBrush}" />
+          </Button>
+          <Button Background="Transparent" BorderThickness="0" Padding="8"
+                  Command="{x:Bind ViewModel.GoNotificationsCommand}">
+            <TextBlock Text="&#xEA8F;" FontFamily="Segoe MDL2 Assets" FontSize="20"
+                       Foreground="{ThemeResource ChefAppBarForegroundBrush}" />
+          </Button>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <ScrollViewer Grid.Row="1" Padding="0">
+      <StackPanel Spacing="20" Padding="16,16,16,32">
+
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Text="Trending Now" Style="{StaticResource ChefSectionTitle}" VerticalAlignment="Center" />
+          <HyperlinkButton Grid.Column="1" Content="View all"
+                           Foreground="{ThemeResource ChefPinkBrush}" FontWeight="SemiBold" Padding="0" />
+        </Grid>
+
+        <ScrollViewer HorizontalScrollMode="Auto" VerticalScrollMode="Disabled"
+                      HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"
+                      HorizontalContentAlignment="Stretch">
+          <ItemsControl ItemsSource="{x:Bind ViewModel.Trending, Mode=OneWay}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="12" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="m:RecipeData">
+                <Border Width="260" Style="{StaticResource ChefCard}">
+                  <Grid>
+                    <Grid.RowDefinitions>
+                      <RowDefinition Height="160" />
+                      <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Border CornerRadius="12,12,0,0" Background="{ThemeResource ChefBackgroundBrush}">
+                      <Image Source="{x:Bind ImageUrl}" Stretch="UniformToFill" />
+                    </Border>
+                    <Grid Grid.Row="1" Padding="14,10">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                      </Grid.ColumnDefinitions>
+                      <StackPanel>
+                        <TextBlock Text="{x:Bind Name}" Style="{StaticResource ChefBody}" FontWeight="SemiBold" />
+                        <TextBlock Text="{x:Bind Calories}" Style="{StaticResource ChefMuted}" />
+                      </StackPanel>
+                      <TextBlock Grid.Column="1" Text="&#xEB52;" FontFamily="Segoe MDL2 Assets" FontSize="20"
+                                 Foreground="{ThemeResource ChefHeartInactiveBrush}" />
+                    </Grid>
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+
+        <TextBlock Text="Categories" Style="{StaticResource ChefSectionTitle}" />
+        <ScrollViewer HorizontalScrollMode="Auto" VerticalScrollMode="Disabled"
+                      HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+          <ItemsControl ItemsSource="{x:Bind ViewModel.Categories, Mode=OneWay}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="10" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="m:CategoryData">
+                <Border Style="{StaticResource ChefCard}" Padding="10,8" MinWidth="160">
+                  <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <Border Width="32" Height="32" CornerRadius="16" Background="{ThemeResource ChefSurfaceBrush}">
+                      <Image Source="{x:Bind UrlIcon}" Stretch="Uniform" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                      <TextBlock Text="{x:Bind Name}" Style="{StaticResource ChefBody}" FontWeight="SemiBold" />
+                      <TextBlock Style="{StaticResource ChefMuted}">
+                        <Run Text="{x:Bind Id}" />
+                        <Run Text=" recipes" />
+                      </TextBlock>
+                    </StackPanel>
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Text="Recently Added" Style="{StaticResource ChefSectionTitle}" VerticalAlignment="Center" />
+          <HyperlinkButton Grid.Column="1" Content="View all"
+                           Foreground="{ThemeResource ChefPinkBrush}" FontWeight="SemiBold" Padding="0" />
+        </Grid>
+
+        <ScrollViewer HorizontalScrollMode="Auto" VerticalScrollMode="Disabled"
+                      HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+          <ItemsControl ItemsSource="{x:Bind ViewModel.Recent, Mode=OneWay}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="12" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="m:RecipeData">
+                <Border Width="160" Style="{StaticResource ChefCard}">
+                  <Grid>
+                    <Grid.RowDefinitions>
+                      <RowDefinition Height="100" />
+                      <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Border CornerRadius="12,12,0,0">
+                      <Image Source="{x:Bind ImageUrl}" Stretch="UniformToFill" />
+                    </Border>
+                    <StackPanel Grid.Row="1" Padding="10,8" Spacing="2">
+                      <TextBlock Text="{x:Bind Name}" Style="{StaticResource ChefBody}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Text="{x:Bind Calories}" Style="{StaticResource ChefMuted}" />
+                    </StackPanel>
+                  </Grid>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <TextBlock Text="Popular Contributors" Style="{StaticResource ChefSectionTitle}" VerticalAlignment="Center" />
+          <HyperlinkButton Grid.Column="1" Content="Near me"
+                           Foreground="{ThemeResource ChefPinkBrush}" FontWeight="SemiBold" Padding="0"
+                           Command="{x:Bind ViewModel.GoNearMeCommand}" />
+        </Grid>
+
+        <ScrollViewer HorizontalScrollMode="Auto" VerticalScrollMode="Disabled"
+                      HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+          <ItemsControl ItemsSource="{x:Bind ViewModel.Contributors, Mode=OneWay}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal" Spacing="20" />
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="m:UserData">
+                <StackPanel Spacing="6" HorizontalAlignment="Center" Width="80">
+                  <Ellipse Width="64" Height="64">
+                    <Ellipse.Fill>
+                      <ImageBrush ImageSource="{x:Bind UrlProfileImage}" Stretch="UniformToFill" />
+                    </Ellipse.Fill>
+                  </Ellipse>
+                  <TextBlock Text="{x:Bind FullName}" Style="{StaticResource ChefMuted}"
+                             FontWeight="SemiBold" HorizontalAlignment="Center"
+                             TextTrimming="CharacterEllipsis" TextAlignment="Center" />
+                  <TextBlock Style="{StaticResource ChefCaption}" HorizontalAlignment="Center">
+                    <Run Text="{x:Bind Followers}" />
+                    <Run Text=" followers" />
+                  </TextBlock>
+                </StackPanel>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </ScrollViewer>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

@@ -1,0 +1,47 @@
+<Page
+    x:Class="Hive.Views.RewardsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:Hive.Converters"
+    Background="{StaticResource StoneBrush}">
+
+    <Page.Resources>
+        <converters:HexColorToBrushConverter x:Key="HexToBrush" />
+    </Page.Resources>
+
+    <Grid Padding="24,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="Rewards" Style="{StaticResource PageTitleStyle}" />
+            <Button Grid.Column="1" Click="OnAddReward" Style="{StaticResource FabStyle}"
+                    Width="40" Height="40" CornerRadius="20">
+                <FontIcon Glyph="&#xE710;" FontSize="16" />
+            </Button>
+        </Grid>
+
+        <!-- Per-profile reward sections (built programmatically) -->
+        <ScrollViewer Grid.Row="1">
+            <StackPanel x:Name="ProfileRewardsPanel" Spacing="24" />
+        </ScrollViewer>
+
+        <!-- Empty state -->
+        <StackPanel Grid.Row="1" x:Name="EmptyState" Visibility="Collapsed"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12">
+            <FontIcon Glyph="&#xE734;" FontSize="48" Foreground="{StaticResource TextTertiaryBrush}" />
+            <TextBlock Text="No rewards yet" Style="{StaticResource SectionHeadingStyle}"
+                       HorizontalAlignment="Center" />
+            <TextBlock Text="Create rewards to motivate task completion"
+                       Style="{StaticResource BodySecondaryStyle}" HorizontalAlignment="Center" />
+        </StackPanel>
+    </Grid>
+</Page>

@@ -1,0 +1,307 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+				xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+				xmlns:um="using:Uno.Material"
+				xmlns:utu="using:Uno.Toolkit.UI">
+
+	<ResourceDictionary.ThemeDictionaries>
+		<!-- Default theme (used as fallback) -->
+		<ResourceDictionary x:Key="Default">
+			<!-- Container: M3 inverseSurface, Extra Small shape (4dp), Level 3 elevation -->
+			<StaticResource x:Key="SnackbarBackground" ResourceKey="InverseSurfaceBrush" />
+			<StaticResource x:Key="SnackbarBorderBrush" ResourceKey="SystemControlTransparentBrush" />
+			<CornerRadius x:Key="SnackbarCornerRadius">4</CornerRadius>
+			<Thickness x:Key="SnackbarBorderThickness">0</Thickness>
+			<Thickness x:Key="SnackbarPadding">16,14,16,14</Thickness>
+			<Thickness x:Key="SnackbarPaddingWithActions">16,14,8,14</Thickness>
+			<x:Double x:Key="SnackbarMinHeight">48</x:Double>
+			<x:Double x:Key="SnackbarMinWidth">344</x:Double>
+			<x:Double x:Key="SnackbarMaxWidth">672</x:Double>
+
+			<!-- Message typography (M3 Body Medium: 14sp/20sp/0.25sp/400) -->
+			<StaticResource x:Key="SnackbarMessageForeground" ResourceKey="InverseOnSurfaceBrush" />
+			<StaticResource x:Key="SnackbarMessageFontFamily" ResourceKey="BodyMediumFontFamily" />
+			<StaticResource x:Key="SnackbarMessageFontWeight" ResourceKey="BodyMediumFontWeight" />
+			<StaticResource x:Key="SnackbarMessageFontSize" ResourceKey="BodyMediumFontSize" />
+			<StaticResource x:Key="SnackbarMessageCharacterSpacing" ResourceKey="BodyMediumCharacterSpacing" />
+
+			<!-- Action typography (M3 Label Large: 14sp/20sp/0.1sp/500) -->
+			<StaticResource x:Key="SnackbarActionForeground" ResourceKey="InversePrimaryBrush" />
+			<StaticResource x:Key="SnackbarActionFontFamily" ResourceKey="LabelLargeFontFamily" />
+			<StaticResource x:Key="SnackbarActionFontWeight" ResourceKey="LabelLargeFontWeight" />
+			<StaticResource x:Key="SnackbarActionFontSize" ResourceKey="LabelLargeFontSize" />
+
+			<!-- Dismiss: M3 inverseOnSurface, 24dp icon -->
+			<StaticResource x:Key="SnackbarDismissForeground" ResourceKey="InverseOnSurfaceBrush" />
+			<x:Double x:Key="SnackbarDismissIconSize">24</x:Double>
+
+			<!-- Host -->
+			<Thickness x:Key="SnackbarHostMargin">8,0,8,8</Thickness>
+		</ResourceDictionary>
+
+		<!-- Light theme -->
+		<ResourceDictionary x:Key="Light">
+			<StaticResource x:Key="SnackbarBackground" ResourceKey="InverseSurfaceBrush" />
+			<StaticResource x:Key="SnackbarBorderBrush" ResourceKey="SystemControlTransparentBrush" />
+			<CornerRadius x:Key="SnackbarCornerRadius">4</CornerRadius>
+			<Thickness x:Key="SnackbarBorderThickness">0</Thickness>
+			<Thickness x:Key="SnackbarPadding">16,14,16,14</Thickness>
+			<Thickness x:Key="SnackbarPaddingWithActions">16,14,8,14</Thickness>
+			<x:Double x:Key="SnackbarMinHeight">48</x:Double>
+			<x:Double x:Key="SnackbarMinWidth">344</x:Double>
+			<x:Double x:Key="SnackbarMaxWidth">672</x:Double>
+
+			<StaticResource x:Key="SnackbarMessageForeground" ResourceKey="InverseOnSurfaceBrush" />
+			<StaticResource x:Key="SnackbarMessageFontFamily" ResourceKey="BodyMediumFontFamily" />
+			<StaticResource x:Key="SnackbarMessageFontWeight" ResourceKey="BodyMediumFontWeight" />
+			<StaticResource x:Key="SnackbarMessageFontSize" ResourceKey="BodyMediumFontSize" />
+			<StaticResource x:Key="SnackbarMessageCharacterSpacing" ResourceKey="BodyMediumCharacterSpacing" />
+
+			<StaticResource x:Key="SnackbarActionForeground" ResourceKey="InversePrimaryBrush" />
+			<StaticResource x:Key="SnackbarActionFontFamily" ResourceKey="LabelLargeFontFamily" />
+			<StaticResource x:Key="SnackbarActionFontWeight" ResourceKey="LabelLargeFontWeight" />
+			<StaticResource x:Key="SnackbarActionFontSize" ResourceKey="LabelLargeFontSize" />
+
+			<StaticResource x:Key="SnackbarDismissForeground" ResourceKey="InverseOnSurfaceBrush" />
+			<x:Double x:Key="SnackbarDismissIconSize">24</x:Double>
+
+			<Thickness x:Key="SnackbarHostMargin">8,0,8,8</Thickness>
+		</ResourceDictionary>
+
+		<!-- Dark theme -->
+		<ResourceDictionary x:Key="Dark">
+			<StaticResource x:Key="SnackbarBackground" ResourceKey="InverseSurfaceBrush" />
+			<StaticResource x:Key="SnackbarBorderBrush" ResourceKey="SystemControlTransparentBrush" />
+			<CornerRadius x:Key="SnackbarCornerRadius">4</CornerRadius>
+			<Thickness x:Key="SnackbarBorderThickness">0</Thickness>
+			<Thickness x:Key="SnackbarPadding">16,14,16,14</Thickness>
+			<Thickness x:Key="SnackbarPaddingWithActions">16,14,8,14</Thickness>
+			<x:Double x:Key="SnackbarMinHeight">48</x:Double>
+			<x:Double x:Key="SnackbarMinWidth">344</x:Double>
+			<x:Double x:Key="SnackbarMaxWidth">672</x:Double>
+
+			<StaticResource x:Key="SnackbarMessageForeground" ResourceKey="InverseOnSurfaceBrush" />
+			<StaticResource x:Key="SnackbarMessageFontFamily" ResourceKey="BodyMediumFontFamily" />
+			<StaticResource x:Key="SnackbarMessageFontWeight" ResourceKey="BodyMediumFontWeight" />
+			<StaticResource x:Key="SnackbarMessageFontSize" ResourceKey="BodyMediumFontSize" />
+			<StaticResource x:Key="SnackbarMessageCharacterSpacing" ResourceKey="BodyMediumCharacterSpacing" />
+
+			<StaticResource x:Key="SnackbarActionForeground" ResourceKey="InversePrimaryBrush" />
+			<StaticResource x:Key="SnackbarActionFontFamily" ResourceKey="LabelLargeFontFamily" />
+			<StaticResource x:Key="SnackbarActionFontWeight" ResourceKey="LabelLargeFontWeight" />
+			<StaticResource x:Key="SnackbarActionFontSize" ResourceKey="LabelLargeFontSize" />
+
+			<StaticResource x:Key="SnackbarDismissForeground" ResourceKey="InverseOnSurfaceBrush" />
+			<x:Double x:Key="SnackbarDismissIconSize">24</x:Double>
+
+			<Thickness x:Key="SnackbarHostMargin">8,0,8,8</Thickness>
+		</ResourceDictionary>
+	</ResourceDictionary.ThemeDictionaries>
+
+	<!-- Material Snackbar style -->
+	<Style x:Key="MaterialSnackbarStyle"
+		   TargetType="utu:Snackbar"
+		   BasedOn="{StaticResource DefaultSnackbar}">
+
+		<Setter Property="Background" Value="{ThemeResource SnackbarBackground}" />
+		<Setter Property="BorderBrush" Value="{ThemeResource SnackbarBorderBrush}" />
+		<Setter Property="BorderThickness" Value="{ThemeResource SnackbarBorderThickness}" />
+		<Setter Property="CornerRadius" Value="{ThemeResource SnackbarCornerRadius}" />
+		<Setter Property="Padding" Value="{ThemeResource SnackbarPadding}" />
+		<Setter Property="MinHeight" Value="{ThemeResource SnackbarMinHeight}" />
+		<Setter Property="MinWidth" Value="{ThemeResource SnackbarMinWidth}" />
+		<Setter Property="MaxWidth" Value="{ThemeResource SnackbarMaxWidth}" />
+
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="utu:Snackbar">
+					<Grid>
+						<!-- Single-line layout -->
+						<Grid x:Name="SingleLineRoot"
+							  Background="{TemplateBinding Background}"
+							  BorderBrush="{TemplateBinding BorderBrush}"
+							  BorderThickness="{TemplateBinding BorderThickness}"
+							  CornerRadius="{TemplateBinding CornerRadius}"
+							  MinHeight="{TemplateBinding MinHeight}"
+							  MinWidth="{TemplateBinding MinWidth}"
+							  MaxWidth="{TemplateBinding MaxWidth}"
+							  Padding="{TemplateBinding Padding}">
+
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*" />
+								<ColumnDefinition Width="Auto" />
+								<ColumnDefinition Width="Auto" />
+							</Grid.ColumnDefinitions>
+
+							<TextBlock x:Name="PART_MessageText"
+									   Grid.Column="0"
+									   Text="{TemplateBinding Message}"
+									   Foreground="{ThemeResource SnackbarMessageForeground}"
+									   FontFamily="{ThemeResource SnackbarMessageFontFamily}"
+									   FontWeight="{ThemeResource SnackbarMessageFontWeight}"
+									   FontSize="{ThemeResource SnackbarMessageFontSize}"
+									   CharacterSpacing="{ThemeResource SnackbarMessageCharacterSpacing}"
+									   LineHeight="20"
+									   MaxLines="2"
+									   TextTrimming="CharacterEllipsis"
+									   VerticalAlignment="Center"
+									   TextWrapping="Wrap"
+									   Padding="0,0,8,0"
+									   AutomationProperties.LiveSetting="Assertive" />
+
+							<Button x:Name="PART_ActionButton"
+									Grid.Column="1"
+									Content="{TemplateBinding ActionLabel}"
+									Foreground="{ThemeResource SnackbarActionForeground}"
+									FontFamily="{ThemeResource SnackbarActionFontFamily}"
+									FontWeight="{ThemeResource SnackbarActionFontWeight}"
+									FontSize="{ThemeResource SnackbarActionFontSize}"
+									Background="Transparent"
+									BorderThickness="0"
+									MinHeight="48"
+									Padding="12,10"
+									VerticalAlignment="Center"
+									Visibility="Collapsed" />
+
+							<Button x:Name="PART_DismissButton"
+									Grid.Column="2"
+									Background="Transparent"
+									BorderThickness="0"
+									Width="48" Height="48"
+									Padding="0"
+									VerticalAlignment="Center"
+									Visibility="Collapsed"
+									AutomationProperties.Name="Dismiss">
+								<FontIcon Glyph="&#xE711;"
+										  FontSize="{ThemeResource SnackbarDismissIconSize}"
+										  Foreground="{ThemeResource SnackbarDismissForeground}" />
+							</Button>
+						</Grid>
+
+						<!-- Multi-line layout -->
+						<Grid x:Name="MultiLineRoot"
+							  Background="{TemplateBinding Background}"
+							  BorderBrush="{TemplateBinding BorderBrush}"
+							  BorderThickness="{TemplateBinding BorderThickness}"
+							  CornerRadius="{TemplateBinding CornerRadius}"
+							  MinHeight="{TemplateBinding MinHeight}"
+							  MinWidth="{TemplateBinding MinWidth}"
+							  MaxWidth="{TemplateBinding MaxWidth}"
+							  Padding="16,14,8,4"
+							  Visibility="Collapsed">
+
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto" />
+								<RowDefinition Height="Auto" />
+							</Grid.RowDefinitions>
+
+							<Grid Grid.Row="0">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="Auto" />
+								</Grid.ColumnDefinitions>
+
+								<TextBlock x:Name="PART_MessageTextMultiLine"
+										   Grid.Column="0"
+										   Text="{TemplateBinding Message}"
+										   Foreground="{ThemeResource SnackbarMessageForeground}"
+										   FontFamily="{ThemeResource SnackbarMessageFontFamily}"
+										   FontWeight="{ThemeResource SnackbarMessageFontWeight}"
+										   FontSize="{ThemeResource SnackbarMessageFontSize}"
+										   CharacterSpacing="{ThemeResource SnackbarMessageCharacterSpacing}"
+										   LineHeight="20"
+										   MaxLines="2"
+										   TextTrimming="CharacterEllipsis"
+										   TextWrapping="Wrap"
+										   Padding="0,0,8,0"
+										   AutomationProperties.LiveSetting="Assertive" />
+
+								<Button x:Name="PART_DismissButtonMultiLine"
+										Grid.Column="1"
+										Background="Transparent"
+										BorderThickness="0"
+										Width="48" Height="48"
+										Padding="0"
+										VerticalAlignment="Top"
+										Visibility="Collapsed"
+										AutomationProperties.Name="Dismiss">
+									<FontIcon Glyph="&#xE711;"
+											  FontSize="{ThemeResource SnackbarDismissIconSize}"
+											  Foreground="{ThemeResource SnackbarDismissForeground}" />
+								</Button>
+							</Grid>
+
+							<StackPanel Grid.Row="1"
+										Orientation="Horizontal"
+										HorizontalAlignment="Right"
+										Padding="0,0,0,8">
+								<Button x:Name="PART_ActionButtonMultiLine"
+										Content="{TemplateBinding ActionLabel}"
+										Foreground="{ThemeResource SnackbarActionForeground}"
+										FontFamily="{ThemeResource SnackbarActionFontFamily}"
+										FontWeight="{ThemeResource SnackbarActionFontWeight}"
+										FontSize="{ThemeResource SnackbarActionFontSize}"
+										Background="Transparent"
+										BorderThickness="0"
+										MinHeight="48"
+										Padding="12,10"
+										Visibility="Collapsed" />
+							</StackPanel>
+						</Grid>
+
+						<VisualStateManager.VisualStateGroups>
+							<VisualStateGroup x:Name="ActionStates">
+								<VisualState x:Name="NoAction" />
+
+								<VisualState x:Name="WithAction">
+									<VisualState.Setters>
+										<Setter Target="SingleLineRoot.Visibility" Value="Visible" />
+										<Setter Target="MultiLineRoot.Visibility" Value="Collapsed" />
+										<Setter Target="PART_ActionButton.Visibility" Value="Visible" />
+										<Setter Target="SingleLineRoot.Padding" Value="{ThemeResource SnackbarPaddingWithActions}" />
+									</VisualState.Setters>
+								</VisualState>
+
+								<VisualState x:Name="WithActionOnNewLine">
+									<VisualState.Setters>
+										<Setter Target="SingleLineRoot.Visibility" Value="Collapsed" />
+										<Setter Target="MultiLineRoot.Visibility" Value="Visible" />
+										<Setter Target="PART_ActionButtonMultiLine.Visibility" Value="Visible" />
+									</VisualState.Setters>
+								</VisualState>
+							</VisualStateGroup>
+
+							<VisualStateGroup x:Name="DismissStates">
+								<VisualState x:Name="NoDismiss" />
+
+								<VisualState x:Name="WithDismiss">
+									<VisualState.Setters>
+										<Setter Target="PART_DismissButton.Visibility" Value="Visible" />
+										<Setter Target="PART_DismissButtonMultiLine.Visibility" Value="Visible" />
+										<Setter Target="SingleLineRoot.Padding" Value="{ThemeResource SnackbarPaddingWithActions}" />
+									</VisualState.Setters>
+								</VisualState>
+							</VisualStateGroup>
+						</VisualStateManager.VisualStateGroups>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<!-- Material SnackbarHost style -->
+	<Style x:Key="MaterialSnackbarHostStyle"
+		   TargetType="utu:SnackbarHost"
+		   BasedOn="{StaticResource DefaultSnackbarHost}">
+		<Setter Property="SnackbarStyle" Value="{StaticResource MaterialSnackbarStyle}" />
+	</Style>
+
+	<!-- Default aliases for implicit styling -->
+	<Style x:Key="MaterialDefaultSnackbarStyle"
+		   TargetType="utu:Snackbar"
+		   BasedOn="{StaticResource MaterialSnackbarStyle}" />
+
+	<Style x:Key="MaterialDefaultSnackbarHostStyle"
+		   TargetType="utu:SnackbarHost"
+		   BasedOn="{StaticResource MaterialSnackbarHostStyle}" />
+
+</ResourceDictionary>

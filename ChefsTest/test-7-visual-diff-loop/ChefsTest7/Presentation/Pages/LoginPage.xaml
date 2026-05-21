@@ -1,0 +1,65 @@
+<Page x:Class="ChefsTest7.Presentation.Pages.LoginPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource BackgroundBrush}">
+  <utu:SafeArea Insets="VisibleBounds,SoftInput" Mode="Padding">
+    <ScrollViewer>
+      <Grid Padding="24" MaxWidth="480" HorizontalAlignment="Stretch">
+        <StackPanel Spacing="16">
+          <Border Width="96" Height="96" CornerRadius="48"
+                  HorizontalAlignment="Center" Margin="0,32,0,16"
+                  Background="{ThemeResource PrimaryContainerBrush}">
+            <TextBlock Text="🍳" FontSize="48" HorizontalAlignment="Center" VerticalAlignment="Center" />
+          </Border>
+          <TextBlock Text="Welcome back" Style="{ThemeResource HeadlineSmall}"
+                     Foreground="{ThemeResource OnSurfaceBrush}" HorizontalAlignment="Center" />
+          <TextBlock Text="Sign in to continue cooking" Style="{ThemeResource BodyMedium}"
+                     Foreground="{ThemeResource OnSurfaceVariantBrush}" HorizontalAlignment="Center" Margin="0,0,0,16" />
+          <TextBox Header="Username" PlaceholderText="Username"
+                   Text="{x:Bind ViewModel.Username, Mode=TwoWay}" />
+          <PasswordBox Header="Password" PlaceholderText="Password"
+                       Password="{x:Bind ViewModel.Password, Mode=TwoWay}" />
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <CheckBox Grid.Column="0" Content="Remember me"
+                      IsChecked="{x:Bind ViewModel.RememberMe, Mode=TwoWay}" />
+            <Button Grid.Column="1" Content="Forgot password?"
+                    Style="{ThemeResource TextButtonStyle}"
+                    Command="{x:Bind ViewModel.ForgotPasswordCommand}" />
+          </Grid>
+          <Button Content="Login" HorizontalAlignment="Stretch"
+                  Style="{ThemeResource FilledButtonStyle}"
+                  Command="{x:Bind ViewModel.LoginCommand}" />
+          <Grid Margin="0,12,0,12">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" Height="1" Background="{ThemeResource OutlineVariantBrush}" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="1" Text="or continue with" Margin="12,0"
+                       Style="{ThemeResource BodySmall}" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+            <Border Grid.Column="2" Height="1" Background="{ThemeResource OutlineVariantBrush}" VerticalAlignment="Center"/>
+          </Grid>
+          <Button Content="Continue with Apple" HorizontalAlignment="Stretch"
+                  Background="{ThemeResource SecondaryContainerBrush}"
+                  Foreground="{ThemeResource OnSecondaryContainerBrush}"
+                  Command="{x:Bind ViewModel.SignInWithAppleCommand}" />
+          <Button Content="Continue with Google" HorizontalAlignment="Stretch"
+                  Background="{ThemeResource SecondaryContainerBrush}"
+                  Foreground="{ThemeResource OnSecondaryContainerBrush}"
+                  Command="{x:Bind ViewModel.SignInWithGoogleCommand}" />
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0" Spacing="4">
+            <TextBlock Text="Don't have an account?" Foreground="{ThemeResource OnSurfaceVariantBrush}" Style="{ThemeResource BodyMedium}" />
+            <Button Content="Register" Style="{ThemeResource TextButtonStyle}"
+                    Command="{x:Bind ViewModel.GoToRegisterCommand}" />
+          </StackPanel>
+        </StackPanel>
+      </Grid>
+    </ScrollViewer>
+  </utu:SafeArea>
+</Page>

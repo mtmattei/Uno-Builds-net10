@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "DOTNET_ENVIRONMENT": "Development"
+  },
+  "permissions": {
+    "allow": [
+      "mcp__uno__uno_platform_agent_rules_init",
+      "mcp__uno__uno_platform_usage_rules_init",
+      "Bash(\"C:/Users/Platform006/.nuget/packages/microsoft.windowsappsdk/1.7.250909003/tools/net472/XamlCompiler.exe\" \"obj/Debug/net10.0-windows10.0.26100/input.json\" \"obj/Debug/net10.0-windows10.0.26100/output.json\")",
+      "Read(//tmp/**)",
+      "Bash(awk 'NR>=49 && NR<=55' \"/c/Users/Platform006/OneDrive - Uno Platform/Desktop/unOS/AI-builds/ChefsFT-test/test-6-blind-prd/ChefsTest6/Presentation/Converters/Converters.cs\")",
+      "mcp__uno__uno_platform_docs_search",
+      "Bash(tee /tmp/chefstest6-runtime2.log)",
+      "Bash(tasklist)",
+      "Bash(taskkill //F //IM ChefsTest6.exe)",
+      "Bash(taskkill //F //IM dotnet.exe)"
+    ]
+  }
+}

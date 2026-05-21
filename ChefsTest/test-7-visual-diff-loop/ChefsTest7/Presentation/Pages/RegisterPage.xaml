@@ -1,0 +1,29 @@
+<Page x:Class="ChefsTest7.Presentation.Pages.RegisterPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource BackgroundBrush}">
+  <utu:SafeArea Insets="VisibleBounds,SoftInput" Mode="Padding">
+    <ScrollViewer>
+      <Grid Padding="24" MaxWidth="480">
+        <StackPanel Spacing="16">
+          <TextBlock Text="Create account" Style="{ThemeResource HeadlineSmall}"
+                     Foreground="{ThemeResource OnSurfaceBrush}" Margin="0,32,0,0" />
+          <TextBlock Text="Sign up to start cooking with us" Style="{ThemeResource BodyMedium}"
+                     Foreground="{ThemeResource OnSurfaceVariantBrush}" Margin="0,0,0,16" />
+          <TextBox Header="Username" Text="{x:Bind ViewModel.Username, Mode=TwoWay}" />
+          <TextBox Header="Email" InputScope="EmailNameOrAddress" Text="{x:Bind ViewModel.Email, Mode=TwoWay}" />
+          <PasswordBox Header="Password" Password="{x:Bind ViewModel.Password, Mode=TwoWay}" />
+          <Button Content="Sign Up" HorizontalAlignment="Stretch"
+                  Style="{ThemeResource FilledButtonStyle}"
+                  Command="{x:Bind ViewModel.SignUpCommand}" Margin="0,12,0,0"/>
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0" Spacing="4">
+            <TextBlock Text="Already have an account?" Foreground="{ThemeResource OnSurfaceVariantBrush}" Style="{ThemeResource BodyMedium}" />
+            <Button Content="Login" Style="{ThemeResource TextButtonStyle}"
+                    Command="{x:Bind ViewModel.BackToLoginCommand}" />
+          </StackPanel>
+        </StackPanel>
+      </Grid>
+    </ScrollViewer>
+  </utu:SafeArea>
+</Page>

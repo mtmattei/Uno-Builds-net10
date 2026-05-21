@@ -1,0 +1,71 @@
+<UserControl x:Class="ChefsTest4.Presentation.Pages.LiveCookingFinishPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:c="using:ChefsTest4.Presentation.Converters"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Background="{ThemeResource CanvasBrush}">
+  <UserControl.Resources>
+    <c:StarFilledConverter x:Key="StarConv" />
+  </UserControl.Resources>
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Border Grid.Row="0" Style="{StaticResource InvertedAppBarBorderStyle}">
+      <Grid>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+        <Button Grid.Column="0" Background="Transparent" BorderThickness="0" Padding="8" Command="{x:Bind ViewModel.BackCommand}">
+          <FontIcon Glyph="&#xE76B;" FontSize="20" Foreground="{ThemeResource AppBarForegroundBrush}" />
+        </Button>
+        <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.Title, Mode=OneWay}" Style="{StaticResource AppBarTitleStyle}" VerticalAlignment="Center" Margin="8,0,0,0" />
+      </Grid>
+    </Border>
+
+    <ScrollViewer Grid.Row="1" Padding="16,32,16,16">
+      <StackPanel Spacing="24" HorizontalAlignment="Center">
+        <Image Source="ms-appx:///Assets/Images/success_light.svg" Width="160" Height="160" Stretch="Uniform" />
+        <TextBlock Text="Hurray!" Style="{StaticResource DisplayTextStyle}" HorizontalAlignment="Center" />
+        <TextBlock Text="All steps are completed. Now it's time to enjoy your meal!" Style="{StaticResource MutedBodyTextStyle}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="320" />
+
+        <Border Style="{StaticResource CardBorderStyle}" Padding="20" Width="320">
+          <StackPanel Spacing="16">
+            <TextBlock Text="Tell us how was your cooking experience!" Style="{StaticResource Body2TextStyle}" HorizontalAlignment="Center" TextAlignment="Center" />
+            <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+              <Button Background="Transparent" BorderThickness="0" Padding="6" Command="{x:Bind ViewModel.RateOneCommand}">
+                <FontIcon FontSize="28" Foreground="{ThemeResource PrimaryBrush}" Glyph="{x:Bind ViewModel.Rating, Mode=OneWay, Converter={StaticResource StarConv}, ConverterParameter=1}" />
+              </Button>
+              <Button Background="Transparent" BorderThickness="0" Padding="6" Command="{x:Bind ViewModel.RateTwoCommand}">
+                <FontIcon FontSize="28" Foreground="{ThemeResource PrimaryBrush}" Glyph="{x:Bind ViewModel.Rating, Mode=OneWay, Converter={StaticResource StarConv}, ConverterParameter=2}" />
+              </Button>
+              <Button Background="Transparent" BorderThickness="0" Padding="6" Command="{x:Bind ViewModel.RateThreeCommand}">
+                <FontIcon FontSize="28" Foreground="{ThemeResource PrimaryBrush}" Glyph="{x:Bind ViewModel.Rating, Mode=OneWay, Converter={StaticResource StarConv}, ConverterParameter=3}" />
+              </Button>
+              <Button Background="Transparent" BorderThickness="0" Padding="6" Command="{x:Bind ViewModel.RateFourCommand}">
+                <FontIcon FontSize="28" Foreground="{ThemeResource PrimaryBrush}" Glyph="{x:Bind ViewModel.Rating, Mode=OneWay, Converter={StaticResource StarConv}, ConverterParameter=4}" />
+              </Button>
+              <Button Background="Transparent" BorderThickness="0" Padding="6" Command="{x:Bind ViewModel.RateFiveCommand}">
+                <FontIcon FontSize="28" Foreground="{ThemeResource PrimaryBrush}" Glyph="{x:Bind ViewModel.Rating, Mode=OneWay, Converter={StaticResource StarConv}, ConverterParameter=5}" />
+              </Button>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+      </StackPanel>
+    </ScrollViewer>
+
+    <Grid Grid.Row="2" Padding="16,12,16,16" Background="{ThemeResource CanvasBrush}">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="12" /><ColumnDefinition Width="2*" /></Grid.ColumnDefinitions>
+      <Button Grid.Column="0" Style="{StaticResource SecondaryOutlineButtonStyle}" Content="Previous" Command="{x:Bind ViewModel.PreviousCommand}" />
+      <Button Grid.Column="2" Style="{StaticResource PrimaryCtaButtonStyle}" Command="{x:Bind ViewModel.FavoriteCommand}">
+        <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+          <FontIcon Glyph="&#xEB52;" FontSize="18" Foreground="{ThemeResource OnPrimaryBrush}" />
+          <TextBlock Text="Favorite" />
+        </StackPanel>
+      </Button>
+    </Grid>
+  </Grid>
+</UserControl>

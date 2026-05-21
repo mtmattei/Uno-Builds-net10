@@ -1,0 +1,59 @@
+<Page x:Class="ChefsTest7.Presentation.CookbookDetailPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:m="using:ChefsTest7.Models"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource BackgroundBrush}">
+  <Page.Resources>
+    <DataTemplate x:Key="RecipeGridCardTemplate" x:DataType="m:RecipeData">
+      <Border Background="{ThemeResource SurfaceBrush}" CornerRadius="12" Margin="4">
+        <Grid Width="170">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="120"/>
+            <RowDefinition Height="Auto"/>
+          </Grid.RowDefinitions>
+          <Image Grid.Row="0" Source="{x:Bind ImageUrl}" Stretch="UniformToFill"/>
+          <Grid Grid.Row="1" Padding="10,8">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+              <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" FontSize="14" Foreground="{ThemeResource OnSurfaceBrush}" TextTrimming="CharacterEllipsis"/>
+              <TextBlock Text="{x:Bind Calories}" FontSize="11" Foreground="{ThemeResource OnSurfaceVariantBrush}"/>
+            </StackPanel>
+            <TextBlock Grid.Column="1" Text="{x:Bind IsFavorite, Converter={StaticResource HeartGlyph}}" FontSize="20" Foreground="{ThemeResource PrimaryBrush}"/>
+          </Grid>
+        </Grid>
+      </Border>
+    </DataTemplate>
+  </Page.Resources>
+
+  <Grid utu:SafeArea.Insets="VisibleBounds">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <Grid Grid.Row="0" Background="{ThemeResource AppBarFillBrush}" Padding="8,8" ColumnSpacing="8">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Button Grid.Column="0" Content="←" FontSize="20" Background="Transparent" Foreground="{ThemeResource OnAppBarBrush}" Command="{Binding BackCommand}"/>
+      <TextBlock Grid.Column="1" Text="{Binding Cookbook.Name}" FontSize="18" FontWeight="Bold" VerticalAlignment="Center" Foreground="{ThemeResource OnAppBarBrush}"/>
+    </Grid>
+
+    <TextBlock Grid.Row="1" Margin="16,12" Foreground="{ThemeResource OnSurfaceVariantBrush}">
+      <Run Text="{Binding RecipeCount}"/><Run Text=" recipes"/>
+    </TextBlock>
+
+    <Grid Grid.Row="2">
+      <GridView ItemsSource="{Binding Recipes}" ItemTemplate="{StaticResource RecipeGridCardTemplate}" SelectionMode="None" Padding="12,0,12,16"
+                IsItemClickEnabled="True" ItemClick="OnRecipeClick"/>
+      <Button Content="✎" Width="56" Height="56" CornerRadius="28" FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,16,16"
+              Background="{ThemeResource PrimaryBrush}" Foreground="{ThemeResource OnPrimaryBrush}" Command="{Binding EditCommand}"/>
+    </Grid>
+  </Grid>
+</Page>

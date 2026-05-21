@@ -1,0 +1,82 @@
+<Page x:Class="ChefsTest1.Presentation.LoginPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource BackgroundBrush}">
+  <utu:SafeArea Insets="VisibleBounds,SoftInput" Mode="Padding">
+    <ScrollViewer>
+      <StackPanel Padding="32,32,32,32" Spacing="20" MaxWidth="480" HorizontalAlignment="Stretch">
+        <Image Source="ms-appx:///Assets/Images/chefsappsignature_light.svg"
+               Width="160" Height="80" Stretch="Uniform"
+               HorizontalAlignment="Center" Margin="0,40,0,40" />
+
+        <TextBox PlaceholderText="Username"
+                 Style="{StaticResource OutlinedTextBoxStyle}"
+                 Text="{x:Bind ViewModel.Username, Mode=TwoWay}">
+          <TextBox.Header>
+            <FontIcon Glyph="&#xE77B;" FontFamily="{ThemeResource SymbolThemeFontFamily}" />
+          </TextBox.Header>
+        </TextBox>
+
+        <PasswordBox PlaceholderText="Password"
+                     Style="{StaticResource OutlinedPasswordBoxStyle}"
+                     Password="{x:Bind ViewModel.Password, Mode=TwoWay}" />
+
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <CheckBox Content="Remember me" IsChecked="{x:Bind ViewModel.RememberMe, Mode=TwoWay}" />
+          <Button Grid.Column="1"
+                  Content="Forgot password?"
+                  Style="{StaticResource TextButtonStyle}"
+                  Foreground="{ThemeResource PrimaryBrush}"
+                  Command="{x:Bind ViewModel.ForgotCommand}" />
+        </Grid>
+
+        <Button Content="Login"
+                HorizontalAlignment="Stretch"
+                Height="48"
+                Style="{StaticResource FilledButtonStyle}"
+                Command="{x:Bind ViewModel.LoginCommand}" />
+
+        <Border Height="1" Background="{ThemeResource OutlineVariantBrush}" Margin="0,8" />
+
+        <Button HorizontalAlignment="Stretch"
+                Height="48"
+                Background="{ThemeResource SecondaryBrush}"
+                Foreground="{ThemeResource OnSecondaryBrush}"
+                Command="{x:Bind ViewModel.AppleLoginCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <FontIcon Glyph="&#xE93C;" />
+            <TextBlock Text="Sign in with Apple" />
+          </StackPanel>
+        </Button>
+
+        <Button HorizontalAlignment="Stretch"
+                Height="48"
+                Background="{ThemeResource SecondaryBrush}"
+                Foreground="{ThemeResource OnSecondaryBrush}"
+                Command="{x:Bind ViewModel.GoogleLoginCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <FontIcon Glyph="&#xE774;" />
+            <TextBlock Text="Sign in with Google" />
+          </StackPanel>
+        </Button>
+
+        <StackPanel Orientation="Horizontal"
+                    Spacing="6"
+                    HorizontalAlignment="Center"
+                    Margin="0,16,0,0">
+          <TextBlock Text="Not a member?" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+          <Button Content="Register Now"
+                  Style="{StaticResource TextButtonStyle}"
+                  Foreground="{ThemeResource PrimaryBrush}"
+                  Padding="0"
+                  Command="{x:Bind ViewModel.RegisterCommand}" />
+        </StackPanel>
+      </StackPanel>
+    </ScrollViewer>
+  </utu:SafeArea>
+</Page>

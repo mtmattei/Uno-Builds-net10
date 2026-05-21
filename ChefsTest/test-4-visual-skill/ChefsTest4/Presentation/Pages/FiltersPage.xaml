@@ -1,0 +1,113 @@
+<UserControl x:Class="ChefsTest4.Presentation.Pages.FiltersPage"
+             x:Name="Root"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:ChefsTest4.ViewModels"
+             xmlns:c="using:ChefsTest4.Presentation.Converters"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Background="{ThemeResource CanvasBrush}">
+  <UserControl.Resources>
+    <c:BoolToVisibilityConverter x:Key="BoolVis" />
+  </UserControl.Resources>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Border Grid.Row="0" Style="{StaticResource InvertedAppBarBorderStyle}">
+      <Grid>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+        <Button Grid.Column="0" Background="Transparent" BorderThickness="0" Padding="8" Command="{x:Bind ViewModel.CloseCommand}">
+          <FontIcon Glyph="&#xE711;" FontSize="20" Foreground="{ThemeResource AppBarForegroundBrush}" />
+        </Button>
+        <TextBlock Grid.Column="1" Text="Filters" Style="{StaticResource AppBarTitleStyle}" VerticalAlignment="Center" Margin="8,0,0,0" />
+      </Grid>
+    </Border>
+
+    <ScrollViewer Grid.Row="1" Padding="16,16,16,16">
+      <StackPanel Spacing="24">
+
+        <StackPanel Spacing="12">
+          <TextBlock Text="Recipe Categories" Style="{StaticResource H3TextStyle}" />
+          <ListView ItemsSource="{x:Bind ViewModel.Categories}" SelectionMode="None" Padding="0">
+            <ListView.ItemsPanel><ItemsPanelTemplate><ItemsWrapGrid Orientation="Horizontal" /></ItemsPanelTemplate></ListView.ItemsPanel>
+            <ListView.ItemContainerStyle>
+              <Style TargetType="ListViewItem"><Setter Property="Padding" Value="0" /><Setter Property="Margin" Value="0,0,12,12" /></Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+              <DataTemplate x:DataType="vm:FilterChip">
+                <Button Padding="0" Background="Transparent" BorderThickness="0" Command="{Binding DataContext.ToggleChipCommand, ElementName=Root}" CommandParameter="{x:Bind}">
+                  <Grid>
+                    <Border Style="{StaticResource ChipBorderStyle}" Visibility="{x:Bind IsSelected, Mode=OneWay, Converter={StaticResource BoolVis}, ConverterParameter=Invert}">
+                      <TextBlock Text="{x:Bind Label}" VerticalAlignment="Center" />
+                    </Border>
+                    <Border Style="{StaticResource ChipBorderSelectedStyle}" Visibility="{x:Bind IsSelected, Mode=OneWay, Converter={StaticResource BoolVis}}">
+                      <TextBlock Text="{x:Bind Label}" VerticalAlignment="Center" Foreground="{ThemeResource OnPrimaryContainerBrush}" />
+                    </Border>
+                  </Grid>
+                </Button>
+              </DataTemplate>
+            </ListView.ItemTemplate>
+          </ListView>
+        </StackPanel>
+
+        <StackPanel Spacing="12">
+          <TextBlock Text="Cooking Time" Style="{StaticResource H3TextStyle}" />
+          <ListView ItemsSource="{x:Bind ViewModel.Times}" SelectionMode="None" Padding="0">
+            <ListView.ItemsPanel><ItemsPanelTemplate><ItemsWrapGrid Orientation="Horizontal" /></ItemsPanelTemplate></ListView.ItemsPanel>
+            <ListView.ItemContainerStyle>
+              <Style TargetType="ListViewItem"><Setter Property="Padding" Value="0" /><Setter Property="Margin" Value="0,0,12,12" /></Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+              <DataTemplate x:DataType="vm:FilterChip">
+                <Button Padding="0" Background="Transparent" BorderThickness="0" Command="{Binding DataContext.ToggleChipCommand, ElementName=Root}" CommandParameter="{x:Bind}">
+                  <Grid>
+                    <Border Style="{StaticResource ChipBorderStyle}" Visibility="{x:Bind IsSelected, Mode=OneWay, Converter={StaticResource BoolVis}, ConverterParameter=Invert}">
+                      <TextBlock Text="{x:Bind Label}" VerticalAlignment="Center" />
+                    </Border>
+                    <Border Style="{StaticResource ChipBorderSelectedStyle}" Visibility="{x:Bind IsSelected, Mode=OneWay, Converter={StaticResource BoolVis}}">
+                      <TextBlock Text="{x:Bind Label}" VerticalAlignment="Center" Foreground="{ThemeResource OnPrimaryContainerBrush}" />
+                    </Border>
+                  </Grid>
+                </Button>
+              </DataTemplate>
+            </ListView.ItemTemplate>
+          </ListView>
+        </StackPanel>
+
+        <StackPanel Spacing="12">
+          <TextBlock Text="Skill Level" Style="{StaticResource H3TextStyle}" />
+          <ListView ItemsSource="{x:Bind ViewModel.Skills}" SelectionMode="None" Padding="0">
+            <ListView.ItemsPanel><ItemsPanelTemplate><ItemsWrapGrid Orientation="Horizontal" /></ItemsPanelTemplate></ListView.ItemsPanel>
+            <ListView.ItemContainerStyle>
+              <Style TargetType="ListViewItem"><Setter Property="Padding" Value="0" /><Setter Property="Margin" Value="0,0,12,12" /></Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+              <DataTemplate x:DataType="vm:FilterChip">
+                <Button Padding="0" Background="Transparent" BorderThickness="0" Command="{Binding DataContext.ToggleChipCommand, ElementName=Root}" CommandParameter="{x:Bind}">
+                  <Grid>
+                    <Border Style="{StaticResource ChipBorderStyle}" Visibility="{x:Bind IsSelected, Mode=OneWay, Converter={StaticResource BoolVis}, ConverterParameter=Invert}">
+                      <TextBlock Text="{x:Bind Label}" VerticalAlignment="Center" />
+                    </Border>
+                    <Border Style="{StaticResource ChipBorderSelectedStyle}" Visibility="{x:Bind IsSelected, Mode=OneWay, Converter={StaticResource BoolVis}}">
+                      <TextBlock Text="{x:Bind Label}" VerticalAlignment="Center" Foreground="{ThemeResource OnPrimaryContainerBrush}" />
+                    </Border>
+                  </Grid>
+                </Button>
+              </DataTemplate>
+            </ListView.ItemTemplate>
+          </ListView>
+        </StackPanel>
+      </StackPanel>
+    </ScrollViewer>
+
+    <Grid Grid.Row="2" Padding="16,12,16,16" Background="{ThemeResource CanvasBrush}">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="12" /><ColumnDefinition Width="2*" /></Grid.ColumnDefinitions>
+      <Button Grid.Column="0" Style="{StaticResource SecondaryOutlineButtonStyle}" Content="Reset" Command="{x:Bind ViewModel.ResetCommand}" />
+      <Button Grid.Column="2" Style="{StaticResource PrimaryCtaButtonStyle}" Content="Apply filters" Command="{x:Bind ViewModel.ApplyCommand}" />
+    </Grid>
+  </Grid>
+</UserControl>

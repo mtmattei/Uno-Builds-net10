@@ -1,0 +1,59 @@
+<Page x:Class="ChefsTest5.Presentation.OtherProfilePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:m="using:ChefsTest5.Models"
+      Background="{ThemeResource ChefBackgroundBrush}">
+  <Grid utu:SafeArea.Insets="VisibleBounds">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <Border Grid.Row="0" Background="{ThemeResource ChefAppBarBrush}" Padding="8,12">
+      <StackPanel Orientation="Horizontal" Spacing="8">
+        <Button Background="Transparent" BorderThickness="0" Padding="8" Command="{x:Bind ViewModel.BackCommand}">
+          <TextBlock Text="&#xE0C4;" FontFamily="Segoe MDL2 Assets" FontSize="18"
+                     Foreground="{ThemeResource ChefAppBarForegroundBrush}" />
+        </Button>
+        <TextBlock Text="Profile" Style="{StaticResource ChefAppBarTitle}" VerticalAlignment="Center" />
+      </StackPanel>
+    </Border>
+
+    <ScrollViewer Grid.Row="1">
+      <StackPanel Padding="16,16,16,32" Spacing="20">
+        <StackPanel Spacing="8" HorizontalAlignment="Center">
+          <Ellipse Width="100" Height="100">
+            <Ellipse.Fill>
+              <ImageBrush ImageSource="{x:Bind ViewModel.User.UrlProfileImage, Mode=OneWay}" Stretch="UniformToFill" />
+            </Ellipse.Fill>
+          </Ellipse>
+          <TextBlock Text="{x:Bind ViewModel.User.FullName, Mode=OneWay}" Style="{StaticResource ChefH2}" HorizontalAlignment="Center" />
+          <TextBlock Text="{x:Bind ViewModel.User.Description, Mode=OneWay}" Style="{StaticResource ChefMuted}" HorizontalAlignment="Center" />
+        </StackPanel>
+        <Border Style="{StaticResource ChefCard}" Padding="14,12">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel HorizontalAlignment="Center" Spacing="2">
+              <TextBlock Text="{x:Bind ViewModel.User.Recipes, Mode=OneWay}" Style="{StaticResource ChefH2}" HorizontalAlignment="Center" />
+              <TextBlock Text="Recipes" Style="{StaticResource ChefMuted}" HorizontalAlignment="Center" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" HorizontalAlignment="Center" Spacing="2">
+              <TextBlock Text="{x:Bind ViewModel.User.Followers, Mode=OneWay}" Style="{StaticResource ChefH2}" HorizontalAlignment="Center" />
+              <TextBlock Text="Followers" Style="{StaticResource ChefMuted}" HorizontalAlignment="Center" />
+            </StackPanel>
+            <StackPanel Grid.Column="2" HorizontalAlignment="Center" Spacing="2">
+              <TextBlock Text="{x:Bind ViewModel.User.Following, Mode=OneWay}" Style="{StaticResource ChefH2}" HorizontalAlignment="Center" />
+              <TextBlock Text="Following" Style="{StaticResource ChefMuted}" HorizontalAlignment="Center" />
+            </StackPanel>
+          </Grid>
+        </Border>
+        <Button Style="{StaticResource ChefPrimaryButton}" Content="Follow" />
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</Page>

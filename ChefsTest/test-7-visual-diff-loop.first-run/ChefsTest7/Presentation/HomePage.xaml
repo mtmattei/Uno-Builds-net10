@@ -1,0 +1,185 @@
+<Page x:Class="ChefsTest7.Presentation.HomePage"
+      x:Name="HomeRoot"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:m="using:ChefsTest7.Models"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource BackgroundBrush}">
+  <Page.Resources>
+    <DataTemplate x:Key="RecipeCardLargeTemplate" x:DataType="m:RecipeData">
+      <Button Background="Transparent" Padding="0" Margin="0,0,12,0" BorderThickness="0"
+              Command="{Binding DataContext.OpenRecipeCommand, ElementName=HomeRoot}" CommandParameter="{x:Bind}">
+        <Border Width="220" Background="{ThemeResource SurfaceBrush}" CornerRadius="12">
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="140"/>
+              <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Image Grid.Row="0" Source="{x:Bind ImageUrl}" Stretch="UniformToFill"/>
+            <Grid Grid.Row="1" Padding="12,10">
+              <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+              </Grid.RowDefinitions>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Bind Name}" FontWeight="SemiBold" FontSize="16" Foreground="{ThemeResource OnSurfaceBrush}" TextTrimming="CharacterEllipsis"/>
+              <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Bind Calories}" FontSize="12" Foreground="{ThemeResource OnSurfaceVariantBrush}"/>
+              <TextBlock Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Text="{x:Bind IsFavorite, Converter={StaticResource HeartGlyph}}" FontSize="22" VerticalAlignment="Center" Foreground="{ThemeResource PrimaryBrush}"/>
+            </Grid>
+          </Grid>
+        </Border>
+      </Button>
+    </DataTemplate>
+    <DataTemplate x:Key="CategoryChipTemplate" x:DataType="m:CategoryData">
+      <Border Background="{ThemeResource SurfaceBrush}" CornerRadius="20" Padding="8,6,16,6" Margin="0,0,8,0">
+        <StackPanel Orientation="Horizontal" Spacing="8">
+          <Border Width="32" Height="32" CornerRadius="16" Background="{x:Bind Color, Converter={StaticResource CategoryColor}}">
+            <Image Source="{x:Bind UrlIcon}" Width="20" Height="20" Stretch="Uniform"/>
+          </Border>
+          <TextBlock Text="{x:Bind Name}" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{ThemeResource OnSurfaceBrush}"/>
+        </StackPanel>
+      </Border>
+    </DataTemplate>
+    <DataTemplate x:Key="ContributorTemplate" x:DataType="m:UserData">
+      <Button Background="Transparent" BorderThickness="0" Padding="0" Margin="0,0,12,0"
+              Command="{Binding DataContext.OpenContributorCommand, ElementName=HomeRoot}" CommandParameter="{x:Bind}">
+        <StackPanel Width="84" Spacing="6">
+          <Border Width="64" Height="64" CornerRadius="32" Background="{ThemeResource SurfaceVariantBrush}">
+            <Image Source="{x:Bind UrlProfileImage}" Stretch="UniformToFill"/>
+          </Border>
+          <TextBlock Text="{x:Bind FullName}" FontSize="12" FontWeight="SemiBold" TextAlignment="Center" Foreground="{ThemeResource OnSurfaceBrush}" TextTrimming="CharacterEllipsis"/>
+          <TextBlock Text="{x:Bind Followers}" FontSize="11" TextAlignment="Center" Foreground="{ThemeResource OnSurfaceVariantBrush}"/>
+        </StackPanel>
+      </Button>
+    </DataTemplate>
+  </Page.Resources>
+
+  <Grid utu:SafeArea.Insets="VisibleBounds">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <!-- Charcoal app bar (inverted) with wordmark + bell + avatar -->
+    <Grid Grid.Row="0" Background="{ThemeResource AppBarFillBrush}" Padding="16,12">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="Auto"/>
+      </Grid.ColumnDefinitions>
+      <TextBlock Grid.Column="0" Text="{Binding Greeting}" FontSize="20" FontWeight="Bold" Foreground="{ThemeResource OnAppBarBrush}" VerticalAlignment="Center"/>
+      <Button Grid.Column="1" Content="🔔" FontSize="18" Background="Transparent" Foreground="{ThemeResource OnAppBarBrush}" Command="{Binding OpenNotificationsCommand}"/>
+      <Button Grid.Column="2" Background="Transparent" Padding="0" Command="{Binding OpenProfileCommand}">
+        <Border Width="32" Height="32" CornerRadius="16" Background="{ThemeResource SurfaceVariantBrush}">
+          <Image Source="ms-appx:///Assets/Profiles/james_bondi.png" Stretch="UniformToFill"/>
+        </Border>
+      </Button>
+    </Grid>
+
+    <ScrollViewer Grid.Row="1">
+      <StackPanel Padding="16" Spacing="20">
+        <!-- Trending -->
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          <TextBlock Grid.Column="0" Text="Trending Now" FontSize="18" FontWeight="Bold" Foreground="{ThemeResource OnBackgroundBrush}"/>
+          <Button Grid.Column="1" Content="View all" Style="{ThemeResource TextButtonStyle}" Foreground="{ThemeResource PrimaryBrush}"/>
+        </Grid>
+        <ScrollViewer HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
+          <ItemsControl ItemsSource="{Binding Trending}" ItemTemplate="{StaticResource RecipeCardLargeTemplate}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+          </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Categories -->
+        <TextBlock Text="Categories" FontSize="18" FontWeight="Bold" Foreground="{ThemeResource OnBackgroundBrush}"/>
+        <ScrollViewer HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
+          <ItemsControl ItemsSource="{Binding Categories}" ItemTemplate="{StaticResource CategoryChipTemplate}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+          </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Recently Added -->
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          <TextBlock Grid.Column="0" Text="Recently Added" FontSize="18" FontWeight="Bold" Foreground="{ThemeResource OnBackgroundBrush}"/>
+          <Button Grid.Column="1" Content="View all" Style="{ThemeResource TextButtonStyle}" Foreground="{ThemeResource PrimaryBrush}"/>
+        </Grid>
+        <ScrollViewer HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
+          <ItemsControl ItemsSource="{Binding RecentlyAdded}" ItemTemplate="{StaticResource RecipeCardLargeTemplate}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+          </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Popular contributors -->
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          <TextBlock Grid.Column="0" Text="Popular Contributors" FontSize="18" FontWeight="Bold" Foreground="{ThemeResource OnBackgroundBrush}"/>
+          <Button Grid.Column="1" Content="Near me" Style="{ThemeResource TextButtonStyle}" Foreground="{ThemeResource PrimaryBrush}" Command="{Binding OpenNearMeCommand}"/>
+        </Grid>
+        <ScrollViewer HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Hidden">
+          <ItemsControl ItemsSource="{Binding PopularContributors}" ItemTemplate="{StaticResource ContributorTemplate}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <StackPanel Orientation="Horizontal"/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+          </ItemsControl>
+        </ScrollViewer>
+
+      </StackPanel>
+    </ScrollViewer>
+
+    <Border Grid.Row="2" Background="{ThemeResource SurfaceBrush}" BorderBrush="{ThemeResource OutlineBrush}" BorderThickness="0,1,0,0">
+      <Grid Padding="0,8" ColumnSpacing="0">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Button Grid.Column="0" Background="Transparent" HorizontalAlignment="Stretch" Command="{Binding NavigateHomeCommand}">
+          <StackPanel Spacing="2" HorizontalAlignment="Center">
+            <TextBlock Text="🏠" FontSize="18" HorizontalAlignment="Center" Foreground="{ThemeResource PrimaryBrush}"/>
+            <TextBlock Text="Home" FontSize="11" HorizontalAlignment="Center" Foreground="{ThemeResource PrimaryBrush}"/>
+          </StackPanel>
+        </Button>
+        <Button Grid.Column="1" Background="Transparent" HorizontalAlignment="Stretch" Command="{Binding NavigateSearchCommand}">
+          <StackPanel Spacing="2" HorizontalAlignment="Center">
+            <TextBlock Text="🔍" FontSize="18" HorizontalAlignment="Center" Foreground="{ThemeResource OnSurfaceVariantBrush}"/>
+            <TextBlock Text="Search" FontSize="11" HorizontalAlignment="Center" Foreground="{ThemeResource OnSurfaceVariantBrush}"/>
+          </StackPanel>
+        </Button>
+        <Button Grid.Column="2" Background="Transparent" HorizontalAlignment="Stretch" Command="{Binding NavigateFavoritesCommand}">
+          <StackPanel Spacing="2" HorizontalAlignment="Center">
+            <TextBlock Text="♥" FontSize="18" HorizontalAlignment="Center" Foreground="{ThemeResource OnSurfaceVariantBrush}"/>
+            <TextBlock Text="Favorites" FontSize="11" HorizontalAlignment="Center" Foreground="{ThemeResource OnSurfaceVariantBrush}"/>
+          </StackPanel>
+        </Button>
+      </Grid>
+    </Border>
+  </Grid>
+</Page>

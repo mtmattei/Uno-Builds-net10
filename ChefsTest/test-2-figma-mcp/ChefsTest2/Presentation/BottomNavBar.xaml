@@ -1,0 +1,72 @@
+<UserControl x:Class="ChefsTest2.Presentation.BottomNavBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:utu="using:Uno.Toolkit.UI"
+             xmlns:um="using:Uno.Material">
+
+  <Grid Background="{ThemeResource SurfaceBrush}"
+        BorderBrush="{ThemeResource OutlineVariantBrush}"
+        BorderThickness="0,1,0,0"
+        Padding="0,8,0,12"
+        AutomationProperties.AutomationId="BottomNavBar">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+
+    <Button Grid.Column="0"
+            x:Name="HomeButton"
+            HorizontalAlignment="Stretch"
+            Background="Transparent"
+            BorderThickness="0"
+            Click="HomeButton_Click"
+            AutomationProperties.AutomationId="BottomNavHome">
+      <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Spacing="4">
+        <FontIcon Glyph="&#xE10F;" FontSize="22" Foreground="{ThemeResource OnSurfaceBrush}" />
+        <TextBlock Text="Home" FontSize="12" FontWeight="Medium"
+                   Foreground="{ThemeResource OnSurfaceBrush}" />
+      </StackPanel>
+    </Button>
+
+    <Button Grid.Column="1"
+            x:Name="SearchButton"
+            HorizontalAlignment="Stretch"
+            Background="Transparent"
+            BorderThickness="0"
+            Click="SearchButton_Click"
+            AutomationProperties.AutomationId="BottomNavSearch">
+      <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Spacing="4">
+        <Border CornerRadius="12" Padding="12,4"
+                Background="{ThemeResource PrimaryContainerBrush}"
+                Visibility="{x:Bind IsSearchActive, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+          <FontIcon Glyph="&#xE721;" FontSize="22" Foreground="{ThemeResource OnPrimaryContainerBrush}" />
+        </Border>
+        <FontIcon Glyph="&#xE721;" FontSize="22" Foreground="{ThemeResource OnSurfaceBrush}"
+                  Visibility="{x:Bind IsSearchActive, Mode=OneWay, Converter={StaticResource InvertedBoolToVisibility}}" />
+        <TextBlock Text="Search" FontSize="12" FontWeight="Medium"
+                   Foreground="{ThemeResource OnSurfaceBrush}" />
+      </StackPanel>
+    </Button>
+
+    <Button Grid.Column="2"
+            x:Name="FavoritesButton"
+            HorizontalAlignment="Stretch"
+            Background="Transparent"
+            BorderThickness="0"
+            Click="FavoritesButton_Click"
+            AutomationProperties.AutomationId="BottomNavFavorites">
+      <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Spacing="4">
+        <Border CornerRadius="12" Padding="12,4"
+                Background="{ThemeResource PrimaryContainerBrush}"
+                Visibility="{x:Bind IsFavoritesActive, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+          <FontIcon Glyph="&#xE00B;" FontSize="22" Foreground="{ThemeResource OnPrimaryContainerBrush}" />
+        </Border>
+        <FontIcon Glyph="&#xE00B;" FontSize="22" Foreground="{ThemeResource OnSurfaceBrush}"
+                  Visibility="{x:Bind IsFavoritesActive, Mode=OneWay, Converter={StaticResource InvertedBoolToVisibility}}" />
+        <TextBlock Text="Favorites" FontSize="12" FontWeight="Medium"
+                   Foreground="{ThemeResource OnSurfaceBrush}" />
+      </StackPanel>
+    </Button>
+  </Grid>
+</UserControl>

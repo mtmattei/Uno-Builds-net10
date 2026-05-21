@@ -1,0 +1,100 @@
+<UserControl x:Class="ChefsTest4.Presentation.Pages.SearchPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:m="using:ChefsTest4.Models"
+             xmlns:c="using:ChefsTest4.Presentation.Converters"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Background="{ThemeResource CanvasBrush}">
+  <UserControl.Resources>
+    <c:CookTimeMinutesConverter x:Key="CookTimeConv" />
+    <c:HeartGlyphConverter x:Key="HeartGlyphConv" />
+    <c:HeartBrushConverter x:Key="HeartBrushConv" />
+    <c:BoolToVisibilityConverter x:Key="BoolVis" />
+  </UserControl.Resources>
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <!-- App bar -->
+    <Border Grid.Row="0" Style="{StaticResource InvertedAppBarBorderStyle}">
+      <TextBlock Text="Uno Chefs" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" Foreground="{ThemeResource AppBarForegroundBrush}" />
+    </Border>
+
+    <!-- Search input -->
+    <Border Grid.Row="1" Margin="16,16,16,8" Background="{ThemeResource CardBrush}" CornerRadius="28" Padding="16,8" MinHeight="56" BorderBrush="{ThemeResource OutlineBrush}" BorderThickness="1">
+      <Grid>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+        <FontIcon Grid.Column="0" Glyph="&#xE721;" FontSize="20" VerticalAlignment="Center" Margin="0,0,12,0" Foreground="{ThemeResource MutedTextBrush}" />
+        <TextBox Grid.Column="1" PlaceholderText="Search" BorderThickness="0" Background="Transparent" VerticalAlignment="Center"
+                 Text="{x:Bind ViewModel.QueryText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+      </Grid>
+    </Border>
+
+    <!-- Result count + Filters link -->
+    <Grid Grid.Row="2" Padding="16,8,16,8">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+      <TextBlock Grid.Column="0" VerticalAlignment="Center">
+        <Run Text="{x:Bind ViewModel.ResultCount, Mode=OneWay}" />
+        <Run Text=" results" />
+      </TextBlock>
+      <Button Grid.Column="1" Style="{StaticResource TertiaryLinkButtonStyle}" Command="{x:Bind ViewModel.FiltersCommand}">
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <FontIcon Glyph="&#xE71C;" FontSize="14" />
+          <TextBlock Text="Filters" />
+        </StackPanel>
+      </Button>
+    </Grid>
+
+    <!-- Results grid + empty state -->
+    <Grid Grid.Row="3">
+      <ListView ItemsSource="{x:Bind ViewModel.Results, Mode=OneWay}"
+                Padding="16,0,16,16"
+                Visibility="{x:Bind ViewModel.HasResults, Mode=OneWay, Converter={StaticResource BoolVis}}"
+                SelectionMode="None">
+        <ListView.ItemsPanel>
+          <ItemsPanelTemplate>
+            <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="2" />
+          </ItemsPanelTemplate>
+        </ListView.ItemsPanel>
+        <ListView.ItemContainerStyle>
+          <Style TargetType="ListViewItem"><Setter Property="Padding" Value="0" /><Setter Property="Margin" Value="0,0,12,12" /><Setter Property="HorizontalContentAlignment" Value="Stretch" /></Style>
+        </ListView.ItemContainerStyle>
+        <ListView.ItemTemplate>
+          <DataTemplate x:DataType="m:RecipeData">
+            <Border Style="{StaticResource CardBorderStyle}" Padding="0" Width="172">
+              <Grid>
+                <Grid.RowDefinitions><RowDefinition Height="130" /><RowDefinition Height="Auto" /></Grid.RowDefinitions>
+                <Border Grid.Row="0" CornerRadius="12,12,0,0" Background="{ThemeResource SurfaceVariantBrush}">
+                  <Image Source="{x:Bind ImageUrl}" Stretch="UniformToFill" />
+                </Border>
+                <StackPanel Grid.Row="1" Padding="12" Spacing="2">
+                  <TextBlock Text="{x:Bind Name}" Style="{StaticResource H4TextStyle}" MaxLines="2" TextTrimming="CharacterEllipsis" />
+                  <Grid>
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{x:Bind Calories}" Style="{StaticResource CaptionTextStyle}" />
+                    <FontIcon Grid.Column="1" Glyph="{x:Bind IsFavorite, Converter={StaticResource HeartGlyphConv}}" FontSize="16"
+                              Foreground="{x:Bind IsFavorite, Converter={StaticResource HeartBrushConv}}" />
+                  </Grid>
+                </StackPanel>
+              </Grid>
+            </Border>
+          </DataTemplate>
+        </ListView.ItemTemplate>
+      </ListView>
+
+      <!-- Empty state -->
+      <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16" Padding="32"
+                  Visibility="{x:Bind ViewModel.HasResults, Mode=OneWay, Converter={StaticResource BoolVis}, ConverterParameter=Invert}">
+        <Image Width="120" Height="120" Stretch="Uniform" Source="ms-appx:///Assets/Images/empty_box_light.svg" />
+        <TextBlock Text="No Results Found" Style="{StaticResource H1TextStyle}" HorizontalAlignment="Center" />
+        <TextBlock Text="Try a different keyword or adjust your filters." Style="{StaticResource MutedBodyTextStyle}" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="280" HorizontalAlignment="Center" />
+      </StackPanel>
+    </Grid>
+  </Grid>
+</UserControl>

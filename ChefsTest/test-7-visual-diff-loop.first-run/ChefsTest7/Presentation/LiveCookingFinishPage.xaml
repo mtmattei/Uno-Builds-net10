@@ -1,0 +1,36 @@
+<Page x:Class="ChefsTest7.Presentation.LiveCookingFinishPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource BackgroundBrush}">
+  <Grid utu:SafeArea.Insets="VisibleBounds">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <StackPanel Grid.Row="0" Padding="32" Spacing="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+      <!-- Success illustration: bundled success_light.svg doesn't render under Skia. Pink circular badge with thumbs-up emoji as visual proxy. -->
+      <Border Width="220" Height="220" CornerRadius="110" Background="{ThemeResource PrimaryContainerBrush}">
+        <TextBlock Text="👍" FontSize="120" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      </Border>
+      <TextBlock Text="Hurray!" FontSize="32" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{ThemeResource PrimaryBrush}"/>
+      <TextBlock Text="You finished cooking" FontSize="14" HorizontalAlignment="Center" Foreground="{ThemeResource OnSurfaceVariantBrush}"/>
+      <TextBlock Text="{Binding Recipe.Name}" FontSize="18" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="{ThemeResource OnBackgroundBrush}"/>
+      <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+        <Button Content="★" FontSize="32" Background="Transparent" Foreground="{ThemeResource PrimaryBrush}" Padding="4" CommandParameter="1" Click="OnStarClick"/>
+        <Button Content="★" FontSize="32" Background="Transparent" Foreground="{ThemeResource PrimaryBrush}" Padding="4" CommandParameter="2" Click="OnStarClick"/>
+        <Button Content="★" FontSize="32" Background="Transparent" Foreground="{ThemeResource PrimaryBrush}" Padding="4" CommandParameter="3" Click="OnStarClick"/>
+        <Button Content="★" FontSize="32" Background="Transparent" Foreground="{ThemeResource PrimaryBrush}" Padding="4" CommandParameter="4" Click="OnStarClick"/>
+        <Button Content="★" FontSize="32" Background="Transparent" Foreground="{ThemeResource PrimaryBrush}" Padding="4" CommandParameter="5" Click="OnStarClick"/>
+      </StackPanel>
+    </StackPanel>
+    <Grid Grid.Row="1" Padding="16,12" ColumnSpacing="12" Background="{ThemeResource SurfaceBrush}" BorderBrush="{ThemeResource OutlineBrush}" BorderThickness="0,1,0,0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <Button Grid.Column="0" Content="Previous" HorizontalAlignment="Stretch" Style="{ThemeResource OutlinedButtonStyle}" Command="{Binding PreviousCommand}"/>
+      <Button Grid.Column="1" Content="Favorite" HorizontalAlignment="Stretch" Background="{ThemeResource PrimaryBrush}" Foreground="{ThemeResource OnPrimaryBrush}" Command="{Binding FavoriteCommand}"/>
+    </Grid>
+  </Grid>
+</Page>

@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snackbar Component — Design Mockup & Gap Analysis</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap');
+
+  :root {
+    --bg: #0f0f12;
+    --surface: #1a1a22;
+    --surface-variant: #22222e;
+    --border: #2a2a3a;
+    --text: #e8e6f0;
+    --text-dim: #8b8998;
+    --accent: #c9b8ff;
+    --accent-dim: #7b6ba6;
+    --green: #4ade80;
+    --red: #f87171;
+    --amber: #fbbf24;
+    --blue: #60a5fa;
+
+    /* M3 Inverse tokens (light on dark snackbar in light theme) */
+    --m3-inverse-surface: #322F35;
+    --m3-inverse-on-surface: #F5EFF7;
+    --m3-inverse-primary: #D0BCFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.6;
+    padding: 40px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    background: linear-gradient(135deg, var(--accent), #60a5fa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .subtitle {
+    color: var(--text-dim);
+    margin-bottom: 48px;
+    font-size: 0.95rem;
+  }
+
+  h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 48px 0 20px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  h2 .badge {
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  h2 .badge.done { background: rgba(74,222,128,0.15); color: var(--green); }
+  h2 .badge.gap { background: rgba(248,113,113,0.15); color: var(--red); }
+  h2 .badge.warn { background: rgba(251,191,36,0.15); color: var(--amber); }
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 28px 0 12px;
+    color: var(--accent);
+  }
+
+  /* --- Section Containers --- */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+
+  /* --- Mockup area --- */
+  .phone-frame {
+    width: 375px;
+    height: 580px;
+    background: #f5f2f7;
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 0 0 2px rgba(255,255,255,0.05);
+    margin: 0 auto 24px;
+  }
+
+  .phone-frame .status-bar {
+    height: 44px;
+    background: #f5f2f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1c1b1f;
+  }
+
+  .phone-frame .app-bar {
+    height: 56px;
+    background: #f5f2f7;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    font-size: 22px;
+    font-weight: 500;
+    color: #1c1b1f;
+    border-bottom: 1px solid #e0dce4;
+  }
+
+  .phone-frame .content {
+    padding: 24px 16px;
+    color: #49454f;
+    font-size: 14px;
+  }
+
+  .phone-frame .content .btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 24px;
+    background: #6750A4;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 12px;
+  }
+
+  .phone-frame .bottom-nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: #FFFBFE;
+    border-top: 1px solid #e0dce4;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: 12px;
+  }
+
+  .phone-frame .bottom-nav .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-size: 11px;
+    color: #49454f;
+  }
+
+  .phone-frame .bottom-nav .nav-item .dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #e0dce4;
+  }
+  .phone-frame .bottom-nav .nav-item.active .dot {
+    background: #E8DEF8;
+  }
+
+  /* --- Snackbar component mockups --- */
+  .snackbar-mockup {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    bottom: 88px;
+    background: var(--m3-inverse-surface);
+    border-radius: 4px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    animation: slideUp 0.25s cubic-bezier(0.0, 0.0, 0.2, 1) forwards;
+    box-shadow: 0 3px 5px -1px rgba(0,0,0,0.2), 0 6px 10px 0 rgba(0,0,0,0.14), 0 1px 18px 0 rgba(0,0,0,0.12);
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .snackbar-mockup .msg {
+    flex: 1;
+    color: var(--m3-inverse-on-surface);
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.25px;
+    padding: 14px 0;
+  }
+
+  .snackbar-mockup .action-btn {
+    color: var(--m3-inverse-primary);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    background: none;
+    border: none;
+    padding: 10px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    margin-left: 8px;
+  }
+
+  .snackbar-mockup .dismiss-btn {
+    color: var(--m3-inverse-on-surface);
+    background: none;
+    border: none;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    opacity: 0.8;
+  }
+
+  /* Multi-line variant */
+  .snackbar-multiline {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px 16px 4px;
+  }
+
+  .snackbar-multiline .top-row {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .snackbar-multiline .bottom-row {
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: 8px;
+  }
+
+  .snackbar-multiline .msg {
+    padding: 0 8px 0 0;
+  }
+
+  /* --- Variant showcase grid --- */
+  .variant-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+  }
+
+  @media (max-width: 768px) {
+    .variant-grid { grid-template-columns: 1fr; }
+  }
+
+  .variant-card {
+    background: var(--surface-variant);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+  }
+
+  .variant-card .label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+  }
+
+  .variant-card .snackbar-demo {
+    background: var(--m3-inverse-surface);
+    border-radius: 4px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  .variant-card .snackbar-demo .msg {
+    flex: 1;
+    color: var(--m3-inverse-on-surface);
+    font-size: 14px;
+    line-height: 20px;
+    padding: 14px 0;
+  }
+
+  .variant-card .snackbar-demo .action-btn {
+    color: var(--m3-inverse-primary);
+    font-size: 14px;
+    font-weight: 500;
+    background: none;
+    border: none;
+    padding: 10px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .variant-card .snackbar-demo .dismiss-btn {
+    color: var(--m3-inverse-on-surface);
+    background: none;
+    border: none;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    opacity: 0.8;
+  }
+
+  .variant-card .snackbar-demo.multiline {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px 16px 4px;
+  }
+
+  .variant-card .snackbar-demo.multiline .top-row {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .variant-card .snackbar-demo.multiline .bottom-row {
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: 8px;
+  }
+
+  .variant-card .snackbar-demo.multiline .msg {
+    padding: 0 8px 0 0;
+  }
+
+  /* --- Gap analysis table --- */
+  .gap-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    margin: 16px 0;
+  }
+
+  .gap-table th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--surface-variant);
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+    font-weight: 500;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .gap-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(42,42,58,0.5);
+    vertical-align: top;
+  }
+
+  .gap-table tr:last-child td { border-bottom: none; }
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  .status.ok { background: rgba(74,222,128,0.12); color: var(--green); }
+  .status.bug { background: rgba(248,113,113,0.12); color: var(--red); }
+  .status.missing { background: rgba(251,191,36,0.12); color: var(--amber); }
+  .status.info { background: rgba(96,165,250,0.12); color: var(--blue); }
+
+  .status::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .status.ok::before { background: var(--green); }
+  .status.bug::before { background: var(--red); }
+  .status.missing::before { background: var(--amber); }
+  .status.info::before { background: var(--blue); }
+
+  /* Code */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82em;
+    background: rgba(201,184,255,0.08);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+
+  /* Lists */
+  ul { margin: 8px 0 8px 20px; }
+  li { margin-bottom: 6px; color: var(--text); }
+  li code { font-size: 0.78em; }
+
+  p { margin-bottom: 12px; }
+
+  /* Anatomy diagram */
+  .anatomy {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin: 20px 0;
+  }
+
+  .anatomy-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .anatomy-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    background: rgba(201,184,255,0.08);
+    padding: 4px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    min-width: 140px;
+    text-align: center;
+  }
+
+  .anatomy-arrow {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+  }
+
+  .anatomy-desc {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+  }
+
+  /* Tabs for live demo */
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+
+  .tab-bar button {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    padding: 10px 20px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .tab-bar button.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .tab-bar button:hover {
+    color: var(--text);
+  }
+
+  .demo-container {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .sep { border-top: 1px solid var(--border); margin: 24px 0; }
+
+  /* Interactive demo */
+  .phone-btn-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 16px;
+  }
+
+  .phone-btn-row button {
+    background: var(--surface-variant);
+    color: var(--accent);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .phone-btn-row button:hover {
+    background: rgba(201,184,255,0.1);
+  }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<h1>Snackbar — Uno Toolkit</h1>
+<p class="subtitle">Design mockup, visual variants, and implementation gap analysis</p>
+
+<!-- ============================================ -->
+<h2>1. Visual Design — All Variants</h2>
+<!-- ============================================ -->
+
+<div class="variant-grid">
+
+  <div class="variant-card">
+    <div class="label">Message only</div>
+    <div class="snackbar-demo">
+      <span class="msg">Photo saved to gallery</span>
+    </div>
+  </div>
+
+  <div class="variant-card">
+    <div class="label">Message + Action</div>
+    <div class="snackbar-demo">
+      <span class="msg">Item deleted</span>
+      <button class="action-btn">Undo</button>
+    </div>
+  </div>
+
+  <div class="variant-card">
+    <div class="label">Message + Action + Dismiss</div>
+    <div class="snackbar-demo">
+      <span class="msg">Connection restored</span>
+      <button class="action-btn">Retry</button>
+      <button class="dismiss-btn">✕</button>
+    </div>
+  </div>
+
+  <div class="variant-card">
+    <div class="label">Message + Dismiss (no action)</div>
+    <div class="snackbar-demo">
+      <span class="msg">3 items moved to trash</span>
+      <button class="dismiss-btn">✕</button>
+    </div>
+  </div>
+
+  <div class="variant-card" style="grid-column: 1 / -1;">
+    <div class="label">Multi-line — Action on new line + Dismiss</div>
+    <div class="snackbar-demo multiline">
+      <div class="top-row">
+        <span class="msg">This item already has the label "travel". You can add a new label or use the search to find existing ones.</span>
+        <button class="dismiss-btn">✕</button>
+      </div>
+      <div class="bottom-row">
+        <button class="action-btn">Add label</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================ -->
+<h2>2. In-Context Mockup — Mobile Frame</h2>
+<!-- ============================================ -->
+
+<div class="section">
+  <div class="demo-container">
+
+    <!-- Phone 1: Simple snackbar -->
+    <div>
+      <div class="phone-frame" id="phone1">
+        <div class="status-bar">9:41</div>
+        <div class="app-bar">My App</div>
+        <div class="content">
+          <p style="color: #49454f;">Welcome to the app. Tap the button below to trigger a snackbar notification.</p>
+          <button class="btn" onclick="toggleSnackbar('phone1-snack')">Delete Item</button>
+        </div>
+        <div class="snackbar-mockup" id="phone1-snack">
+          <span class="msg">Item deleted</span>
+          <button class="action-btn">Undo</button>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item active"><div class="dot"></div>Home</div>
+          <div class="nav-item"><div class="dot"></div>Search</div>
+          <div class="nav-item"><div class="dot"></div>Profile</div>
+        </div>
+      </div>
+      <p style="text-align:center; color: var(--text-dim); font-size:0.8rem; margin-top: 12px;">Single-line with action</p>
+    </div>
+
+    <!-- Phone 2: Multi-line snackbar -->
+    <div>
+      <div class="phone-frame" id="phone2">
+        <div class="status-bar">9:41</div>
+        <div class="app-bar">Settings</div>
+        <div class="content">
+          <p style="color: #49454f;">Multi-line snackbar with action on a new line and dismiss button.</p>
+          <button class="btn" onclick="toggleSnackbar('phone2-snack')">Change Setting</button>
+        </div>
+        <div class="snackbar-mockup snackbar-multiline" id="phone2-snack">
+          <div class="top-row">
+            <span class="msg">Changes saved. Your preference will take effect the next time you open the app.</span>
+            <button class="dismiss-btn">✕</button>
+          </div>
+          <div class="bottom-row">
+            <button class="action-btn">View changes</button>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item"><div class="dot"></div>Home</div>
+          <div class="nav-item"><div class="dot"></div>Search</div>
+          <div class="nav-item active"><div class="dot"></div>Settings</div>
+        </div>
+      </div>
+      <p style="text-align:center; color: var(--text-dim); font-size:0.8rem; margin-top: 12px;">Multi-line with dismiss</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================ -->
+<h2>3. Component Anatomy</h2>
+<!-- ============================================ -->
+
+<div class="section">
+  <div style="background: var(--m3-inverse-surface); border-radius: 4px; padding: 0 16px; display: flex; align-items: center; min-height: 48px; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.3); margin-bottom: 24px;">
+    <span style="flex:1; color: var(--m3-inverse-on-surface); font-size: 14px; padding: 14px 0; position: relative;">
+      Message text
+      <span style="position:absolute; top: -18px; left: 0; font-size: 10px; color: var(--accent); font-family: 'JetBrains Mono', monospace;">① Message (BodyMedium)</span>
+    </span>
+    <button style="color: var(--m3-inverse-primary); font-size: 14px; font-weight: 500; background: none; border: none; padding: 10px 12px; position: relative;">
+      Action
+      <span style="position:absolute; top: -18px; left: 0; font-size: 10px; color: var(--accent); font-family: 'JetBrains Mono', monospace; white-space: nowrap;">② Action (LabelLarge)</span>
+    </button>
+    <button style="color: var(--m3-inverse-on-surface); background: none; border: none; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; position: relative; opacity: 0.8;">
+      ✕
+      <span style="position:absolute; top: -18px; right: 0; font-size: 10px; color: var(--accent); font-family: 'JetBrains Mono', monospace; white-space: nowrap;">③ Dismiss</span>
+    </button>
+  </div>
+
+  <p style="font-size: 0.85rem; color: var(--text-dim);">
+    <strong style="color: var(--text);">Container:</strong> InverseSurface background, 4dp corner radius, elevation 3<br>
+    <strong style="color: var(--text);">Dimensions:</strong> min-height 48dp, min-width 288dp, max-width 560dp<br>
+    <strong style="color: var(--text);">Spacing:</strong> 16dp horizontal padding, 8dp between message and action<br>
+    <strong style="color: var(--text);">Position:</strong> 8dp margin from edges, above BottomNavigationBar
+  </p>
+</div>
+
+<!-- ============================================ -->
+<h2>4. Gap Analysis <span class="badge gap">Action Required</span></h2>
+<!-- ============================================ -->
+
+<div class="section">
+
+  <h3>🔴 Bugs Found in Existing Code</h3>
+  <table class="gap-table">
+    <thead>
+      <tr><th>Issue</th><th>Severity</th><th>Location</th><th>Details</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Material multi-line action button unnamed</strong></td>
+        <td><span class="status bug">Bug</span></td>
+        <td><code>Material/v2/Snackbar.xaml</code></td>
+        <td>The multi-line action button in the Material style is missing <code>x:Name="PART_ActionButtonMultiLine"</code>. It won't be wired for click events. The default template has the same issue.</td>
+      </tr>
+      <tr>
+        <td><strong>Material Dark theme missing</strong></td>
+        <td><span class="status bug">Bug</span></td>
+        <td><code>Material/v2/Snackbar.xaml</code></td>
+        <td>Only <code>Default</code> and <code>Light</code> theme dictionaries exist. The <code>Dark</code> theme is missing, meaning dark mode will fall back to Default (which uses light-theme M3 inverse tokens). M3 inverse colors flip between themes.</td>
+      </tr>
+      <tr>
+        <td><strong>SnackbarHost outer Grid comment claims clip but doesn't clip</strong></td>
+        <td><span class="status info">Minor</span></td>
+        <td><code>SnackbarHost.xaml</code></td>
+        <td>Comment says "clips the slide-in animation" but no <code>ClipToBounds</code> or <code>Clip</code> is set. The slide-up animation may be visible outside the host bounds on some platforms.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>🟡 Missing Files / Deliverables</h3>
+  <table class="gap-table">
+    <thead>
+      <tr><th>Item</th><th>Status</th><th>Impact</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Cupertino styles</td>
+        <td><span class="status missing">Missing</span></td>
+        <td>iOS theming</td>
+        <td>No Cupertino <code>Snackbar.xaml</code> created. Needed at <code>Cupertino/Styles/Controls/Snackbar.xaml</code>.</td>
+      </tr>
+      <tr>
+        <td>C# Markup extensions</td>
+        <td><span class="status missing">Missing</span></td>
+        <td>Markup users</td>
+        <td>No <code>Snackbar.cs</code> in <code>Uno.Toolkit.WinUI.Markup/Theme/</code>. Other controls (Card, Divider, etc.) have them.</td>
+      </tr>
+      <tr>
+        <td>Sample page</td>
+        <td><span class="status missing">Missing</span></td>
+        <td>Demo / QA</td>
+        <td>No <code>SnackbarSamplePage.xaml</code> / <code>.xaml.cs</code> in samples project.</td>
+      </tr>
+      <tr>
+        <td><code>doc/toc.yml</code> entry</td>
+        <td><span class="status missing">Missing</span></td>
+        <td>Documentation</td>
+        <td>Snackbar not listed in table of contents.</td>
+      </tr>
+      <tr>
+        <td><code>doc/controls-styles.md</code> entry</td>
+        <td><span class="status missing">Missing</span></td>
+        <td>Documentation</td>
+        <td>Snackbar not listed in controls overview page.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>🟢 Implementation Quality Review</h3>
+  <table class="gap-table">
+    <thead>
+      <tr><th>Area</th><th>Status</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Core Snackbar visual</td>
+        <td><span class="status ok">Solid</span></td>
+        <td>Clean template parts wiring, proper unwire in OnApplyTemplate, visual states work correctly. Dual-layout (inline + multiline) is the right pattern.</td>
+      </tr>
+      <tr>
+        <td>Accessibility / AutomationPeer</td>
+        <td><span class="status ok">Solid</span></td>
+        <td><code>SnackbarAutomationPeer</code> exposes as StatusBar control type. <code>AutomationProperties.LiveSetting="Assertive"</code> on message TextBlock — screen readers will announce. Dismiss buttons have <code>AutomationProperties.Name</code>. Escape key handling present.</td>
+      </tr>
+      <tr>
+        <td>SnackbarHost queue + lifecycle</td>
+        <td><span class="status ok">Solid</span></td>
+        <td>TaskCompletionSource pattern is correct. Queue with MaxQueueSize cap. CancellationToken-based timer. Proper cleanup of event handlers.</td>
+      </tr>
+      <tr>
+        <td>Animations</td>
+        <td><span class="status ok">Solid</span></td>
+        <td>Storyboard-based enter/exit with slide + fade. StopRunningAnimations follows DrawerControl's Pause→snapshot→Stop→restore pattern. Swipe snap-back animation.</td>
+      </tr>
+      <tr>
+        <td>Thread safety</td>
+        <td><span class="status ok">Good</span></td>
+        <td>DispatcherCompat usage for timer callbacks. ProcessQueue guards with _isAnimating. ShowAsync is UI-thread-only (correct for WinUI control).</td>
+      </tr>
+      <tr>
+        <td>SnackbarDismissReason enum</td>
+        <td><span class="status ok">Good addition</span></td>
+        <td>Not in original plan but valuable — callers can distinguish timeout vs user action vs replaced. Matches Compose SnackbarResult pattern.</td>
+      </tr>
+      <tr>
+        <td>SnackbarDuration constants</td>
+        <td><span class="status ok">Good addition</span></td>
+        <td>Short/Long/Indefinite as static TimeSpan fields. Clean, discoverable API.</td>
+      </tr>
+      <tr>
+        <td>Swipe-to-dismiss</td>
+        <td><span class="status ok">Solid</span></td>
+        <td>ManipulationDelta/Completed handlers with 1/3 threshold, opacity fade, snap-back animation.</td>
+      </tr>
+      <tr>
+        <td>DependencyProperty patterns</td>
+        <td><span class="status ok">Consistent</span></td>
+        <td>Follows toolkit convention: #region blocks, static property, PropertyMetadata with callbacks, IS_WINUI conditionals.</td>
+      </tr>
+      <tr>
+        <td>Material 3 theming</td>
+        <td><span class="status ok">Good</span></td>
+        <td>Uses StaticResource aliasing to Material tokens (InverseSurfaceBrush, BodyMediumFontSize, etc.). Typography tokens for both message and action.</td>
+      </tr>
+      <tr>
+        <td>Lightweight styling</td>
+        <td><span class="status ok">Comprehensive</span></td>
+        <td>Full set of overridable ThemeResource keys for background, foreground, corner radius, dimensions, typography.</td>
+      </tr>
+      <tr>
+        <td>Runtime tests</td>
+        <td><span class="status ok">Good coverage</span></td>
+        <td>Tests for: default state, action visibility, dismiss, auto-dismiss, queue processing, max queue, indefinite duration, action command.</td>
+      </tr>
+      <tr>
+        <td>Documentation</td>
+        <td><span class="status ok">Complete</span></td>
+        <td>Full doc with properties tables, XAML + C# examples, SnackbarDismissReason explanation, lightweight styling guide.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>🔵 Edge Cases & Hardening Considerations</h3>
+  <table class="gap-table">
+    <thead>
+      <tr><th>Consideration</th><th>Status</th><th>Recommendation</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>ShowAsync before template applied</td>
+        <td><span class="status info">Consider</span></td>
+        <td>If ShowAsync is called before OnApplyTemplate completes, <code>_isReady</code> will be false and ProcessQueue returns early. Items will be queued but never displayed. Consider adding a deferred processing call in OnApplyTemplate.</td>
+      </tr>
+      <tr>
+        <td>SnackbarHost removed from tree mid-show</td>
+        <td><span class="status info">Consider</span></td>
+        <td>If the host is unloaded while showing, pending TCS tasks will never complete. Consider completing with a Cancelled-like reason on Unloaded, or use CancellationToken.</td>
+      </tr>
+      <tr>
+        <td>Re-entrancy in DismissCurrent → ProcessQueue</td>
+        <td><span class="status ok">Handled</span></td>
+        <td>The <code>_isAnimating</code> guard and deferred ProcessQueue via dispatcher prevents re-entrancy. Good pattern.</td>
+      </tr>
+      <tr>
+        <td>SafeArea integration</td>
+        <td><span class="status info">Future</span></td>
+        <td>Plan mentions SafeArea integration but it's not implemented. The SnackbarHostMargin provides basic offset. True SafeArea would need dynamic bottom inset on iOS/Android. Can be a follow-up.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ============================================ -->
+<h2>5. Fix Priority <span class="badge warn">Recommended Order</span></h2>
+<!-- ============================================ -->
+
+<div class="section">
+  <table class="gap-table">
+    <thead>
+      <tr><th>#</th><th>Fix</th><th>Priority</th><th>Effort</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><strong>Add <code>x:Name</code> to multi-line action buttons</strong> in both default and Material XAML</td>
+        <td><span class="status bug">P0 — broken behavior</span></td>
+        <td>5 min</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><strong>Add Dark theme dictionary</strong> to Material Snackbar.xaml</td>
+        <td><span class="status bug">P0 — dark mode broken</span></td>
+        <td>10 min</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><strong>Process queue on template apply</strong> — call ProcessQueue at end of OnApplyTemplate</td>
+        <td><span class="status info">P1 — edge case</span></td>
+        <td>2 min</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><strong>Handle Unloaded</strong> — complete pending TCS tasks when host leaves tree</td>
+        <td><span class="status info">P1 — edge case</span></td>
+        <td>10 min</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td><strong>Create Cupertino styles</strong></td>
+        <td><span class="status missing">P2 — completeness</span></td>
+        <td>30 min</td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td><strong>Create sample page</strong></td>
+        <td><span class="status missing">P2 — demo</span></td>
+        <td>30 min</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td><strong>Update doc/toc.yml and controls-styles.md</strong></td>
+        <td><span class="status missing">P2 — docs</span></td>
+        <td>5 min</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td><strong>C# Markup extensions</strong></td>
+        <td><span class="status missing">P3 — nice-to-have</span></td>
+        <td>20 min</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+function toggleSnackbar(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.style.display = el.style.display === 'none' ? '' : 'none';
+    if (el.style.display !== 'none') {
+      el.style.animation = 'none';
+      el.offsetHeight; // trigger reflow
+      el.style.animation = 'slideUp 0.25s cubic-bezier(0.0, 0.0, 0.2, 1) forwards';
+    }
+  }
+}
+</script>
+
+</body>
+</html>

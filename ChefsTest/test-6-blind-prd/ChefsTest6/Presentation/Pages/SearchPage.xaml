@@ -1,0 +1,90 @@
+<Page x:Class="ChefsTest6.Presentation.Pages.SearchPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:m="using:ChefsTest6.Models"
+      x:Name="PageRoot"
+      NavigationCacheMode="Required"
+      Background="{ThemeResource BackgroundBrush}">
+  <utu:SafeArea Insets="VisibleBounds,SoftInput">
+    <Grid Padding="16,12">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+
+      <Grid Grid.Row="0" ColumnSpacing="8">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <AutoSuggestBox Grid.Column="0"
+                        QueryIcon="Find"
+                        Text="{Binding Query, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        PlaceholderText="Search recipes" />
+        <Button Grid.Column="1" Content="Filters" Style="{StaticResource OutlinedButtonStyle}" Command="{Binding OpenFiltersCommand}" />
+      </Grid>
+
+      <Grid Grid.Row="1" Margin="0,12,0,0" ColumnSpacing="8">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="0" Text="{Binding ResultCountLabel}" Style="{StaticResource TitleMedium}" VerticalAlignment="Center" />
+        <Button Grid.Column="1"
+                Content="Clear filters"
+                Style="{StaticResource TextButtonStyle}"
+                Command="{Binding ClearFiltersCommand}"
+                Visibility="{Binding HasFilters, Converter={StaticResource BoolToVisible}}" />
+      </Grid>
+
+      <!-- Empty / no-results state -->
+      <StackPanel Grid.Row="3"
+                  Spacing="8"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Visibility="{Binding HasResults, Converter={StaticResource BoolToVisibleInverted}}">
+        <Image Source="ms-appx:///Assets/Images/empty_box_light.svg" Width="180" Height="180" Stretch="Uniform" />
+        <TextBlock Text="No recipes match" Style="{StaticResource TitleLarge}" HorizontalAlignment="Center" />
+        <TextBlock Text="Try a different search or clear filters." Style="{StaticResource BodyMedium}" Opacity="0.7" HorizontalAlignment="Center" />
+      </StackPanel>
+
+      <ScrollViewer Grid.Row="3"
+                    Visibility="{Binding HasResults, Converter={StaticResource BoolToVisible}}">
+        <GridView ItemsSource="{Binding Results}"
+                  SelectionMode="None"
+                  IsItemClickEnabled="False"
+                  Margin="0,8,0,0">
+          <GridView.ItemsPanel>
+            <ItemsPanelTemplate>
+              <ItemsWrapGrid Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+          </GridView.ItemsPanel>
+          <GridView.ItemTemplate>
+            <DataTemplate x:DataType="m:RecipeData">
+              <Button Width="180" Margin="4" Background="Transparent" BorderThickness="0" Padding="0"
+                      Command="{Binding DataContext.OpenRecipeCommand, ElementName=PageRoot}"
+                      CommandParameter="{x:Bind}">
+                <Border CornerRadius="16" Background="{ThemeResource SurfaceVariantBrush}">
+                  <StackPanel>
+                    <Image Source="{x:Bind ImageUrl}" Height="120" Stretch="UniformToFill" />
+                    <StackPanel Padding="10" Spacing="2">
+                      <TextBlock Text="{x:Bind Name}" Style="{StaticResource TitleSmall}" TextWrapping="Wrap" />
+                      <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="{x:Bind CookTimeLabel}" Style="{StaticResource BodySmall}" Opacity="0.7" />
+                        <TextBlock Text="·" Opacity="0.7" />
+                        <TextBlock Text="{x:Bind Calories}" Style="{StaticResource BodySmall}" Opacity="0.7" />
+                      </StackPanel>
+                    </StackPanel>
+                  </StackPanel>
+                </Border>
+              </Button>
+            </DataTemplate>
+          </GridView.ItemTemplate>
+        </GridView>
+      </ScrollViewer>
+    </Grid>
+  </utu:SafeArea>
+</Page>

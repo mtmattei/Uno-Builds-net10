@@ -1,0 +1,202 @@
+<Page x:Class="ChefsTest6.Presentation.Pages.HomePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:m="using:ChefsTest6.Models"
+      xmlns:c="using:ChefsTest6.Presentation.Converters"
+      x:Name="PageRoot"
+      NavigationCacheMode="Required"
+      Background="{ThemeResource BackgroundBrush}">
+  <utu:SafeArea Insets="VisibleBounds">
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+
+      <Grid Grid.Row="0" Padding="16,12" ColumnSpacing="8">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="Auto" />
+          <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Image Grid.Column="0"
+               Source="{Binding CurrentUser.UrlProfileImage}"
+               Width="40" Height="40"
+               Stretch="UniformToFill"
+               VerticalAlignment="Center">
+          <Image.Clip>
+            <RectangleGeometry Rect="0,0,40,40" />
+          </Image.Clip>
+        </Image>
+        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+          <TextBlock Text="Uno Chefs" Style="{StaticResource TitleLarge}" />
+          <TextBlock Text="{Binding CurrentUser.FullName}" Style="{StaticResource BodySmall}" Opacity="0.7" />
+        </StackPanel>
+        <Button Grid.Column="2" Style="{StaticResource TextButtonStyle}" Command="{Binding OpenNotificationsCommand}">
+          <SymbolIcon Symbol="Important" />
+        </Button>
+        <Button Grid.Column="3" Style="{StaticResource TextButtonStyle}" Command="{Binding OpenProfileCommand}">
+          <SymbolIcon Symbol="Contact" />
+        </Button>
+      </Grid>
+
+      <ScrollViewer Grid.Row="1">
+        <StackPanel Spacing="20" Padding="0,0,0,24">
+
+          <!-- Trending Now -->
+          <Grid Padding="16,8,16,0" ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Trending Now" Style="{StaticResource TitleLarge}" />
+            <Button Grid.Column="1" Content="View all" Style="{StaticResource TextButtonStyle}" Command="{Binding ViewAllTrendingCommand}" />
+          </Grid>
+          <ScrollViewer HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled">
+            <ItemsControl ItemsSource="{Binding Trending}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Orientation="Horizontal" Spacing="12" Padding="16,0" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="m:RecipeData">
+                  <Button Width="240" HorizontalContentAlignment="Stretch"
+                          VerticalContentAlignment="Stretch"
+                          Background="Transparent" BorderThickness="0" Padding="0"
+                          Command="{Binding DataContext.OpenRecipeCommand, ElementName=PageRoot}"
+                          CommandParameter="{x:Bind}">
+                    <Border CornerRadius="16" Background="{ThemeResource SurfaceVariantBrush}">
+                      <Grid>
+                        <Grid.RowDefinitions>
+                          <RowDefinition Height="160" />
+                          <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Image Grid.Row="0" Source="{x:Bind ImageUrl}" Stretch="UniformToFill" />
+                        <Button Grid.Row="0"
+                                HorizontalAlignment="Right" VerticalAlignment="Top" Margin="8"
+                                Style="{StaticResource TextButtonStyle}"
+                                Command="{Binding DataContext.ToggleFavoriteCommand, ElementName=PageRoot}"
+                                CommandParameter="{x:Bind}">
+                          <FontIcon Glyph="{x:Bind IsFavorite, Mode=OneWay, Converter={StaticResource HeartGlyph}}"
+                                    Foreground="{ThemeResource OnSurfaceBrush}" />
+                        </Button>
+                        <StackPanel Grid.Row="1" Padding="12" Spacing="4">
+                          <TextBlock Text="{x:Bind Name}" Style="{StaticResource TitleMedium}" TextWrapping="Wrap" />
+                          <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="{x:Bind CookTimeLabel}" Style="{StaticResource BodySmall}" Opacity="0.7" />
+                            <TextBlock Text="·" />
+                            <TextBlock Text="{x:Bind Calories}" Style="{StaticResource BodySmall}" Opacity="0.7" />
+                          </StackPanel>
+                        </StackPanel>
+                      </Grid>
+                    </Border>
+                  </Button>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+
+          <!-- Categories -->
+          <TextBlock Padding="16,8,16,0" Text="Categories" Style="{StaticResource TitleLarge}" />
+          <ScrollViewer HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled">
+            <ItemsControl ItemsSource="{Binding Categories}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Orientation="Horizontal" Spacing="8" Padding="16,0" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="m:CategoryData">
+                  <Button Background="{ThemeResource SecondaryContainerBrush}"
+                          Padding="12,8"
+                          CornerRadius="20"
+                          Command="{Binding DataContext.OpenCategoryCommand, ElementName=PageRoot}"
+                          CommandParameter="{x:Bind}">
+                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                      <Image Source="{x:Bind UrlIcon}" Width="20" Height="20" />
+                      <TextBlock Text="{x:Bind Name}" Style="{StaticResource LabelLarge}" />
+                      <TextBlock Text="{x:Bind CountLabel}" Style="{StaticResource LabelSmall}" Opacity="0.7" />
+                    </StackPanel>
+                  </Button>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+
+          <!-- Recently Added -->
+          <Grid Padding="16,8,16,0" ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Recently Added" Style="{StaticResource TitleLarge}" />
+            <Button Grid.Column="1" Content="View all" Style="{StaticResource TextButtonStyle}" Command="{Binding ViewAllRecentCommand}" />
+          </Grid>
+          <ScrollViewer HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled">
+            <ItemsControl ItemsSource="{Binding RecentlyAdded}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Orientation="Horizontal" Spacing="12" Padding="16,0" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="m:RecipeData">
+                  <Button Width="180" Background="Transparent" BorderThickness="0" Padding="0"
+                          Command="{Binding DataContext.OpenRecipeCommand, ElementName=PageRoot}"
+                          CommandParameter="{x:Bind}">
+                    <Border CornerRadius="16" Background="{ThemeResource SurfaceVariantBrush}">
+                      <StackPanel>
+                        <Image Source="{x:Bind ImageUrl}" Height="120" Stretch="UniformToFill" />
+                        <StackPanel Padding="10" Spacing="2">
+                          <TextBlock Text="{x:Bind Name}" Style="{StaticResource TitleSmall}" TextWrapping="Wrap" />
+                          <TextBlock Text="{x:Bind CookTimeLabel}" Style="{StaticResource BodySmall}" Opacity="0.7" />
+                        </StackPanel>
+                      </StackPanel>
+                    </Border>
+                  </Button>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+
+          <!-- Popular Contributors -->
+          <Grid Padding="16,8,16,0" ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Popular Contributors" Style="{StaticResource TitleLarge}" />
+            <Button Grid.Column="1" Content="Near me" Style="{StaticResource TextButtonStyle}" Command="{Binding OpenNearMeCommand}" />
+          </Grid>
+          <ScrollViewer HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Hidden" VerticalScrollMode="Disabled">
+            <ItemsControl ItemsSource="{Binding PopularContributors}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Orientation="Horizontal" Spacing="12" Padding="16,0" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="m:UserData">
+                  <Button Background="Transparent" BorderThickness="0" Padding="0"
+                          Command="{Binding DataContext.OpenContributorCommand, ElementName=PageRoot}"
+                          CommandParameter="{x:Bind}">
+                    <StackPanel Width="100" HorizontalAlignment="Center" Spacing="4">
+                      <Border Width="80" Height="80" CornerRadius="40" Background="{ThemeResource SurfaceVariantBrush}">
+                        <Image Source="{x:Bind UrlProfileImage}" Stretch="UniformToFill" />
+                      </Border>
+                      <TextBlock Text="{x:Bind FullName}" Style="{StaticResource LabelLarge}" TextAlignment="Center" TextWrapping="Wrap" />
+                      <TextBlock Text="{x:Bind FollowerLabel}" Style="{StaticResource LabelSmall}" TextAlignment="Center" Opacity="0.7" />
+                    </StackPanel>
+                  </Button>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </ScrollViewer>
+        </StackPanel>
+      </ScrollViewer>
+    </Grid>
+  </utu:SafeArea>
+</Page>

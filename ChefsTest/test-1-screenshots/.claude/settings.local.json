@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "DOTNET_ENVIRONMENT": "Development"
+  },
+  "permissions": {
+    "allow": [
+      "mcp__uno__uno_platform_agent_rules_init",
+      "mcp__uno__uno_platform_usage_rules_init",
+      "Bash(tasklist)",
+      "Bash(mkdir -p \"/c/Users/Platform006/OneDrive - Uno Platform/Desktop/unOS/AI-builds/ChefsFT-test/results/screenshots\")",
+      "Read(//c/Users/Platform006/OneDrive - Uno Platform/Desktop/unOS/AI-builds/ChefsFT-test/results/screenshots/**)",
+      "mcp__uno-app__uno_app_start",
+      "mcp__uno-app__uno_app_get_runtime_info",
+      "mcp__uno-app__uno_app_get_screenshot",
+      "mcp__uno-app__uno_app_visualtree_snapshot",
+      "mcp__uno-app__uno_app_element_peer_default_action",
+      "mcp__uno-app__uno_app_pointer_click",
+      "mcp__uno-app__uno_app_close",
+      "mcp__uno-app__uno_app_type_text",
+      "mcp__uno-app__uno_app_element_peer_action"
+    ]
+  }
+}

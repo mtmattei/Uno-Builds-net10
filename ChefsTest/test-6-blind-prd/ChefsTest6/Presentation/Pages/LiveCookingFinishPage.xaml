@@ -1,0 +1,49 @@
+<Page x:Class="ChefsTest6.Presentation.Pages.LiveCookingFinishPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      NavigationCacheMode="Required"
+      Background="{ThemeResource BackgroundBrush}">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+    <utu:NavigationBar Grid.Row="0" Content="{Binding Recipe.Name}" />
+
+    <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12" Padding="24">
+      <Image Source="ms-appx:///Assets/Images/success_light.svg" Width="220" Height="220" Stretch="Uniform" />
+      <TextBlock Text="Hurray!" Style="{StaticResource DisplayMedium}" HorizontalAlignment="Center" />
+      <TextBlock Text="You finished cooking. How was it?" Style="{StaticResource BodyLarge}" Opacity="0.8" TextWrapping="Wrap" TextAlignment="Center" />
+
+      <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center" Margin="0,12,0,0">
+        <Button Style="{StaticResource TextButtonStyle}" Command="{Binding SetRatingCommand}" CommandParameter="1">
+          <FontIcon Glyph="" />
+        </Button>
+        <Button Style="{StaticResource TextButtonStyle}" Command="{Binding SetRatingCommand}" CommandParameter="2">
+          <FontIcon Glyph="" />
+        </Button>
+        <Button Style="{StaticResource TextButtonStyle}" Command="{Binding SetRatingCommand}" CommandParameter="3">
+          <FontIcon Glyph="" />
+        </Button>
+        <Button Style="{StaticResource TextButtonStyle}" Command="{Binding SetRatingCommand}" CommandParameter="4">
+          <FontIcon Glyph="" />
+        </Button>
+        <Button Style="{StaticResource TextButtonStyle}" Command="{Binding SetRatingCommand}" CommandParameter="5">
+          <FontIcon Glyph="" />
+        </Button>
+      </StackPanel>
+      <TextBlock Text="{Binding Rating, FallbackValue='Tap to rate'}" HorizontalAlignment="Center" Style="{StaticResource LabelLarge}" />
+    </StackPanel>
+
+    <Grid Grid.Row="2" Padding="16" ColumnSpacing="12">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <Button Grid.Column="0" Content="Previous" Style="{StaticResource OutlinedButtonStyle}" HorizontalAlignment="Stretch" Command="{Binding PreviousCommand}" />
+      <Button Grid.Column="1" Content="Favorite" Style="{StaticResource FilledButtonStyle}" HorizontalAlignment="Stretch" Command="{Binding ToggleFavoriteCommand}" />
+    </Grid>
+  </Grid>
+</Page>

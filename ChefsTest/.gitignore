@@ -1,0 +1,28 @@
+# .NET / Uno build output
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+*.swp
+
+# IDE
+.vs/
+.vscode/
+.idea/
+
+# Node / web
+node_modules/
+
+# Secrets / env
+.env
+.env.local
+*.env
+
+# OS / misc
+Thumbs.db
+.DS_Store
+*.tmp
+
+# Excluded from this repo per scope
+reference/

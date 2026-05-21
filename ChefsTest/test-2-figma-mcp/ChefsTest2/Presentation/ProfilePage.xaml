@@ -1,0 +1,114 @@
+<Page x:Class="ChefsTest2.Presentation.ProfilePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:m="using:ChefsTest2.Models"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      Background="{ThemeResource BackgroundBrush}"
+      NavigationCacheMode="Required">
+
+  <Grid utu:SafeArea.Insets="VisibleBounds">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <utu:NavigationBar Grid.Row="0" Content="Profile">
+      <utu:NavigationBar.PrimaryCommands>
+        <AppBarButton Icon="Setting" Label="Settings"
+                      Command="{x:Bind ViewModel.OpenSettingsCommand}"
+                      AutomationProperties.AutomationId="ProfileSettings" />
+        <AppBarButton Icon="Mail" Label="Notifications"
+                      Command="{x:Bind ViewModel.OpenNotificationsCommand}"
+                      AutomationProperties.AutomationId="ProfileNotifications" />
+      </utu:NavigationBar.PrimaryCommands>
+    </utu:NavigationBar>
+
+    <ScrollViewer Grid.Row="1">
+      <StackPanel Spacing="14" Padding="20,16,20,16">
+        <Border Width="120" Height="120" CornerRadius="60" HorizontalAlignment="Center"
+                Background="{ThemeResource SurfaceVariantBrush}">
+          <Image Source="{x:Bind ViewModel.User.UrlProfileImage, Mode=OneWay}" Stretch="UniformToFill" />
+        </Border>
+        <TextBlock Text="{x:Bind ViewModel.User.FullName, Mode=OneWay}"
+                   Style="{StaticResource ChefsTitleLarge}"
+                   HorizontalAlignment="Center"
+                   Foreground="{ThemeResource OnBackgroundBrush}" />
+        <TextBlock Text="{x:Bind ViewModel.User.Description, Mode=OneWay}"
+                   HorizontalAlignment="Stretch" TextAlignment="Center"
+                   TextWrapping="Wrap"
+                   Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+
+        <Grid ColumnSpacing="12">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+          </Grid.ColumnDefinitions>
+          <Border Grid.Column="0" Padding="12" CornerRadius="12"
+                  Background="{ThemeResource SurfaceBrush}">
+            <StackPanel HorizontalAlignment="Center">
+              <TextBlock Text="{x:Bind ViewModel.User.Recipes, Mode=OneWay}"
+                         FontWeight="SemiBold" FontSize="20"
+                         Foreground="{ThemeResource OnSurfaceBrush}" />
+              <TextBlock Text="Recipes" FontSize="12"
+                         Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+            </StackPanel>
+          </Border>
+          <Border Grid.Column="1" Padding="12" CornerRadius="12"
+                  Background="{ThemeResource SurfaceBrush}">
+            <StackPanel HorizontalAlignment="Center">
+              <TextBlock Text="{x:Bind ViewModel.User.Followers, Mode=OneWay}"
+                         FontWeight="SemiBold" FontSize="20"
+                         Foreground="{ThemeResource OnSurfaceBrush}" />
+              <TextBlock Text="Followers" FontSize="12"
+                         Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+            </StackPanel>
+          </Border>
+          <Border Grid.Column="2" Padding="12" CornerRadius="12"
+                  Background="{ThemeResource SurfaceBrush}">
+            <StackPanel HorizontalAlignment="Center">
+              <TextBlock Text="{x:Bind ViewModel.User.Following, Mode=OneWay}"
+                         FontWeight="SemiBold" FontSize="20"
+                         Foreground="{ThemeResource OnSurfaceBrush}" />
+              <TextBlock Text="Following" FontSize="12"
+                         Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+            </StackPanel>
+          </Border>
+        </Grid>
+
+        <TextBlock Text="My Recipes" Style="{StaticResource ChefsTitleMedium}"
+                   Foreground="{ThemeResource OnBackgroundBrush}" Margin="0,8,0,0" />
+
+        <Grid Visibility="{x:Bind ViewModel.MyRecipes.Count, Mode=OneWay, Converter={StaticResource EmptyToVisibility}}"
+              Padding="0,12,0,0" AutomationProperties.AutomationId="ProfileEmptyState">
+          <StackPanel HorizontalAlignment="Center" Spacing="8">
+            <FontIcon Glyph="&#xE7C3;" FontSize="48" Foreground="{ThemeResource OutlineBrush}" />
+            <TextBlock Text="No recipes yet" Foreground="{ThemeResource OnSurfaceVariantBrush}" />
+          </StackPanel>
+        </Grid>
+
+        <ItemsRepeater ItemsSource="{x:Bind ViewModel.MyRecipes, Mode=OneWay}"
+                       Visibility="{x:Bind ViewModel.MyRecipes.Count, Mode=OneWay, Converter={StaticResource HasItemsToVisibility}}">
+          <ItemsRepeater.Layout>
+            <UniformGridLayout MinItemWidth="160" MinItemHeight="220"
+                               MinRowSpacing="12" MinColumnSpacing="12" />
+          </ItemsRepeater.Layout>
+          <ItemsRepeater.ItemTemplate>
+            <DataTemplate x:DataType="m:Recipe">
+              <Button Background="Transparent" BorderThickness="0" Padding="0"
+                      Click="OnRecipeClick" Tag="{x:Bind}">
+                <Border CornerRadius="12" Background="{ThemeResource SurfaceBrush}">
+                  <StackPanel>
+                    <Image Source="{x:Bind ImageUrl}" Height="120" Stretch="UniformToFill" />
+                    <TextBlock Text="{x:Bind Name}" Padding="12,8" FontWeight="Medium"
+                               Foreground="{ThemeResource OnSurfaceBrush}" TextWrapping="Wrap" />
+                  </StackPanel>
+                </Border>
+              </Button>
+            </DataTemplate>
+          </ItemsRepeater.ItemTemplate>
+        </ItemsRepeater>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</Page>

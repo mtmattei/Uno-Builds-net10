@@ -1,0 +1,65 @@
+<Page x:Class="ChefsTest6.Presentation.Pages.CookbookDetailPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:m="using:ChefsTest6.Models"
+      x:Name="PageRoot"
+      NavigationCacheMode="Required"
+      Background="{ThemeResource BackgroundBrush}">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <utu:NavigationBar Grid.Row="0" Content="{Binding Cookbook.Name}">
+      <utu:NavigationBar.PrimaryCommands>
+        <AppBarButton Icon="Edit" Label="Edit" Command="{Binding EditCookbookCommand}" />
+      </utu:NavigationBar.PrimaryCommands>
+    </utu:NavigationBar>
+
+    <TextBlock Grid.Row="1" Margin="16,8" Text="{Binding CountLabel}" Style="{StaticResource TitleMedium}" />
+
+    <Grid Grid.Row="2">
+      <StackPanel Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center"
+                  Visibility="{Binding HasRecipes, Converter={StaticResource BoolToVisibleInverted}}">
+        <Image Source="ms-appx:///Assets/Images/empty_box_light.svg" Width="200" Height="200" Stretch="Uniform" />
+        <TextBlock Text="This cookbook is empty" Style="{StaticResource TitleLarge}" HorizontalAlignment="Center" />
+      </StackPanel>
+
+      <ScrollViewer Visibility="{Binding HasRecipes, Converter={StaticResource BoolToVisible}}">
+        <GridView ItemsSource="{Binding Cookbook.Recipes}" SelectionMode="None" Margin="16,0">
+          <GridView.ItemsPanel>
+            <ItemsPanelTemplate>
+              <ItemsWrapGrid Orientation="Horizontal" />
+            </ItemsPanelTemplate>
+          </GridView.ItemsPanel>
+          <GridView.ItemTemplate>
+            <DataTemplate x:DataType="m:RecipeData">
+              <Button Width="180" Margin="4" Background="Transparent" BorderThickness="0" Padding="0"
+                      Command="{Binding DataContext.OpenRecipeCommand, ElementName=PageRoot}"
+                      CommandParameter="{x:Bind}">
+                <Border CornerRadius="16" Background="{ThemeResource SurfaceVariantBrush}">
+                  <StackPanel>
+                    <Image Source="{x:Bind ImageUrl}" Height="120" Stretch="UniformToFill" />
+                    <StackPanel Padding="10" Spacing="2">
+                      <TextBlock Text="{x:Bind Name}" Style="{StaticResource TitleSmall}" TextWrapping="Wrap" />
+                      <TextBlock Text="{x:Bind CookTimeLabel}" Style="{StaticResource BodySmall}" Opacity="0.7" />
+                    </StackPanel>
+                  </StackPanel>
+                </Border>
+              </Button>
+            </DataTemplate>
+          </GridView.ItemTemplate>
+        </GridView>
+      </ScrollViewer>
+
+      <Button Style="{StaticResource FabStyle}"
+              HorizontalAlignment="Right" VerticalAlignment="Bottom"
+              Margin="16"
+              Command="{Binding EditCookbookCommand}">
+        <SymbolIcon Symbol="Edit" />
+      </Button>
+    </Grid>
+  </Grid>
+</Page>
