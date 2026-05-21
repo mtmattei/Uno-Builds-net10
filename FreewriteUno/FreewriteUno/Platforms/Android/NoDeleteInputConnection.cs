@@ -1,4 +1,5 @@
 #if __ANDROID__
+using Android.Views;
 using Android.Views.InputMethods;
 
 namespace FreewriteUno.Platforms.Android;
@@ -42,10 +43,10 @@ internal sealed class NoDeleteInputConnection : InputConnectionWrapper
         return base.SetComposingText(text, newCursorPosition);
     }
 
-    public override bool SendKeyEvent(Android.Views.KeyEvent? e)
+    public override bool SendKeyEvent(KeyEvent? e)
     {
         if (_isLocked() && e is not null &&
-            (e.KeyCode == Android.Views.Keycode.Del || e.KeyCode == Android.Views.Keycode.ForwardDel))
+            (e.KeyCode == Keycode.Del || e.KeyCode == Keycode.ForwardDel))
         {
             return true;
         }

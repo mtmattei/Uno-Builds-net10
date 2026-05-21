@@ -2,9 +2,11 @@ using System.Collections.ObjectModel;
 using FreewriteUno.Models;
 using FreewriteUno.Services;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Data;
 
 namespace FreewriteUno.ViewModels;
 
+[Bindable]
 public sealed partial class MainViewModel : ObservableObject
 {
     private const string LeadingPrefix = "\n\n";
