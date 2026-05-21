@@ -3,10 +3,7 @@ using SkiaSharp;
 
 namespace Liveline.Rendering;
 
-/// <summary>
-/// Draws the current value badge in the right margin of the chart.
-/// </summary>
-public static class BadgeRenderer
+internal static class BadgeRenderer
 {
     private const float BadgeHeight = 28f;
     private const float BadgePaddingH = 8f;
@@ -19,9 +16,10 @@ public static class BadgeRenderer
         double currentValue,
         double badgeY,
         double minY, double maxY,
-        ChartPalette palette)
+        ChartPalette palette,
+        RenderContext rc)
     {
-        var (left, right, top, bottom) = GridRenderer.GetChartArea(width, height);
+        var (_, right, top, bottom) = GridRenderer.GetChartArea(width, height);
         float chartHeight = bottom - top;
         double range = maxY - minY;
         if (range <= 0) range = 1;
@@ -30,37 +28,20 @@ public static class BadgeRenderer
         y = Math.Clamp(y, top + BadgeHeight / 2, bottom - BadgeHeight / 2);
 
         string text = FormatBadgeValue(currentValue);
-
-        using var textFont = new SKFont(SKTypeface.FromFamilyName("Segoe UI", SKFontStyle.Bold), 12f);
-
-        using var textPaint = new SKPaint
-        {
-            Color = palette.BadgeText,
-            IsAntialias = true
-        };
-
-        float textWidth = textFont.MeasureText(text);
+        float textWidth = rc.BadgeFont.MeasureText(text);
         float badgeWidth = textWidth + BadgePaddingH * 2;
 
-        // Position badge fully in the right margin, left-aligned to chart edge
         float bx = right + 6f;
         float by = y - BadgeHeight / 2;
+        bx = Math.Min(bx, width - badgeWidth - BadgeMarginRight);
 
-        // Clamp so badge doesn't overflow the canvas
-        float maxBx = width - badgeWidth - BadgeMarginRight;
-        bx = Math.Min(bx, maxBx);
-
-        using var bgPaint = new SKPaint
-        {
-            Color = palette.BadgeBg,
-            IsAntialias = true,
-            Style = SKPaintStyle.Fill
-        };
-
+        rc.Fill.Color = palette.BadgeBg;
+        rc.Fill.Style = SKPaintStyle.Fill;
         var rect = new SKRoundRect(new SKRect(bx, by, bx + badgeWidth, by + BadgeHeight), BadgeRadius);
-        canvas.DrawRoundRect(rect, bgPaint);
+        canvas.DrawRoundRect(rect, rc.Fill);
 
-        canvas.DrawText(text, bx + badgeWidth / 2, y + 4.5f, SKTextAlign.Center, textFont, textPaint);
+        rc.Fill.Color = palette.BadgeText;
+        canvas.DrawText(text, bx + badgeWidth / 2, y + 4.5f, SKTextAlign.Center, rc.BadgeFont, rc.Fill);
     }
 
     private static string FormatBadgeValue(double val)
