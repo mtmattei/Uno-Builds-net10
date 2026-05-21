@@ -37,6 +37,16 @@ public static class Formatters
     public static double EntryPreviewOpacity(Entry? entry)
         => entry is null || string.IsNullOrWhiteSpace(entry.Preview) ? 0.55 : 1.0;
 
+    // Editor placeholder: visible only when the entry body (after the leading
+    // "\n\n" padding) is still empty. TextBox.PlaceholderText doesn't work here
+    // because the underlying Text always contains the padding, so we overlay
+    // a TextBlock and drive its opacity from this function.
+    public static double PlaceholderOpacity(string? text)
+    {
+        if (string.IsNullOrEmpty(text)) return 0.45;
+        return string.IsNullOrWhiteSpace(text) ? 0.45 : 0.0;
+    }
+
     public static string ThemeGlyph(Microsoft.UI.Xaml.ElementTheme theme)
         => theme == Microsoft.UI.Xaml.ElementTheme.Dark ? "☀" : "☾";
 

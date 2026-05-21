@@ -18,6 +18,9 @@ public sealed partial class MainPage : Page
     private const int ChromeFadeOutDurationMs = 240;
     private const int ChromeFadeInDurationMs = 160;
     private const int ChromeHoverLeaveDelayMs = 1500;
+    // Toolbar never fully disappears; a ghost at ~18% opacity hints at its location
+    // so writers can find it without remembering "tap the bottom of the screen".
+    private const double ChromeRestOpacity = 0.18;
     private const int ThemeCrossFadeMs = 200;
     private const int ToastVisibleMs = 1800;
     private const int BackspaceFlashMs = 80;
@@ -71,11 +74,37 @@ public sealed partial class MainPage : Page
     {
         DetectReducedMotion();
         ConfigureBackspaceToggleForPlatform();
+        StripTooltipsOnTouchPlatforms();
         ApplyThemeToRoot();
         StartCountdownTimer();
         await ViewModel.InitializeAsync();
         EditorTextBox.Focus(FocusState.Programmatic);
         EditorTextBox.SelectionStart = ViewModel.Text.Length;
+    }
+
+    private void StripTooltipsOnTouchPlatforms()
+    {
+#if __ANDROID__
+        // Tooltips on Android trigger via long-press and float to mid-screen with
+        // desktop-flavored copy. Clear them across the page; touch UX uses
+        // AutomationProperties.Name (TalkBack) for discoverability instead.
+        foreach (var btn in EnumerateDescendants<Button>(this))
+        {
+            ToolTipService.SetToolTip(btn, null);
+        }
+#endif
+    }
+
+    private static IEnumerable<T> EnumerateDescendants<T>(Microsoft.UI.Xaml.DependencyObject root)
+        where T : Microsoft.UI.Xaml.DependencyObject
+    {
+        var count = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChildrenCount(root);
+        for (int i = 0; i < count; i++)
+        {
+            var child = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetChild(root, i);
+            if (child is T match) yield return match;
+            foreach (var nested in EnumerateDescendants<T>(child)) yield return nested;
+        }
     }
 
     private void ApplyThemeToRoot()
@@ -194,7 +223,7 @@ public sealed partial class MainPage : Page
     private void OnChromeFadeOutTick(object? sender, object e)
     {
         _chromeFadeOutTimer?.Stop();
-        FadeChrome(0.0, ChromeFadeOutDurationMs);
+        FadeChrome(ChromeRestOpacity, ChromeFadeOutDurationMs);
     }
 
     private void SnapChromeVisible()
@@ -284,7 +313,7 @@ public sealed partial class MainPage : Page
     private void OnChromeHoverLeaveTick(object? sender, object e)
     {
         _chromeHoverLeaveTimer?.Stop();
-        FadeChrome(0.0, ChromeFadeOutDurationMs);
+        FadeChrome(ChromeRestOpacity, ChromeFadeOutDurationMs);
     }
 
     // ─── Theme cross-fade ──────────────────────────────────────────────────

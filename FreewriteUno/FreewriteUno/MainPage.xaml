@@ -131,7 +131,22 @@
           <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                         VerticalScrollBarVisibility="Auto"
                         Padding="48,48,48,112">
-            <Grid HorizontalAlignment="Center" MaxWidth="720">
+            <Grid HorizontalAlignment="Center" MinWidth="600" MaxWidth="720">
+              <!-- Placeholder behind the editor TextBox. Same leading newlines so it
+                   aligns with where the cursor sits; opacity driven by Formatters.
+                   Grid MinWidth keeps the typing area at a consistent position even
+                   when the TextBox is empty (otherwise the auto-sized Grid collapses
+                   to the placeholder's natural width). -->
+              <TextBlock x:Name="PlaceholderText"
+                         Text="&#10;&#10;Begin writing..."
+                         FontFamily="{x:Bind FontFamilyForName(ViewModel.SelectedFont), Mode=OneWay}"
+                         FontSize="{x:Bind ViewModel.FontSize, Mode=OneWay}"
+                         Foreground="{ThemeResource ChromeIconBrushInactive}"
+                         Opacity="{x:Bind vm:Formatters.PlaceholderOpacity(ViewModel.Text), Mode=OneWay}"
+                         IsHitTestVisible="False"
+                         TextWrapping="Wrap"
+                         HorizontalAlignment="Stretch"
+                         VerticalAlignment="Top" />
               <TextBox x:Name="EditorTextBox"
                        Style="{StaticResource EditorTextBoxStyle}"
                        Text="{x:Bind ViewModel.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -145,11 +160,6 @@
           <!-- Backspace flash overlay -->
           <Border x:Name="BackspaceFlash"
                   Background="{ThemeResource BackspaceFlashBrush}"
-                  Opacity="0"
-                  IsHitTestVisible="False" />
-
-          <!-- Theme cross-fade overlay (painted with the OUTGOING surface color, then faded out) -->
-          <Border x:Name="ThemeFadeOverlay"
                   Opacity="0"
                   IsHitTestVisible="False" />
 
@@ -293,6 +303,14 @@
                        FontFamily="{StaticResource LatoFontFamily}"
                        FontSize="13" />
           </Border>
+
+          <!-- Theme cross-fade overlay (painted with the OUTGOING surface color,
+               then faded out). Kept LAST so it sits above chrome + toasts during
+               the fade; otherwise the chrome's theme brushes flip color instantly
+               and the user sees a flash. -->
+          <Border x:Name="ThemeFadeOverlay"
+                  Opacity="0"
+                  IsHitTestVisible="False" />
         </Grid>
       </SplitView.Content>
     </SplitView>
