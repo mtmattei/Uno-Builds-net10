@@ -41,17 +41,14 @@
     </UnoFeatures>
   </PropertyGroup>
 
-  <!-- Release builds for net10.0-android: disable trimming + Mono AOT.
-       The trimmer pulls Microsoft.NETCore.App.Runtime.Mono.win-x64 10.0.1
-       at restore time, which is not on public NuGet for this Uno.Sdk
-       version. Disabling keeps the APK Release-optimized (JIT) without
-       requiring the missing host runtime pack. Revisit when Uno.Sdk
-       pins runtime packs to a published version. -->
-  <PropertyGroup Condition="'$(Configuration)'=='Release' AND '$(TargetFramework)'=='net10.0-android'">
-    <RunAOTCompilation>false</RunAOTCompilation>
-    <PublishTrimmed>false</PublishTrimmed>
-    <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
-  </PropertyGroup>
+  <!-- Release builds for net10.0-android are intentionally not wired up.
+       Restore for Release pulls Microsoft.NETCore.App.Runtime.Mono.win-x64
+       10.0.1, which isn't on public NuGet for this Uno.Sdk pin. Disabling
+       trimming/AOT bypasses the restore, but produces an APK whose JNI
+       binding for NativeApplication.n_onCreate fails at runtime (verified
+       on Pixel 2026-05-21 — clean rebuild still crashes; same flags worked
+       2026-05-20). Use Debug for on-device testing; revisit Release when
+       Uno.Sdk pins to a published runtime pack version. -->
 
   <ItemGroup>
     <PackageReference Include="QuestPDF" />
