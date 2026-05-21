@@ -70,3 +70,4 @@ _(InfiniteImage, PrecisionDial, QuoteCraft, ReservoomUno, RivTes, SalesDashboard
 | 6 | UnoWallet | 6.4.0-dev.85 | 6.5.33 | BLOCKED (net10.0-android) | - |
 | 6 | AgentNotifier | 6.4.58 | 6.5.33 | BLOCKED (restore) | - |
 | 6 | AgentNotifier | 6.4.58 | 6.5.33 | ok (net10.0-desktop) | d3d775e |
+| fix3 | FluxTransit | 6.4.58 | 6.5.33 | STILL BLOCKED (restore) | - |
