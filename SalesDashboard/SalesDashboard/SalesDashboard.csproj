@@ -29,8 +29,6 @@
       Logging;
       MVUX;
       Configuration;
-      HttpKiota;
-      Serialization;
       Localization;
       Navigation;
       ThemeService;

@@ -1,9 +1,7 @@
-using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
-using System;
 using Windows.UI;
 
 namespace SalesDashboard.Presentation;
@@ -14,50 +12,122 @@ public sealed partial class SalesDashboardWidget : UserControl
     private const int GridRows = 8;
     private const double CellSize = 20;
     private const double CellGap = 3;
+    private const int PaletteBuckets = 32;
+    private const double InterpolationFactor = 0.10;
+    private const double ConvergenceEpsilon = 0.5;
+
+    private static readonly SolidColorBrush[] HeatmapPalette = BuildHeatmapPalette();
+    private static readonly SolidColorBrush PositiveBrush =
+        new(Color.FromArgb(255, 0, 255, 136));
+    private static readonly SolidColorBrush NegativeBrush =
+        new(Color.FromArgb(255, 255, 68, 68));
+
+    public static readonly DependencyProperty SnapshotProperty =
+        DependencyProperty.Register(
+            nameof(Snapshot),
+            typeof(SalesSnapshot),
+            typeof(SalesDashboardWidget),
+            new PropertyMetadata(null, OnSnapshotChanged));
+
+    public SalesSnapshot? Snapshot
+    {
+        get => (SalesSnapshot?)GetValue(SnapshotProperty);
+        set => SetValue(SnapshotProperty, value);
+    }
 
     private readonly Random _random = new();
     private readonly Rectangle[,] _heatmapCells = new Rectangle[GridColumns, GridRows];
     private readonly double[,] _currentIntensities = new double[GridColumns, GridRows];
     private readonly double[,] _targetIntensities = new double[GridColumns, GridRows];
+    private readonly int[,] _appliedBuckets = new int[GridColumns, GridRows];
 
-    // Animation targets
-    private double _monthlyTarget = 312134;
-    private double _monthlyCurrent = 312134;
-    private double _monthlyChangeTarget = 12.4;
-    private double _monthlyChangeCurrent = 12.4;
+    private double _monthlyTarget, _monthlyCurrent;
+    private double _monthlyChangeTarget, _monthlyChangeCurrent;
+    private double _yearlyTarget, _yearlyCurrent;
+    private double _yearlyChangeTarget, _yearlyChangeCurrent;
+    private double _laTarget, _laCurrent;
+    private double _laChangeTarget, _laChangeCurrent;
+    private double _nyTarget, _nyCurrent;
+    private double _nyChangeTarget, _nyChangeCurrent;
+    private double _caTarget, _caCurrent;
+    private double _caChangeTarget, _caChangeCurrent;
 
-    private double _yearlyTarget = 3745608;
-    private double _yearlyCurrent = 3745608;
-    private double _yearlyChangeTarget = 8.2;
-    private double _yearlyChangeCurrent = 8.2;
+    private string? _lastMonthlyText, _lastYearlyText, _lastLAText, _lastNYText, _lastCAText;
+    private string? _lastMonthlyChangeText, _lastYearlyChangeText;
+    private string? _lastLAChangeText, _lastNYChangeText, _lastCAChangeText;
+    private int _lastMonthlySign = int.MinValue, _lastYearlySign = int.MinValue;
+    private int _lastLASign = int.MinValue, _lastNYSign = int.MinValue, _lastCASign = int.MinValue;
 
-    private double _laTarget = 98420;
-    private double _laCurrent = 98420;
-    private double _laChangeTarget = 15.2;
-    private double _laChangeCurrent = 15.2;
-
-    private double _nyTarget = 87650;
-    private double _nyCurrent = 87650;
-    private double _nyChangeTarget = -3.8;
-    private double _nyChangeCurrent = -3.8;
-
-    private double _caTarget = 65230;
-    private double _caCurrent = 65230;
-    private double _caChangeTarget = 22.1;
-    private double _caChangeCurrent = 22.1;
-
-    private DispatcherTimer? _heatmapTimer;      // 150ms - intensity drift
-    private DispatcherTimer? _dataUpdateTimer;   // 2s - random data updates
-    private DispatcherTimer? _interpolationTimer; // 16ms - smooth number interpolation
-    private DispatcherTimer? _liveIndicatorTimer; // 500ms - pulsing live indicator
-
+    private DispatcherTimer? _heatmapTimer;
+    private DispatcherTimer? _interpolationTimer;
+    private DispatcherTimer? _liveIndicatorTimer;
     private bool _liveIndicatorOn = true;
 
     public SalesDashboardWidget()
     {
         this.InitializeComponent();
-        this.Loaded += OnLoaded;
-        this.Unloaded += OnUnloaded;
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+        SeedFromSnapshot(SalesSnapshot.Initial, animate: false);
+    }
+
+    private static SolidColorBrush[] BuildHeatmapPalette()
+    {
+        var palette = new SolidColorBrush[PaletteBuckets];
+        for (int i = 0; i < PaletteBuckets; i++)
+        {
+            double intensity = (double)i / (PaletteBuckets - 1);
+            double lightness = 0.12 + intensity * 0.73;
+            byte gray = (byte)(lightness * 255);
+            palette[i] = new SolidColorBrush(Color.FromArgb(255, gray, gray, gray));
+        }
+        return palette;
+    }
+
+    private static int IntensityToBucket(double intensity)
+    {
+        int bucket = (int)(Math.Clamp(intensity, 0, 1) * (PaletteBuckets - 1));
+        return bucket;
+    }
+
+    private static void OnSnapshotChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is SalesDashboardWidget widget && e.NewValue is SalesSnapshot snapshot)
+        {
+            widget.SeedFromSnapshot(snapshot, animate: true);
+        }
+    }
+
+    private void SeedFromSnapshot(SalesSnapshot snapshot, bool animate)
+    {
+        _monthlyTarget = snapshot.Monthly;
+        _monthlyChangeTarget = snapshot.MonthlyChange;
+        _yearlyTarget = snapshot.Yearly;
+        _yearlyChangeTarget = snapshot.YearlyChange;
+        _laTarget = snapshot.LosAngeles;
+        _laChangeTarget = snapshot.LosAngelesChange;
+        _nyTarget = snapshot.NewYork;
+        _nyChangeTarget = snapshot.NewYorkChange;
+        _caTarget = snapshot.Canada;
+        _caChangeTarget = snapshot.CanadaChange;
+
+        if (!animate)
+        {
+            _monthlyCurrent = _monthlyTarget;
+            _monthlyChangeCurrent = _monthlyChangeTarget;
+            _yearlyCurrent = _yearlyTarget;
+            _yearlyChangeCurrent = _yearlyChangeTarget;
+            _laCurrent = _laTarget;
+            _laChangeCurrent = _laChangeTarget;
+            _nyCurrent = _nyTarget;
+            _nyChangeCurrent = _nyChangeTarget;
+            _caCurrent = _caTarget;
+            _caChangeCurrent = _caChangeTarget;
+        }
+        else if (_interpolationTimer is { IsEnabled: false })
+        {
+            _interpolationTimer.Start();
+        }
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
@@ -69,14 +139,29 @@ public sealed partial class SalesDashboardWidget : UserControl
 
     private void OnUnloaded(object sender, RoutedEventArgs e)
     {
-        _heatmapTimer?.Stop();
-        _dataUpdateTimer?.Stop();
-        _interpolationTimer?.Stop();
-        _liveIndicatorTimer?.Stop();
+        if (_heatmapTimer is not null)
+        {
+            _heatmapTimer.Stop();
+            _heatmapTimer.Tick -= OnHeatmapTick;
+            _heatmapTimer = null;
+        }
+        if (_interpolationTimer is not null)
+        {
+            _interpolationTimer.Stop();
+            _interpolationTimer.Tick -= OnInterpolationTick;
+            _interpolationTimer = null;
+        }
+        if (_liveIndicatorTimer is not null)
+        {
+            _liveIndicatorTimer.Stop();
+            _liveIndicatorTimer.Tick -= OnLiveIndicatorTick;
+            _liveIndicatorTimer = null;
+        }
     }
 
     private void InitializeHeatmap()
     {
+        // Reset on re-Loaded (e.g., theme change re-mounts the template).
         HeatmapGrid.ColumnDefinitions.Clear();
         HeatmapGrid.RowDefinitions.Clear();
         HeatmapGrid.Children.Clear();
@@ -99,13 +184,16 @@ public sealed partial class SalesDashboardWidget : UserControl
                 _currentIntensities[col, row] = intensity;
                 _targetIntensities[col, row] = intensity;
 
+                int bucket = IntensityToBucket(intensity);
+                _appliedBuckets[col, row] = bucket;
+
                 var cell = new Rectangle
                 {
                     Width = CellSize,
                     Height = CellSize,
                     RadiusX = 3,
                     RadiusY = 3,
-                    Fill = GetIntensityBrush(intensity),
+                    Fill = HeatmapPalette[bucket],
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment = VerticalAlignment.Top
                 };
@@ -118,52 +206,23 @@ public sealed partial class SalesDashboardWidget : UserControl
         }
     }
 
-    private static SolidColorBrush GetIntensityBrush(double intensity)
-    {
-        // Map intensity 0-1 to lightness 12%-85%
-        double lightness = 0.12 + (intensity * 0.73);
-        byte gray = (byte)(lightness * 255);
-        return new SolidColorBrush(Color.FromArgb(255, gray, gray, gray));
-    }
-
     private void InitializeTimers()
     {
-        // 150ms heatmap cell intensity drift
-        _heatmapTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMilliseconds(150)
-        };
+        _heatmapTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };
         _heatmapTimer.Tick += OnHeatmapTick;
         _heatmapTimer.Start();
 
-        // 2s random data updates
-        _dataUpdateTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromSeconds(2)
-        };
-        _dataUpdateTimer.Tick += OnDataUpdateTick;
-        _dataUpdateTimer.Start();
-
-        // 16ms smooth number interpolation (60fps)
-        _interpolationTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMilliseconds(16)
-        };
+        _interpolationTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(16) };
         _interpolationTimer.Tick += OnInterpolationTick;
         _interpolationTimer.Start();
 
-        // 500ms pulsing live indicator
-        _liveIndicatorTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMilliseconds(500)
-        };
+        _liveIndicatorTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(500) };
         _liveIndicatorTimer.Tick += OnLiveIndicatorTick;
         _liveIndicatorTimer.Start();
     }
 
     private void OnHeatmapTick(object? sender, object e)
     {
-        // Randomly drift some cells toward new target intensities
         int cellsToUpdate = _random.Next(5, 15);
         for (int i = 0; i < cellsToUpdate; i++)
         {
@@ -172,7 +231,6 @@ public sealed partial class SalesDashboardWidget : UserControl
             _targetIntensities[col, row] = _random.NextDouble();
         }
 
-        // Interpolate all cells toward their targets
         for (int col = 0; col < GridColumns; col++)
         {
             for (int row = 0; row < GridRows; row++)
@@ -181,50 +239,50 @@ public sealed partial class SalesDashboardWidget : UserControl
                 double target = _targetIntensities[col, row];
                 double newValue = current + (target - current) * 0.15;
                 _currentIntensities[col, row] = newValue;
-                _heatmapCells[col, row].Fill = GetIntensityBrush(newValue);
+
+                int bucket = IntensityToBucket(newValue);
+                if (bucket != _appliedBuckets[col, row])
+                {
+                    _appliedBuckets[col, row] = bucket;
+                    _heatmapCells[col, row].Fill = HeatmapPalette[bucket];
+                }
             }
         }
     }
 
-    private void OnDataUpdateTick(object? sender, object e)
-    {
-        // Generate random changes for values
-        _monthlyTarget = _monthlyCurrent * (1 + (_random.NextDouble() - 0.5) * 0.1);
-        _monthlyChangeTarget = (_random.NextDouble() - 0.3) * 30;
-
-        _yearlyTarget = _yearlyCurrent * (1 + (_random.NextDouble() - 0.5) * 0.05);
-        _yearlyChangeTarget = (_random.NextDouble() - 0.3) * 20;
-
-        _laTarget = _laCurrent * (1 + (_random.NextDouble() - 0.5) * 0.15);
-        _laChangeTarget = (_random.NextDouble() - 0.3) * 40;
-
-        _nyTarget = _nyCurrent * (1 + (_random.NextDouble() - 0.5) * 0.15);
-        _nyChangeTarget = (_random.NextDouble() - 0.4) * 30;
-
-        _caTarget = _caCurrent * (1 + (_random.NextDouble() - 0.5) * 0.15);
-        _caChangeTarget = (_random.NextDouble() - 0.2) * 35;
-    }
-
     private void OnInterpolationTick(object? sender, object e)
     {
-        const double lerpFactor = 0.10; // 10% lerp per frame
+        bool converged = true;
 
-        _monthlyCurrent = Lerp(_monthlyCurrent, _monthlyTarget, lerpFactor);
-        _monthlyChangeCurrent = Lerp(_monthlyChangeCurrent, _monthlyChangeTarget, lerpFactor);
-
-        _yearlyCurrent = Lerp(_yearlyCurrent, _yearlyTarget, lerpFactor);
-        _yearlyChangeCurrent = Lerp(_yearlyChangeCurrent, _yearlyChangeTarget, lerpFactor);
-
-        _laCurrent = Lerp(_laCurrent, _laTarget, lerpFactor);
-        _laChangeCurrent = Lerp(_laChangeCurrent, _laChangeTarget, lerpFactor);
-
-        _nyCurrent = Lerp(_nyCurrent, _nyTarget, lerpFactor);
-        _nyChangeCurrent = Lerp(_nyChangeCurrent, _nyChangeTarget, lerpFactor);
-
-        _caCurrent = Lerp(_caCurrent, _caTarget, lerpFactor);
-        _caChangeCurrent = Lerp(_caChangeCurrent, _caChangeTarget, lerpFactor);
+        converged &= StepToward(ref _monthlyCurrent, _monthlyTarget);
+        converged &= StepToward(ref _monthlyChangeCurrent, _monthlyChangeTarget);
+        converged &= StepToward(ref _yearlyCurrent, _yearlyTarget);
+        converged &= StepToward(ref _yearlyChangeCurrent, _yearlyChangeTarget);
+        converged &= StepToward(ref _laCurrent, _laTarget);
+        converged &= StepToward(ref _laChangeCurrent, _laChangeTarget);
+        converged &= StepToward(ref _nyCurrent, _nyTarget);
+        converged &= StepToward(ref _nyChangeCurrent, _nyChangeTarget);
+        converged &= StepToward(ref _caCurrent, _caTarget);
+        converged &= StepToward(ref _caChangeCurrent, _caChangeTarget);
 
         UpdateDisplay();
+
+        if (converged)
+        {
+            _interpolationTimer?.Stop();
+        }
+    }
+
+    private static bool StepToward(ref double current, double target)
+    {
+        double delta = target - current;
+        if (Math.Abs(delta) < ConvergenceEpsilon)
+        {
+            current = target;
+            return true;
+        }
+        current += delta * InterpolationFactor;
+        return false;
     }
 
     private void OnLiveIndicatorTick(object? sender, object e)
@@ -233,60 +291,73 @@ public sealed partial class SalesDashboardWidget : UserControl
         LiveIndicator.Opacity = _liveIndicatorOn ? 1.0 : 0.3;
     }
 
-    private static double Lerp(double current, double target, double factor)
-    {
-        return current + (target - current) * factor;
-    }
-
     private void UpdateDisplay()
     {
-        // Monthly
-        MonthlyValue.Text = FormatCurrency(_monthlyCurrent);
-        UpdateChangeIndicator(MonthlyChangeIcon, MonthlyChangeValue, _monthlyChangeCurrent);
+        SetTextIfChanged(MonthlyValue, FormatCurrency(_monthlyCurrent), ref _lastMonthlyText);
+        SetTextIfChanged(YearlyValue, FormatCurrency(_yearlyCurrent), ref _lastYearlyText);
+        SetTextIfChanged(LAValue, FormatCurrency(_laCurrent), ref _lastLAText);
+        SetTextIfChanged(NYValue, FormatCurrency(_nyCurrent), ref _lastNYText);
+        SetTextIfChanged(CAValue, FormatCurrency(_caCurrent), ref _lastCAText);
 
-        // Yearly
-        YearlyValue.Text = FormatCurrency(_yearlyCurrent);
-        UpdateChangeIndicator(YearlyChangeIcon, YearlyChangeValue, _yearlyChangeCurrent);
+        UpdateChangeIndicator(MonthlyChangeIcon, MonthlyChangeValue, _monthlyChangeCurrent,
+            ref _lastMonthlyChangeText, ref _lastMonthlySign);
+        UpdateChangeIndicator(YearlyChangeIcon, YearlyChangeValue, _yearlyChangeCurrent,
+            ref _lastYearlyChangeText, ref _lastYearlySign);
 
-        // Cities
-        LAValue.Text = FormatCurrency(_laCurrent);
-        UpdateCityChange(LAChange, _laChangeCurrent);
-
-        NYValue.Text = FormatCurrency(_nyCurrent);
-        UpdateCityChange(NYChange, _nyChangeCurrent);
-
-        CAValue.Text = FormatCurrency(_caCurrent);
-        UpdateCityChange(CAChange, _caChangeCurrent);
+        UpdateCityChange(LAChange, _laChangeCurrent, ref _lastLAChangeText, ref _lastLASign);
+        UpdateCityChange(NYChange, _nyChangeCurrent, ref _lastNYChangeText, ref _lastNYSign);
+        UpdateCityChange(CAChange, _caChangeCurrent, ref _lastCAChangeText, ref _lastCASign);
     }
 
-    private static string FormatCurrency(double value)
+    private static void SetTextIfChanged(TextBlock target, string value, ref string? cache)
     {
-        return "$" + ((int)value).ToString("N0");
+        if (cache == value) return;
+        cache = value;
+        target.Text = value;
     }
 
-    private static void UpdateChangeIndicator(TextBlock iconBlock, TextBlock valueBlock, double change)
+    private static string FormatCurrency(double value) =>
+        "$" + ((int)value).ToString("N0");
+
+    private static void UpdateChangeIndicator(
+        TextBlock iconBlock,
+        TextBlock valueBlock,
+        double change,
+        ref string? cachedValueText,
+        ref int cachedSign)
     {
-        bool isPositive = change >= 0;
-        var color = isPositive
-            ? Color.FromArgb(255, 0, 255, 136)   // Green #00FF88
-            : Color.FromArgb(255, 255, 68, 68);  // Red #FF4444
+        int sign = change >= 0 ? 1 : -1;
+        if (sign != cachedSign)
+        {
+            cachedSign = sign;
+            var brush = sign >= 0 ? PositiveBrush : NegativeBrush;
+            iconBlock.Foreground = brush;
+            valueBlock.Foreground = brush;
+            iconBlock.Text = sign >= 0 ? "▲" : "▼";
+        }
 
-        var brush = new SolidColorBrush(color);
-        iconBlock.Foreground = brush;
-        valueBlock.Foreground = brush;
-
-        iconBlock.Text = isPositive ? "▲" : "▼";
-        valueBlock.Text = Math.Abs(change).ToString("F1") + "%";
+        string valueText = Math.Abs(change).ToString("F1") + "%";
+        if (cachedValueText == valueText) return;
+        cachedValueText = valueText;
+        valueBlock.Text = valueText;
     }
 
-    private static void UpdateCityChange(TextBlock changeBlock, double change)
+    private static void UpdateCityChange(
+        TextBlock changeBlock,
+        double change,
+        ref string? cachedText,
+        ref int cachedSign)
     {
-        bool isPositive = change >= 0;
-        var color = isPositive
-            ? Color.FromArgb(255, 0, 255, 136)   // Green #00FF88
-            : Color.FromArgb(255, 255, 68, 68);  // Red #FF4444
+        int sign = change >= 0 ? 1 : -1;
+        if (sign != cachedSign)
+        {
+            cachedSign = sign;
+            changeBlock.Foreground = sign >= 0 ? PositiveBrush : NegativeBrush;
+        }
 
-        changeBlock.Foreground = new SolidColorBrush(color);
-        changeBlock.Text = (isPositive ? "▲ +" : "▼ ") + Math.Abs(change).ToString("F1") + "%";
+        string text = (sign >= 0 ? "▲ +" : "▼ ") + Math.Abs(change).ToString("F1") + "%";
+        if (cachedText == text) return;
+        cachedText = text;
+        changeBlock.Text = text;
     }
 }
