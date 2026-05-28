@@ -28,8 +28,7 @@
             <Image Source="ms-appx:///Assets/images/pens-logo.png" Stretch="UniformToFill" />
           </Border>
           <StackPanel VerticalAlignment="Center">
-            <TextBlock Text="PENGUINS" Style="{StaticResource BebasTitleTextStyle}"
-                       FontSize="22" CharacterSpacing="60"
+            <TextBlock Text="PENGUINS" Style="{StaticResource BebasSubtitleTextStyle}"
                        AutomationProperties.HeadingLevel="Level1" />
             <TextBlock Text="DORVAL YOUNGTIMERS" Style="{StaticResource OverlineTextStyle}" />
           </StackPanel>
