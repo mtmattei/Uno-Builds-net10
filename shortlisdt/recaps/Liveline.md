@@ -2,9 +2,7 @@
 
 > A reusable SkiaSharp line-chart control for Uno Platform that smoothly lerps between incoming values, auto-scales its Y axis, and idles when the data settles.
 
-<!-- 📸 Add a screenshot of Liveline.Demo: drop it in screenshots/Liveline/ and point the src below at it -->
-<!-- <img src="../screenshots/Liveline/<file>.png" alt="Liveline chart" width="640" /> -->
-> 📸 *Screenshot coming.*
+<img src="../screenshots/Liveline/liveline-chart.png" alt="Liveline real-time chart" width="560" />
 
 ## What you get
 A **control library**, not just an app — `src/Liveline/` ships as `OutputType=Library`, and `samples/Liveline.Demo/` wires every property to a live control panel. This is the chart engine behind **Meridian**.

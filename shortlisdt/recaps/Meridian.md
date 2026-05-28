@@ -2,9 +2,7 @@
 
 > A portfolio / market dashboard: watchlist, holdings, news, and stock detail — running on live or mock market data.
 
-<!-- 📸 Add a screenshot: drop it in screenshots/Meridian/ and point the src below at it -->
-<!-- <img src="../screenshots/Meridian/<file>.png" alt="Meridian dashboard" width="640" /> -->
-> 📸 *Screenshot coming.*
+<img src="../screenshots/Meridian%20(Hero%20App)/Meridian%20(Hero%20App)/Meridian-desktop%20(1).png" alt="Meridian portfolio dashboard" width="640" />
 
 ## What you get
 The **exemplary MVUX model** sample — computed feeds, command generation, and a strong three-typeface identity — paired with hand-built ambient visuals.

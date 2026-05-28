@@ -2,9 +2,7 @@
 
 > Upload a video and watch it play with YOLO bounding boxes + track IDs drawn over each frame, rendered as a GPU overlay on the video player.
 
-<!-- 📸 Add a screenshot: drop it in screenshots/VTrack/ and point the src below at it -->
-<!-- <img src="../screenshots/VTrack/<file>.png" alt="VTrack detection overlay" width="640" /> -->
-> 📸 *Screenshot coming.*
+<img src="../screenshots/VTrack/vtrack-tracking.png" alt="VTrack YOLO tracking overlay" width="560" />
 
 ## What you get
 The **native-interop + GPU-overlay** sample: real OpenCV + YOLO inference on desktop, an honest zero-allocation hot path, and a clean platform-gating story.
