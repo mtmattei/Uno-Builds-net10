@@ -4,15 +4,18 @@
       xmlns:local="using:SmartCity.Presentation"
       xmlns:controls="using:SmartCity.Presentation.Controls"
       xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:mvux="using:Uno.Extensions.Reactive.UI"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
       Background="{ThemeResource SurfaceCanvasBrush}">
 
   <!--
-    MVUX page → {Binding} for the data surface (slice 2). Slice 1 is a static skeleton:
-    left column (AI card / energy / savings) + right twin viewport, matching the reference bands.
-    Page split is a Grid (fixed 360 + fill, single layout pass); inner stacks use AutoLayout.
+    MVUX page → {Binding} for the data surface (brief override of the repo x:Bind default). Each panel
+    is a FeedView so loading/empty/error states are handled. The twin's ActiveFloorIndex is two-way
+    bound to the model state, so the left "Live floor" panel and the lit floor stay in lockstep.
+    Apply/Dismiss buttons sit in the page namescope (not inside a FeedView template) so the generated
+    commands resolve against the page DataContext.
   -->
   <Grid Padding="16" ColumnSpacing="24">
     <Grid.ColumnDefinitions>
@@ -24,60 +27,192 @@
     <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
       <utu:AutoLayout Orientation="Vertical" Spacing="24" CounterAxisAlignment="Stretch">
 
-        <!-- AI Suggestion card -->
+        <!-- ── AI Suggestion card ── -->
         <Border Background="{ThemeResource AiCardBlueGradient}" CornerRadius="12" Padding="16">
-          <utu:AutoLayout Orientation="Vertical" Spacing="8" CounterAxisAlignment="Stretch">
+          <utu:AutoLayout Orientation="Vertical" Spacing="10" CounterAxisAlignment="Stretch">
             <TextBlock Text="AI Suggestion" Style="{StaticResource LabelMedium}" Foreground="White" Opacity="0.8" />
-            <TextBlock Text="Optimize ventilation at 14F in the office sector"
-                       Style="{StaticResource TitleSmall}" Foreground="White" TextWrapping="Wrap" />
-            <TextBlock Text="Bound in slice 2"
-                       Style="{StaticResource BodySmall}" Foreground="White" Opacity="0.7" />
+
+            <mvux:FeedView Source="{Binding Suggestion}">
+              <mvux:FeedView.ValueTemplate>
+                <DataTemplate>
+                  <utu:AutoLayout Orientation="Vertical" Spacing="6" CounterAxisAlignment="Stretch">
+                    <TextBlock Text="{Binding Data.Title}" Style="{StaticResource TitleSmall}"
+                               Foreground="White" TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding Data.Body}" Style="{StaticResource BodySmall}"
+                               Foreground="White" Opacity="0.78" TextWrapping="Wrap" />
+                  </utu:AutoLayout>
+                </DataTemplate>
+              </mvux:FeedView.ValueTemplate>
+              <mvux:FeedView.NoneTemplate>
+                <DataTemplate>
+                  <TextBlock Text="No optimization suggested" Style="{StaticResource BodySmall}"
+                             Foreground="White" Opacity="0.75" />
+                </DataTemplate>
+              </mvux:FeedView.NoneTemplate>
+              <mvux:FeedView.ProgressTemplate>
+                <DataTemplate>
+                  <TextBlock Text="Analyzing…" Style="{StaticResource BodySmall}" Foreground="White" Opacity="0.6" />
+                </DataTemplate>
+              </mvux:FeedView.ProgressTemplate>
+            </mvux:FeedView>
+
             <utu:AutoLayout Orientation="Horizontal" Spacing="8" PrimaryAxisAlignment="End">
-              <Button Content="Dismiss" Style="{StaticResource TextButtonStyle}" Foreground="White" />
-              <Button Content="Apply" Style="{StaticResource FilledTonalButtonStyle}" />
+              <Button Content="Dismiss" Command="{Binding DismissSuggestion}"
+                      Style="{StaticResource TextButtonStyle}" Foreground="White"
+                      AutomationProperties.Name="Dismiss suggestion" />
+              <Button Content="Apply" Command="{Binding ApplySuggestion}"
+                      Style="{StaticResource FilledTonalButtonStyle}"
+                      AutomationProperties.Name="Apply suggestion" />
             </utu:AutoLayout>
           </utu:AutoLayout>
         </Border>
 
-        <!-- Energy Consumption -->
+        <!-- ── Live floor panel (populates as floors light up) ── -->
+        <mvux:FeedView Source="{Binding ActiveFloor}">
+          <mvux:FeedView.ValueTemplate>
+            <DataTemplate>
+              <Border Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="16"
+                      BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
+                <utu:AutoLayout Orientation="Vertical" Spacing="10" CounterAxisAlignment="Stretch">
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="Auto" />
+                      <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                      <Ellipse Width="8" Height="8" Fill="{ThemeResource TwinGlowGreenBrush}" />
+                      <TextBlock Text="Live floor" Style="{StaticResource LabelMedium}"
+                                 Foreground="{ThemeResource MutedTextBrush}" />
+                    </StackPanel>
+                    <TextBlock Grid.Column="1" Text="{Binding Data.StatusText}" Style="{StaticResource LabelSmall}"
+                               Foreground="{ThemeResource TwinGlowGreenBrush}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                  </Grid>
+
+                  <TextBlock Text="{Binding Data.Label}" Style="{StaticResource HeadlineSmall}"
+                             Foreground="{ThemeResource OnSurfaceBrush}" />
+
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="Auto" />
+                      <ColumnDefinition Width="Auto" />
+                      <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Spacing="2" Margin="0,0,20,0">
+                      <TextBlock Text="Current" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+                      <TextBlock Text="{Binding Data.CurrentText}" Style="{StaticResource TitleSmall}" Foreground="{ThemeResource OnSurfaceBrush}" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Spacing="2">
+                      <TextBlock Text="Optimized" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+                      <TextBlock Text="{Binding Data.OptimizedText}" Style="{StaticResource TitleSmall}" Foreground="{ThemeResource SavingsAccentBrush}" />
+                    </StackPanel>
+                    <TextBlock Grid.Column="2" Text="{Binding Data.ReductionText}" Style="{StaticResource TitleMedium}"
+                               Foreground="{ThemeResource SavingsAccentBrush}" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+                  </Grid>
+                </utu:AutoLayout>
+              </Border>
+            </DataTemplate>
+          </mvux:FeedView.ValueTemplate>
+        </mvux:FeedView>
+
+        <!-- ── Energy Consumption ── -->
         <utu:AutoLayout Orientation="Vertical" Spacing="12" CounterAxisAlignment="Stretch">
           <TextBlock Text="Energy Consumption" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
-          <!-- Bar chart placeholder (custom SkiaSharp in slice 3) -->
-          <Border Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Height="180" Padding="16">
-            <TextBlock Text="Bar chart — slice 3" Style="{StaticResource BodySmall}"
-                       Foreground="{ThemeResource MutedTextBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+
+          <Border Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Height="180" Padding="12">
+            <mvux:FeedView Source="{Binding HourlyChart}">
+              <mvux:FeedView.ValueTemplate>
+                <DataTemplate>
+                  <controls:BarChartView Series="{Binding Data.Series}" Applied="{Binding Data.Applied}" />
+                </DataTemplate>
+              </mvux:FeedView.ValueTemplate>
+            </mvux:FeedView>
           </Border>
+
           <!-- 2×2 KPI tiles -->
-          <Grid RowSpacing="12" ColumnSpacing="12">
-            <Grid.RowDefinitions>
-              <RowDefinition Height="Auto" />
-              <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="*" />
-              <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Border Grid.Row="0" Grid.Column="0" Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="12" MinHeight="84">
-              <TextBlock Text="Daily" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
-            </Border>
-            <Border Grid.Row="0" Grid.Column="1" Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="12" MinHeight="84">
-              <TextBlock Text="Weekly" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
-            </Border>
-            <Border Grid.Row="1" Grid.Column="0" Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="12" MinHeight="84">
-              <TextBlock Text="Monthly" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
-            </Border>
-            <Border Grid.Row="1" Grid.Column="1" Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="12" MinHeight="84">
-              <TextBlock Text="Yearly" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
-            </Border>
-          </Grid>
+          <mvux:FeedView Source="{Binding Kpis}">
+            <mvux:FeedView.ValueTemplate>
+              <DataTemplate>
+                <Grid RowSpacing="12" ColumnSpacing="12">
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                  </Grid.RowDefinitions>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+
+                  <Border Grid.Row="0" Grid.Column="0" Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="12" MinHeight="84"
+                          BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
+                    <utu:AutoLayout Orientation="Vertical" Spacing="4">
+                      <TextBlock Text="{Binding Data.Daily.Title}" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+                      <TextBlock Text="{Binding Data.Daily.KwhText}" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
+                      <TextBlock Text="{Binding Data.Daily.ReductionText}" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource SavingsAccentBrush}" />
+                    </utu:AutoLayout>
+                  </Border>
+                  <Border Grid.Row="0" Grid.Column="1" Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="12" MinHeight="84"
+                          BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
+                    <utu:AutoLayout Orientation="Vertical" Spacing="4">
+                      <TextBlock Text="{Binding Data.Weekly.Title}" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+                      <TextBlock Text="{Binding Data.Weekly.KwhText}" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
+                      <TextBlock Text="{Binding Data.Weekly.ReductionText}" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource SavingsAccentBrush}" />
+                    </utu:AutoLayout>
+                  </Border>
+                  <Border Grid.Row="1" Grid.Column="0" Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="12" MinHeight="84"
+                          BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
+                    <utu:AutoLayout Orientation="Vertical" Spacing="4">
+                      <TextBlock Text="{Binding Data.Monthly.Title}" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+                      <TextBlock Text="{Binding Data.Monthly.KwhText}" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
+                      <TextBlock Text="{Binding Data.Monthly.ReductionText}" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource SavingsAccentBrush}" />
+                    </utu:AutoLayout>
+                  </Border>
+                  <Border Grid.Row="1" Grid.Column="1" Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="12" MinHeight="84"
+                          BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
+                    <utu:AutoLayout Orientation="Vertical" Spacing="4">
+                      <TextBlock Text="{Binding Data.Yearly.Title}" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+                      <TextBlock Text="{Binding Data.Yearly.KwhText}" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
+                      <TextBlock Text="{Binding Data.Yearly.ReductionText}" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource SavingsAccentBrush}" />
+                    </utu:AutoLayout>
+                  </Border>
+                </Grid>
+              </DataTemplate>
+            </mvux:FeedView.ValueTemplate>
+          </mvux:FeedView>
         </utu:AutoLayout>
 
-        <!-- Monthly Savings -->
+        <!-- ── Monthly Savings ── -->
         <utu:AutoLayout Orientation="Vertical" Spacing="12" CounterAxisAlignment="Stretch">
           <TextBlock Text="Monthly Savings" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
-          <Border Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Height="160" Padding="16">
-            <TextBlock Text="Savings stats + trend line — slices 2/3" Style="{StaticResource BodySmall}"
-                       Foreground="{ThemeResource MutedTextBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+          <Border Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="16"
+                  BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
+            <mvux:FeedView Source="{Binding Savings}">
+              <mvux:FeedView.ValueTemplate>
+                <DataTemplate>
+                  <utu:AutoLayout Orientation="Vertical" Spacing="14" CounterAxisAlignment="Stretch">
+                    <Grid ColumnSpacing="12">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                      </Grid.ColumnDefinitions>
+                      <StackPanel Grid.Column="0" Spacing="2">
+                        <TextBlock Text="{Binding Data.CostText}" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource SavingsAccentBrush}" />
+                        <TextBlock Text="Cost saved" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="1" Spacing="2">
+                        <TextBlock Text="{Binding Data.EnergyText}" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
+                        <TextBlock Text="Energy saved" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="2" Spacing="2">
+                        <TextBlock Text="{Binding Data.Co2Text}" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
+                        <TextBlock Text="CO₂ avoided" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+                      </StackPanel>
+                    </Grid>
+                    <controls:TrendLineView Points="{Binding Data.Trend}" Height="96" />
+                  </utu:AutoLayout>
+                </DataTemplate>
+              </mvux:FeedView.ValueTemplate>
+            </mvux:FeedView>
           </Border>
         </utu:AutoLayout>
 
@@ -86,14 +221,16 @@
 
     <!-- ============ RIGHT VIEWPORT (3D twin) ============ -->
     <Grid Grid.Column="1">
-      <!-- SKMesh/Skia building twin. Clipped to a rounded viewport. -->
-      <Border CornerRadius="12" Background="{ThemeResource SurfaceCanvasBrush}">
-        <controls:BuildingTwinView />
+      <Border CornerRadius="12" Background="{ThemeResource SurfaceCanvasBrush}"
+              BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
+        <controls:BuildingTwinView ActiveFloorIndex="{Binding ActiveFloorIndex, Mode=TwoWay}"
+                                   AutomationProperties.Name="Nakatomi Plaza building twin" />
       </Border>
 
-      <!-- Scale selector (City / District / Street / Building) — placeholder, real selector in slice 2 -->
+      <!-- Scale selector (City / District / Street / Building) — Building is the only wired scale -->
       <Border HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,8,0,0"
-              Background="{ThemeResource SurfaceCardBrush}" CornerRadius="20" Padding="4">
+              Background="{ThemeResource SurfaceCardBrush}" CornerRadius="20" Padding="4"
+              BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
         <utu:AutoLayout Orientation="Horizontal" Spacing="4">
           <TextBlock Text="City" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource MutedTextBrush}" Margin="12,6" />
           <TextBlock Text="District" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource MutedTextBrush}" Margin="12,6" />
