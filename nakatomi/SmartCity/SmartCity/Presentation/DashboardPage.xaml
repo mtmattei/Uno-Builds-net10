@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:local="using:SmartCity.Presentation"
       xmlns:controls="using:SmartCity.Presentation.Controls"
+      xmlns:live="using:Liveline"
       xmlns:utu="using:Uno.Toolkit.UI"
       xmlns:mvux="using:Uno.Extensions.Reactive.UI"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -209,6 +210,23 @@
           </mvux:FeedView>
         </utu:AutoLayout>
 
+        <!-- ── Live building load (continuous telemetry, Liveline) ── -->
+        <utu:AutoLayout Orientation="Vertical" Spacing="12" CounterAxisAlignment="Stretch">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="Live Building Load" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
+            <TextBlock Grid.Column="1" x:Name="LiveValueText" Text="—" Style="{StaticResource TitleSmall}"
+                       Foreground="{ThemeResource AccentTealBrush}" VerticalAlignment="Center" />
+          </Grid>
+          <Border Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Height="120" Padding="8"
+                  BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
+            <live:LivelineChart x:Name="LiveChart" ShowGrid="False" ShowBadge="True" ShowFill="True" />
+          </Border>
+        </utu:AutoLayout>
+
         <!-- ── Monthly Savings ── -->
         <utu:AutoLayout Orientation="Vertical" Spacing="12" CounterAxisAlignment="Stretch">
           <TextBlock Text="Monthly Savings" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
@@ -275,7 +293,7 @@
       <Border HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,56,0,0"
               Background="{ThemeResource TooltipSurfaceBrush}" CornerRadius="8" Padding="10,4"
               BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
-        <TextBlock Text="Main Hospital Building" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
+        <TextBlock Text="Nakatomi Plaza" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
       </Border>
 
       <!-- Floor ruler (17F → 11F). Highlight pill tracks ActiveFloorIndex; click/hover selects a floor. -->
