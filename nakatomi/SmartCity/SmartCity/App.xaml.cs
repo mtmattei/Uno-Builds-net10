@@ -74,6 +74,12 @@ public partial class App : Application
             );
         MainWindow = builder.Window;
 
+        // Decision: extended/custom title bar for the borderless console look. Deferred to M4
+        // polish — it needs SetTitleBar drag-region handling; enabling it now hides the top nav
+        // on desktop. Standard title bar for M2/M3 so the chrome stays visible.
+        // TODO(M4): MainWindow.ExtendsContentIntoTitleBar = true + SetTitleBar drag regions.
+        MainWindow.ExtendsContentIntoTitleBar = false;
+
         #if DEBUG
         MainWindow.UseStudio();
 #endif
@@ -86,14 +92,25 @@ public partial class App : Application
     {
         views.Register(
             new ViewMap(ViewModel: typeof(ShellModel)),
-            new ViewMap<MainPage, MainModel>()
+            new ViewMap<MainPage, MainModel>(),
+            new ViewMap<DashboardPage, EnergyDashboardModel>(),
+            new ViewMap<ComingSoonPage, ComingSoonModel>()
         );
 
+        // Shell -> Main chrome -> four top-nav destinations. Only Predictive AI is live
+        // (DashboardPage); the others share the ComingSoon stub. Predictive AI is the default.
         routes.Register(
             new RouteMap("", View: views.FindByViewModel<ShellModel>(),
                 Nested:
                 [
-                    new ("Main", View: views.FindByViewModel<MainModel>(), IsDefault:true),
+                    new RouteMap("Main", View: views.FindByViewModel<MainModel>(), IsDefault: true,
+                        Nested:
+                        [
+                            new RouteMap("PredictiveAI", View: views.FindByViewModel<EnergyDashboardModel>(), IsDefault: true),
+                            new RouteMap("Overview", View: views.FindByViewModel<ComingSoonModel>()),
+                            new RouteMap("Monitoring", View: views.FindByViewModel<ComingSoonModel>()),
+                            new RouteMap("Management", View: views.FindByViewModel<ComingSoonModel>()),
+                        ]),
                 ]
             )
         );

@@ -1,0 +1,109 @@
+<Page x:Class="SmartCity.Presentation.DashboardPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:SmartCity.Presentation"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d"
+      Background="{ThemeResource SurfaceCanvasBrush}">
+
+  <!--
+    MVUX page → {Binding} for the data surface (slice 2). Slice 1 is a static skeleton:
+    left column (AI card / energy / savings) + right twin viewport, matching the reference bands.
+    Page split is a Grid (fixed 360 + fill, single layout pass); inner stacks use AutoLayout.
+  -->
+  <Grid Padding="16" ColumnSpacing="24">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="360" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
+
+    <!-- ============ LEFT COLUMN ============ -->
+    <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+      <utu:AutoLayout Orientation="Vertical" Spacing="24" CounterAxisAlignment="Stretch">
+
+        <!-- AI Suggestion card -->
+        <Border Background="{ThemeResource AiCardBlueGradient}" CornerRadius="12" Padding="16">
+          <utu:AutoLayout Orientation="Vertical" Spacing="8" CounterAxisAlignment="Stretch">
+            <TextBlock Text="AI Suggestion" Style="{StaticResource LabelMedium}" Foreground="White" Opacity="0.8" />
+            <TextBlock Text="Optimize ventilation at 14F in the office sector"
+                       Style="{StaticResource TitleSmall}" Foreground="White" TextWrapping="Wrap" />
+            <TextBlock Text="Bound in slice 2"
+                       Style="{StaticResource BodySmall}" Foreground="White" Opacity="0.7" />
+            <utu:AutoLayout Orientation="Horizontal" Spacing="8" PrimaryAxisAlignment="End">
+              <Button Content="Dismiss" Style="{StaticResource TextButtonStyle}" Foreground="White" />
+              <Button Content="Apply" Style="{StaticResource FilledTonalButtonStyle}" />
+            </utu:AutoLayout>
+          </utu:AutoLayout>
+        </Border>
+
+        <!-- Energy Consumption -->
+        <utu:AutoLayout Orientation="Vertical" Spacing="12" CounterAxisAlignment="Stretch">
+          <TextBlock Text="Energy Consumption" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
+          <!-- Bar chart placeholder (custom SkiaSharp in slice 3) -->
+          <Border Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Height="180" Padding="16">
+            <TextBlock Text="Bar chart — slice 3" Style="{StaticResource BodySmall}"
+                       Foreground="{ThemeResource MutedTextBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+          </Border>
+          <!-- 2×2 KPI tiles -->
+          <Grid RowSpacing="12" ColumnSpacing="12">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Border Grid.Row="0" Grid.Column="0" Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="12" MinHeight="84">
+              <TextBlock Text="Daily" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+            </Border>
+            <Border Grid.Row="0" Grid.Column="1" Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="12" MinHeight="84">
+              <TextBlock Text="Weekly" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+            </Border>
+            <Border Grid.Row="1" Grid.Column="0" Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="12" MinHeight="84">
+              <TextBlock Text="Monthly" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+            </Border>
+            <Border Grid.Row="1" Grid.Column="1" Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="12" MinHeight="84">
+              <TextBlock Text="Yearly" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+            </Border>
+          </Grid>
+        </utu:AutoLayout>
+
+        <!-- Monthly Savings -->
+        <utu:AutoLayout Orientation="Vertical" Spacing="12" CounterAxisAlignment="Stretch">
+          <TextBlock Text="Monthly Savings" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
+          <Border Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Height="160" Padding="16">
+            <TextBlock Text="Savings stats + trend line — slices 2/3" Style="{StaticResource BodySmall}"
+                       Foreground="{ThemeResource MutedTextBrush}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+          </Border>
+        </utu:AutoLayout>
+
+      </utu:AutoLayout>
+    </ScrollViewer>
+
+    <!-- ============ RIGHT VIEWPORT (3D twin in M3) ============ -->
+    <Grid Grid.Column="1">
+      <Border Background="{ThemeResource SurfaceCanvasBrush}" CornerRadius="12">
+        <TextBlock Text="3D building twin — M3 (SKMesh)"
+                   Style="{StaticResource TitleMedium}" Foreground="{ThemeResource MutedTextBrush}"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+      </Border>
+
+      <!-- Scale selector (City / District / Street / Building) — placeholder, real selector in slice 2 -->
+      <Border HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,8,0,0"
+              Background="{ThemeResource SurfaceCardBrush}" CornerRadius="20" Padding="4">
+        <utu:AutoLayout Orientation="Horizontal" Spacing="4">
+          <TextBlock Text="City" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource MutedTextBrush}" Margin="12,6" />
+          <TextBlock Text="District" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource MutedTextBrush}" Margin="12,6" />
+          <TextBlock Text="Street" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource MutedTextBrush}" Margin="12,6" />
+          <Border Background="{ThemeResource SurfaceBrush}" CornerRadius="16">
+            <TextBlock Text="Building" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource OnSurfaceBrush}" Margin="12,6" />
+          </Border>
+        </utu:AutoLayout>
+      </Border>
+    </Grid>
+
+  </Grid>
+</Page>

@@ -1,28 +1,12 @@
 namespace SmartCity.Presentation;
 
+/// <summary>
+/// Chrome shell for the dashboard: hosts the top nav (regions), the icon rail and the
+/// content area. Mostly static console chrome; the live data lives in <see cref="EnergyDashboardModel"/>.
+/// </summary>
 public partial record MainModel
 {
-    private INavigator _navigator;
-
-    public MainModel(
-        IStringLocalizer localizer,
-        IOptions<AppConfig> appInfo,
-        INavigator navigator)
-    {
-        _navigator = navigator;
-        Title = "Main";
-        Title += $" - {localizer["ApplicationName"]}";
-        Title += $" - {appInfo?.Value?.Environment}";
-    }
-
-    public string? Title { get; }
-
-    public IState<string> Name => State<string>.Value(this, () => string.Empty);
-
-    public async Task GoToSecond()
-    {
-        var name = await Name;
-        await _navigator.NavigateViewModelAsync<SecondModel>(this, data: new Entity(name!));
-    }
-
+    // Right-cluster status text (static console chrome for this build).
+    public string Location => "Singapore";
+    public string Weather => "75°F, 11:00 PM";
 }
