@@ -505,21 +505,28 @@ public sealed partial class BuildingTwinView : SKCanvasElement
         var start = Project(new Vec3(dx * 0.95f, flaggedY, dz * 0.95f)).pt;
         var end = Project(new Vec3(Tower2OffX, _groundY + Tower2Floors * FloorHeightModel, Tower2OffZ)).pt;
 
-        // Quadratic arc bowing upward in screen space.
+        // Two separate arcs, one per direction: an upper arc carries cyan main → tower 2, a lower
+        // arc carries mint tower 2 → main, so each flow direction has its own clear path.
+        var mx = (start.X + end.X) / 2f;
+        var my = (start.Y + end.Y) / 2f;
         var lift = Dist(start, end) * 0.30f;
-        var control = new SKPoint((start.X + end.X) / 2f, (start.Y + end.Y) / 2f - lift);
+        var upper = new SKPoint(mx, my - lift);
+        var lower = new SKPoint(mx, my + lift * 0.55f);
 
+        DrawArc(canvas, start, upper, end, EnergyCyan, forward: true);
+        DrawArc(canvas, start, lower, end, EnergyMint, forward: false);
+    }
+
+    private void DrawArc(SKCanvas canvas, SKPoint a, SKPoint c, SKPoint b, SKColor color, bool forward)
+    {
         _facePath.Reset();
-        _facePath.MoveTo(start);
-        _facePath.QuadTo(control.X, control.Y, end.X, end.Y);
+        _facePath.MoveTo(a);
+        _facePath.QuadTo(c.X, c.Y, b.X, b.Y);
+        _arcGlow.Color = color.WithAlpha(0x3A);
+        _arc.Color = color.WithAlpha(0xA0);
         canvas.DrawPath(_facePath, _arcGlow);
         canvas.DrawPath(_facePath, _arc);
-
-        // Travelling particles — bidirectional flow. One stream runs main → tower 2 (cyan), the other
-        // tower 2 → main (mint), so it reads as data/energy moving both ways.
-        const int count = 6;
-        DrawParticleStream(canvas, start, control, end, forward: true, EnergyCyan, count);
-        DrawParticleStream(canvas, start, control, end, forward: false, EnergyMint, count);
+        DrawParticleStream(canvas, a, c, b, forward, color, 6);
     }
 
     private void DrawParticleStream(SKCanvas canvas, SKPoint a, SKPoint c, SKPoint b, bool forward, SKColor color, int count)
