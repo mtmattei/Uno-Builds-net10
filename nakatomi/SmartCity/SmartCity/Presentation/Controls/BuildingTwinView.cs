@@ -66,7 +66,6 @@ public sealed partial class BuildingTwinView : SKCanvasElement
     private readonly List<CityBox> _city = new();
     private readonly List<Vec3[]> _roads = new();
     private float _groundY;
-    private const float SceneAzimuth = -0.62f; // fixed backdrop orientation — only the tower spins
 
     // ── Reused render objects (Phase 1: no per-frame allocations) ───────────────────────────────
     private readonly SKPaint _fill = new() { IsAntialias = true, Style = SKPaintStyle.Fill };
@@ -280,17 +279,13 @@ public sealed partial class BuildingTwinView : SKCanvasElement
         _scale = (float)Math.Min(area.Width, area.Height) * 1.2f;
         _cosE = MathF.Cos(_elevation);
         _sinE = MathF.Sin(_elevation);
+        _cosA = MathF.Cos(_azimuth);
+        _sinA = MathF.Sin(_azimuth);
 
-        // Backdrop uses a FIXED azimuth so only the tower spins, not the whole scene.
-        _cosA = MathF.Cos(SceneAzimuth);
-        _sinA = MathF.Sin(SceneAzimuth);
+        // Backdrop first: ground glow, street grid, city blocks (orbit with the scene).
         DrawGround(canvas);
         DrawRoads(canvas);
         DrawCity(canvas);
-
-        // Tower (and its elevators) use the live, animated azimuth.
-        _cosA = MathF.Cos(_azimuth);
-        _sinA = MathF.Sin(_azimuth);
 
         var activeStorey = OfficeTopStorey - Math.Clamp(ActiveFloorIndex, 0, DataFloorCount - 1);
         var flaggedStorey = OfficeTopStorey - FlaggedDataIndex;
