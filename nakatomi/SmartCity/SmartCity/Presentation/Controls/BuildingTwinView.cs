@@ -53,6 +53,16 @@ public sealed partial class BuildingTwinView : SKCanvasElement
     private bool _dragging;
     private Point _lastPoint;
 
+    // Cityscape backdrop + elevators.
+    private readonly List<CityBox> _city = new();
+    private float _groundY;
+    private static readonly SKColor ElevatorAmber = new(0xFF, 0xB4, 0x4C);
+    private static readonly SKColor CityLight = new(0x2C, 0x3A, 0x5C);
+    private static readonly SKColor CityDark = new(0x12, 0x1A, 0x2C);
+    private const int ElevatorShafts = 3;
+
+    private readonly record struct CityBox(Vec3[] Corners, float Tone, float SpeedSeed);
+
     public bool IsPaused => _paused;
     public bool Is2D => _is2D;
 
@@ -85,6 +95,28 @@ public sealed partial class BuildingTwinView : SKCanvasElement
                 _winPhase[s][c] = (float)(rng.NextDouble() * Math.PI * 2);
                 _winOccupancy[s][c] = rng.NextDouble() < 0.6 ? 0.4f + (float)rng.NextDouble() * 0.4f : 0f;
             }
+        }
+
+        // Neumorphic cityscape: scattered extruded blocks ringing the tower on the ground plane.
+        _groundY = _storeys[0].Corners[0].Y;
+        var crng = new Random(7);
+        for (var n = 0; n < 28; n++)
+        {
+            var ang = (float)(crng.NextDouble() * Math.PI * 2);
+            var rad = 1.8f + (float)crng.NextDouble() * 2.9f;
+            var bx = MathF.Cos(ang) * rad;
+            var bz = MathF.Sin(ang) * rad;
+            var hw = 0.20f + (float)crng.NextDouble() * 0.30f;
+            var hd = 0.20f + (float)crng.NextDouble() * 0.30f;
+            var h = 0.30f + (float)crng.NextDouble() * 1.6f;
+            var y0 = _groundY;
+            var y1 = _groundY + h;
+            var c = new[]
+            {
+                new Vec3(bx - hw, y0, bz - hd), new Vec3(bx + hw, y0, bz - hd), new Vec3(bx + hw, y0, bz + hd), new Vec3(bx - hw, y0, bz + hd),
+                new Vec3(bx - hw, y1, bz - hd), new Vec3(bx + hw, y1, bz - hd), new Vec3(bx + hw, y1, bz + hd), new Vec3(bx - hw, y1, bz + hd),
+            };
+            _city.Add(new CityBox(c, 0.65f + (float)crng.NextDouble() * 0.7f, (float)crng.NextDouble()));
         }
 
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
@@ -195,6 +227,10 @@ public sealed partial class BuildingTwinView : SKCanvasElement
             return (new SKPoint(cx + scale * x1 / denom, cy - scale * y2 / denom), z2);
         }
 
+        // Backdrop first: ground glow + neumorphic city blocks behind the tower.
+        DrawGround(canvas, Project);
+        DrawCity(canvas, Project);
+
         var activeStorey = OfficeTopStorey - Math.Clamp(ActiveFloorIndex, 0, DataFloorCount - 1);
         var flaggedStorey = OfficeTopStorey - FlaggedDataIndex;
 
@@ -269,6 +305,131 @@ public sealed partial class BuildingTwinView : SKCanvasElement
             }
             canvas.DrawPath(path, stroke);
         }
+
+        // Elevators ride the core in front of the glass, in amber (distinct from the floor green).
+        DrawElevators(canvas, Project);
+    }
+
+    // ── Cityscape backdrop ──────────────────────────────────────────────────────────────────────
+    private void DrawGround(SKCanvas canvas, Func<Vec3, (SKPoint pt, float depth)> project)
+    {
+        const float r = 5.2f;
+        var bl = project(new Vec3(-r, _groundY, -r)).pt;
+        var br = project(new Vec3(r, _groundY, -r)).pt;
+        var fr = project(new Vec3(r, _groundY, r)).pt;
+        var fl = project(new Vec3(-r, _groundY, r)).pt;
+        var center = project(new Vec3(0, _groundY, 0)).pt;
+
+        using var path = new SKPath();
+        path.MoveTo(bl); path.LineTo(br); path.LineTo(fr); path.LineTo(fl); path.Close();
+        using var fill = new SKPaint
+        {
+            IsAntialias = true,
+            Style = SKPaintStyle.Fill,
+            Shader = SKShader.CreateRadialGradient(
+                center, (float)Math.Min(ActualWidth, ActualHeight) * 0.9f,
+                new[] { new SKColor(0x16, 0x22, 0x3C), new SKColor(0x09, 0x0D, 0x15) },
+                new[] { 0f, 1f }, SKShaderTileMode.Clamp),
+        };
+        canvas.DrawPath(path, fill);
+    }
+
+    private void DrawCity(SKCanvas canvas, Func<Vec3, (SKPoint pt, float depth)> project)
+    {
+        var faces = new List<(SKPoint a, SKPoint b, SKPoint c, SKPoint d, float depth, bool top, float tone)>(_city.Count * 5);
+        var p = new SKPoint[8];
+        var z = new float[8];
+        foreach (var box in _city)
+        {
+            for (var i = 0; i < 8; i++) (p[i], z[i]) = project(box.Corners[i]);
+            for (var k = 0; k < FloorBox.Faces.Length; k++)
+            {
+                var (ia, ib, ic, id) = FloorBox.Faces[k];
+                var avg = (z[ia] + z[ib] + z[ic] + z[id]) / 4f;
+                faces.Add((p[ia], p[ib], p[ic], p[id], avg, k == 4, box.Tone));
+            }
+        }
+        faces.Sort(static (l, r) => r.depth.CompareTo(l.depth));
+
+        using var fill = new SKPaint { IsAntialias = true, Style = SKPaintStyle.Fill };
+        using var edge = new SKPaint { IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 0.8f };
+        foreach (var f in faces)
+        {
+            // Neumorphic shade: top faces catch the light, sides fall into soft shadow.
+            var t = f.top ? 1f : 0.42f;
+            var col = Lerp(CityDark, CityLight, Math.Clamp(t * f.tone, 0f, 1f));
+            fill.Color = col;
+            using var path = new SKPath();
+            path.MoveTo(f.a); path.LineTo(f.b); path.LineTo(f.c); path.LineTo(f.d); path.Close();
+            canvas.DrawPath(path, fill);
+            if (f.top)
+            {
+                edge.Color = Lerp(CityLight, new SKColor(0x4A, 0x5E, 0x8C), 0.6f).WithAlpha(0xAA);
+                canvas.DrawPath(path, edge);
+            }
+        }
+    }
+
+    // ── Elevators ───────────────────────────────────────────────────────────────────────────────
+    private void DrawElevators(SKCanvas canvas, Func<Vec3, (SKPoint pt, float depth)> project)
+    {
+        var bottom = _storeys[0].Corners;
+        var top = _storeys[^1].Corners;
+
+        // The four tower sides as full-height quads (bottom-left, bottom-right, top-right, top-left).
+        Span<(int b0, int b1, int t1, int t0)> sides =
+        [
+            (0, 1, 5, 4), (1, 2, 6, 5), (2, 3, 7, 6), (3, 0, 4, 7),
+        ];
+
+        var bestSide = -1;
+        var bestDepth = float.MaxValue;
+        var quad = new SKPoint[4];
+        for (var s = 0; s < 4; s++)
+        {
+            var (b0, b1, t1, t0) = sides[s];
+            var (q0, d0) = project(bottom[b0]);
+            var (q1, d1) = project(bottom[b1]);
+            var (q2, d2) = project(top[t1]);
+            var (q3, d3) = project(top[t0]);
+            var avg = (d0 + d1 + d2 + d3) / 4f;
+            if (avg < bestDepth) { bestDepth = avg; bestSide = s; quad[0] = q0; quad[1] = q1; quad[2] = q2; quad[3] = q3; }
+        }
+        if (bestSide < 0) return;
+
+        SKPoint Q(float u, float v) => Lerp(Lerp(quad[0], quad[1], u), Lerp(quad[3], quad[2], u), v);
+
+        using var rail = new SKPaint { IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 1f, Color = ElevatorAmber.WithAlpha(0x3A) };
+        using var car = new SKPaint { IsAntialias = true, Style = SKPaintStyle.Fill };
+        using var glow = new SKPaint
+        {
+            IsAntialias = true, Style = SKPaintStyle.Fill, Color = ElevatorAmber.WithAlpha(0x66),
+            MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 6f),
+        };
+
+        const float vTop = 0.06f, vBot = 0.94f, carH = 0.05f, halfW = 0.022f;
+        for (var e = 0; e < ElevatorShafts; e++)
+        {
+            var u = 0.30f + e * (0.40f / Math.Max(1, ElevatorShafts - 1)); // cluster the shafts near the core
+            // Shaft rails.
+            canvas.DrawLine(Q(u - halfW, vTop), Q(u - halfW, vBot), rail);
+            canvas.DrawLine(Q(u + halfW, vTop), Q(u + halfW, vBot), rail);
+
+            // Car position oscillates up/down; alternate directions and speeds per shaft.
+            var dir = e % 2 == 0 ? 1f : -1f;
+            var speed = 0.6f + e * 0.25f;
+            var vc = vTop + (vBot - vTop) * (0.5f + 0.5f * MathF.Sin(_t * speed * dir + e * 1.7f));
+
+            var c0 = Q(u - halfW, vc - carH * 0.5f);
+            var c1 = Q(u + halfW, vc - carH * 0.5f);
+            var c2 = Q(u + halfW, vc + carH * 0.5f);
+            var c3 = Q(u - halfW, vc + carH * 0.5f);
+            using var path = new SKPath();
+            path.MoveTo(c0); path.LineTo(c1); path.LineTo(c2); path.LineTo(c3); path.Close();
+            canvas.DrawPath(path, glow);
+            car.Color = ElevatorAmber;
+            canvas.DrawPath(path, car);
+        }
     }
 
     private void DrawWindows(SKCanvas canvas, SKPaint fill, Face f, bool isActive, bool isFlagged, float pulse)
@@ -324,4 +485,9 @@ public sealed partial class BuildingTwinView : SKCanvasElement
 
     private static SKPoint Lerp(SKPoint a, SKPoint b, float t) =>
         new(a.X + (b.X - a.X) * t, a.Y + (b.Y - a.Y) * t);
+
+    private static SKColor Lerp(SKColor a, SKColor b, float t) => new(
+        (byte)(a.Red + (b.Red - a.Red) * t),
+        (byte)(a.Green + (b.Green - a.Green) * t),
+        (byte)(a.Blue + (b.Blue - a.Blue) * t));
 }
