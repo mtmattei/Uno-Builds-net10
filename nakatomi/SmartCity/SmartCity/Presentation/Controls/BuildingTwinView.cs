@@ -51,6 +51,7 @@ public sealed partial class BuildingTwinView : SKCanvasElement
     // Second (smaller) building + the energy link between the two towers.
     private static readonly SKColor Tower2Glass = new(0x4F, 0xC8, 0xD8);
     private static readonly SKColor EnergyCyan = new(0x6C, 0xF2, 0xFF);
+    private static readonly SKColor EnergyMint = new(0x7C, 0xFF, 0xC8);
     private const int Tower2Floors = 9;
     private const float Tower2OffX = 2.6f;
     private const float Tower2OffZ = -0.5f;
@@ -76,6 +77,8 @@ public sealed partial class BuildingTwinView : SKCanvasElement
     private readonly List<CityBox> _city = new();
     private readonly List<Vec3[]> _roads = new();
     private float _groundY;
+    private float _anchorY;        // screen Y of the active floor (for the synced tooltip)
+    private int _lastElevFloor = -1;
 
     // ── Reused render objects (Phase 1: no per-frame allocations) ───────────────────────────────
     private readonly SKPaint _fill = new() { IsAntialias = true, Style = SKPaintStyle.Fill };
@@ -119,6 +122,22 @@ public sealed partial class BuildingTwinView : SKCanvasElement
         get => (int)GetValue(ActiveFloorIndexProperty);
         set => SetValue(ActiveFloorIndexProperty, value);
     }
+
+    // Live readouts the left column binds to (ElementName=Twin), kept in sync with the canvas each frame.
+    public static readonly DependencyProperty ActiveAnchorYProperty =
+        DependencyProperty.Register(nameof(ActiveAnchorY), typeof(double), typeof(BuildingTwinView), new PropertyMetadata(0.0));
+    /// <summary>Screen-space Y of the highlighted floor — the tooltip tracks this so it stays beside the lit band.</summary>
+    public double ActiveAnchorY { get => (double)GetValue(ActiveAnchorYProperty); private set => SetValue(ActiveAnchorYProperty, value); }
+
+    public static readonly DependencyProperty ElevatorFloorTextProperty =
+        DependencyProperty.Register(nameof(ElevatorFloorText), typeof(string), typeof(BuildingTwinView), new PropertyMetadata("—"));
+    /// <summary>Lead elevator car's current floor, e.g. "12F" — synced to the moving car in the canvas.</summary>
+    public string ElevatorFloorText { get => (string)GetValue(ElevatorFloorTextProperty); private set => SetValue(ElevatorFloorTextProperty, value); }
+
+    public static readonly DependencyProperty ElevatorDirTextProperty =
+        DependencyProperty.Register(nameof(ElevatorDirText), typeof(string), typeof(BuildingTwinView), new PropertyMetadata("—"));
+    /// <summary>Lead elevator direction, e.g. "▲ Ascending".</summary>
+    public string ElevatorDirText { get => (string)GetValue(ElevatorDirTextProperty); private set => SetValue(ElevatorDirTextProperty, value); }
 
     public BuildingTwinView()
     {
@@ -324,6 +343,11 @@ public sealed partial class BuildingTwinView : SKCanvasElement
         {
             for (var i = 0; i < 8; i++) (_proj[i], _projDepth[i]) = Project(storey.Corners[i]);
             var s = storey.Floor - 1;
+            if (s == activeStorey)
+            {
+                float ay = 0; for (var i = 0; i < 8; i++) ay += _proj[i].Y;
+                _anchorY = ay / 8f; // screen-space centre of the lit floor
+            }
             for (var k = 0; k < FloorBox.Faces.Length; k++)
             {
                 var (a, b, c, d) = FloorBox.Faces[k];
@@ -332,6 +356,7 @@ public sealed partial class BuildingTwinView : SKCanvasElement
                 _faces.Add(new Face(s, k, _proj[a], _proj[b], _proj[c], _proj[d], avg, 0));
             }
         }
+        ActiveAnchorY = _anchorY;
 
         // Second tower faces, into the same depth-sorted pass so the two buildings occlude correctly.
         var t2Center = Project(new Vec3(Tower2OffX, _groundY + Tower2Floors * FloorHeightModel / 2f, Tower2OffZ)).depth;
@@ -490,18 +515,26 @@ public sealed partial class BuildingTwinView : SKCanvasElement
         canvas.DrawPath(_facePath, _arcGlow);
         canvas.DrawPath(_facePath, _arc);
 
-        // Travelling particles — data/energy flowing from the main tower to tower 2.
-        const int count = 7;
+        // Travelling particles — bidirectional flow. One stream runs main → tower 2 (cyan), the other
+        // tower 2 → main (mint), so it reads as data/energy moving both ways.
+        const int count = 6;
+        DrawParticleStream(canvas, start, control, end, forward: true, EnergyCyan, count);
+        DrawParticleStream(canvas, start, control, end, forward: false, EnergyMint, count);
+    }
+
+    private void DrawParticleStream(SKCanvas canvas, SKPoint a, SKPoint c, SKPoint b, bool forward, SKColor color, int count)
+    {
         for (var i = 0; i < count; i++)
         {
             var t = _t * 0.22f + i / (float)count;
             t -= MathF.Floor(t);
-            var p = Bezier(start, control, end, t);
-            var fade = MathF.Sin(t * MathF.PI); // dim at the ends, bright mid-flight
-            _particleGlow.Color = EnergyCyan.WithAlpha((byte)(0x90 * fade));
-            _particle.Color = EnergyCyan.WithAlpha((byte)(0xC0 + 0x3F * fade));
-            canvas.DrawCircle(p, 6f, _particleGlow);
-            canvas.DrawCircle(p, 2.6f, _particle);
+            if (!forward) t = 1f - t;            // travel the opposite way along the same arc
+            var p = Bezier(a, c, b, t);
+            var fade = MathF.Sin(t * MathF.PI);  // dim at the ends, bright mid-flight
+            _particleGlow.Color = color.WithAlpha((byte)(0x90 * fade));
+            _particle.Color = color.WithAlpha((byte)(0xC0 + 0x3F * fade));
+            canvas.DrawCircle(p, 5.5f, _particleGlow);
+            canvas.DrawCircle(p, 2.4f, _particle);
         }
     }
 
@@ -558,6 +591,19 @@ public sealed partial class BuildingTwinView : SKCanvasElement
             var dir = e % 2 == 0 ? 1f : -1f;
             var speed = 0.6f + e * 0.25f;
             var vc = vTop + (vBot - vTop) * (0.5f + 0.5f * MathF.Sin(_t * speed * dir + e * 1.7f));
+
+            // Lead car drives the synced left-column metric (floor number ticks as it moves).
+            if (e == 0)
+            {
+                var frac = (vc - vTop) / (vBot - vTop);
+                var floor = Math.Clamp(1 + (int)MathF.Round(frac * (TotalStoreys - 1)), 1, TotalStoreys);
+                if (floor != _lastElevFloor)
+                {
+                    ElevatorDirText = floor > _lastElevFloor ? "▲ Ascending" : "▼ Descending";
+                    _lastElevFloor = floor;
+                    ElevatorFloorText = floor + "F";
+                }
+            }
 
             SetQuad(_cellPath,
                 Q(u - halfW, vc - carH * 0.5f), Q(u + halfW, vc - carH * 0.5f),

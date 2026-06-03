@@ -180,6 +180,29 @@
           </mvux:FeedView.ValueTemplate>
         </mvux:FeedView>
 
+        <!-- ── Elevator metric (synced to the moving car in the twin) ── -->
+        <Border Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="16"
+                BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Spacing="2">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <Ellipse Width="8" Height="8" Fill="{ThemeResource ElevatorAmberBrush}" VerticalAlignment="Center" />
+                <TextBlock Text="Elevator" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource MutedTextBrush}" />
+              </StackPanel>
+              <TextBlock Text="{Binding ElevatorFloorText, ElementName=Twin}" Style="{StaticResource HeadlineSmall}" Foreground="{ThemeResource OnSurfaceBrush}" />
+              <TextBlock Text="{Binding ElevatorDirText, ElementName=Twin}" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource ElevatorAmberBrush}" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Spacing="2">
+              <TextBlock Text="3 cars" Style="{StaticResource TitleSmall}" Foreground="{ThemeResource OnSurfaceBrush}" HorizontalAlignment="Right" />
+              <TextBlock Text="in service" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" HorizontalAlignment="Right" />
+            </StackPanel>
+          </Grid>
+        </Border>
+
         <!-- ── Energy Consumption ── -->
         <utu:AutoLayout Orientation="Vertical" Spacing="12" CounterAxisAlignment="Stretch">
           <TextBlock Text="Energy Consumption" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
@@ -336,12 +359,15 @@
         <Button Grid.Row="6" Tag="6" Content="11F" Style="{StaticResource RulerFloorButton}" Click="RulerFloor_Click" PointerEntered="RulerFloor_PointerEntered" />
       </Grid>
 
-      <!-- Live floor tooltip (tracks the lit / hovered floor) -->
-      <mvux:FeedView Source="{Binding ActiveFloor}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="476,0,0,0">
+      <!-- Live floor tooltip — vertically tracks the highlighted floor band on the canvas -->
+      <mvux:FeedView Source="{Binding ActiveFloor}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="476,0,0,0">
+        <mvux:FeedView.RenderTransform>
+          <TranslateTransform Y="{Binding ActiveAnchorY, ElementName=Twin}" />
+        </mvux:FeedView.RenderTransform>
         <mvux:FeedView.ValueTemplate>
           <DataTemplate>
             <Border Background="{ThemeResource TooltipSurfaceBrush}" CornerRadius="10" Padding="14" MaxWidth="220"
-                    BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
+                    Margin="0,-58,0,0" BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
               <StackPanel Spacing="10">
                 <TextBlock Text="{Binding Data.Title}" Style="{StaticResource TitleSmall}" Foreground="{ThemeResource OnSurfaceBrush}" />
                 <StackPanel Spacing="2">
