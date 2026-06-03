@@ -43,9 +43,19 @@ public sealed partial class BuildingTwinView : SKCanvasElement
     private const int ElevatorShafts = 3;
 
     private readonly IReadOnlyList<FloorBox> _storeys;
+    private readonly IReadOnlyList<FloorBox> _tower2;
     private readonly float[][] _winPhase;
     private readonly float[][] _winOccupancy;
     private readonly DispatcherTimer _timer;
+
+    // Second (smaller) building + the energy link between the two towers.
+    private static readonly SKColor Tower2Glass = new(0x4F, 0xC8, 0xD8);
+    private static readonly SKColor EnergyCyan = new(0x6C, 0xF2, 0xFF);
+    private const int Tower2Floors = 9;
+    private const float Tower2OffX = 2.6f;
+    private const float Tower2OffZ = -0.5f;
+    private const float Tower2Scale = 0.60f;
+    private const float FloorHeightModel = 0.30f; // mirrors BoxStackGeometryProvider
 
     private float _t;
     private float _lastAdvance;
@@ -80,6 +90,10 @@ public sealed partial class BuildingTwinView : SKCanvasElement
     private readonly SKPaint _carPaint = new() { IsAntialias = true, Style = SKPaintStyle.Fill, Color = ElevatorAmber };
     private readonly SKPaint _carGlow = new() { IsAntialias = true, Style = SKPaintStyle.Fill, Color = ElevatorAmber.WithAlpha(0x66), MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 6f) };
     private readonly SKPaint _roadPaint = new() { IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 2.2f, Color = new SKColor(0x33, 0x3F, 0x59).WithAlpha(0x9A) };
+    private readonly SKPaint _arc = new() { IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 1.6f, StrokeCap = SKStrokeCap.Round, Color = EnergyCyan.WithAlpha(0xA0) };
+    private readonly SKPaint _arcGlow = new() { IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 6f, Color = EnergyCyan.WithAlpha(0x3A), MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 5f) };
+    private readonly SKPaint _particle = new() { IsAntialias = true, Style = SKPaintStyle.Fill, Color = EnergyCyan };
+    private readonly SKPaint _particleGlow = new() { IsAntialias = true, Style = SKPaintStyle.Fill, Color = EnergyCyan.WithAlpha(0x80), MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 5f) };
     private readonly SKPath _facePath = new();
     private readonly SKPath _cellPath = new();
     private readonly List<Face> _faces = new(TotalStoreys * 5);
@@ -154,6 +168,20 @@ public sealed partial class BuildingTwinView : SKCanvasElement
             _roads.Add(new[] { new Vec3(o, _groundY, -5.4f), new Vec3(o, _groundY, 5.4f) });
             _roads.Add(new[] { new Vec3(-5.4f, _groundY, o), new Vec3(5.4f, _groundY, o) });
         }
+
+        // Second, smaller tower: built by the same provider, then scaled in footprint and translated
+        // to stand on the ground plane offset from the main tower.
+        var t2 = new BoxStackGeometryProvider().BuildTower(Tower2Floors, flaggedFloor: -1);
+        var translateY = _groundY + Tower2Floors * FloorHeightModel / 2f;
+        var list2 = new List<FloorBox>(t2.Count);
+        foreach (var fb in t2)
+        {
+            var nc = new Vec3[8];
+            for (var i = 0; i < 8; i++)
+                nc[i] = new Vec3(fb.Corners[i].X * Tower2Scale + Tower2OffX, fb.Corners[i].Y + translateY, fb.Corners[i].Z * Tower2Scale + Tower2OffZ);
+            list2.Add(new FloorBox(fb.Floor, fb.Label, nc, false));
+        }
+        _tower2 = list2;
 
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
         _timer.Tick += OnTick;
@@ -254,7 +282,7 @@ public sealed partial class BuildingTwinView : SKCanvasElement
         return new Size(w, h);
     }
 
-    private readonly record struct Face(int Storey, int Kind, SKPoint P0, SKPoint P1, SKPoint P2, SKPoint P3, float Depth);
+    private readonly record struct Face(int Storey, int Kind, SKPoint P0, SKPoint P1, SKPoint P2, SKPoint P3, float Depth, int Building);
 
     // Camera state captured per frame so Project can stay a cheap static-like local.
     private float _cx, _cy, _scale, _cosA, _sinA, _cosE, _sinE;
@@ -301,18 +329,36 @@ public sealed partial class BuildingTwinView : SKCanvasElement
                 var (a, b, c, d) = FloorBox.Faces[k];
                 var avg = (_projDepth[a] + _projDepth[b] + _projDepth[c] + _projDepth[d]) / 4f;
                 if (k != 4 && avg > centerDepth) continue; // cull back-facing side faces
-                _faces.Add(new Face(s, k, _proj[a], _proj[b], _proj[c], _proj[d], avg));
+                _faces.Add(new Face(s, k, _proj[a], _proj[b], _proj[c], _proj[d], avg, 0));
             }
         }
+
+        // Second tower faces, into the same depth-sorted pass so the two buildings occlude correctly.
+        var t2Center = Project(new Vec3(Tower2OffX, _groundY + Tower2Floors * FloorHeightModel / 2f, Tower2OffZ)).depth;
+        foreach (var storey in _tower2)
+        {
+            for (var i = 0; i < 8; i++) (_proj[i], _projDepth[i]) = Project(storey.Corners[i]);
+            var s = storey.Floor - 1;
+            for (var k = 0; k < FloorBox.Faces.Length; k++)
+            {
+                var (a, b, c, d) = FloorBox.Faces[k];
+                var avg = (_projDepth[a] + _projDepth[b] + _projDepth[c] + _projDepth[d]) / 4f;
+                if (k != 4 && avg > t2Center) continue;
+                _faces.Add(new Face(s, k, _proj[a], _proj[b], _proj[c], _proj[d], avg, 1));
+            }
+        }
+
         _faces.Sort(static (l, r) => r.Depth.CompareTo(l.Depth));
 
         var pulse = 0.5f + 0.5f * MathF.Sin(_t * 2.2f);
 
         foreach (var f in _faces)
         {
-            var isActive = f.Storey == activeStorey;
-            var isFlagged = f.Storey == flaggedStorey;
+            var isMain = f.Building == 0;
+            var isActive = isMain && f.Storey == activeStorey;
+            var isFlagged = isMain && f.Storey == flaggedStorey;
             var isTop = f.Kind == 4;
+            var glass = isMain ? BodyBlue : Tower2Glass;
 
             SetQuad(_facePath, f.P0, f.P1, f.P2, f.P3);
 
@@ -321,7 +367,7 @@ public sealed partial class BuildingTwinView : SKCanvasElement
             else if (isActive)
                 _fill.Color = LiveCyan.WithAlpha((byte)(0x34 + 0x24 * pulse));
             else
-                _fill.Color = BodyBlue.WithAlpha(isTop ? (byte)0x40 : (byte)0x58);
+                _fill.Color = glass.WithAlpha(isTop ? (byte)0x40 : (byte)0x58);
             canvas.DrawPath(_facePath, _fill);
 
             if (!isTop)
@@ -346,7 +392,7 @@ public sealed partial class BuildingTwinView : SKCanvasElement
             }
             else
             {
-                _stroke.Color = BodyBlue.WithAlpha(isTop ? (byte)0x70 : (byte)0xB0);
+                _stroke.Color = glass.WithAlpha(isTop ? (byte)0x70 : (byte)0xB0);
                 _stroke.StrokeWidth = 1.0f;
             }
             canvas.DrawPath(_facePath, _stroke);
@@ -354,6 +400,9 @@ public sealed partial class BuildingTwinView : SKCanvasElement
 
         // Elevators ride the core in front of the glass, in amber (distinct from the floor green).
         DrawElevators(canvas);
+
+        // Energy link: glowing arc + travelling particles between the two towers.
+        DrawConnection(canvas);
     }
 
     // ── Cityscape backdrop ──────────────────────────────────────────────────────────────────────
@@ -415,6 +464,54 @@ public sealed partial class BuildingTwinView : SKCanvasElement
     {
         foreach (var road in _roads)
             canvas.DrawLine(Project(road[0]).pt, Project(road[1]).pt, _roadPaint);
+    }
+
+    // ── Energy link between the two towers ───────────────────────────────────────────────────────
+    private void DrawConnection(SKCanvas canvas)
+    {
+        // Start on the main tower's flagged floor, offset toward tower 2; end at tower 2's roof.
+        var flaggedStorey = OfficeTopStorey - FlaggedDataIndex;
+        var fc = _storeys[flaggedStorey].Corners;
+        var flaggedY = (fc[0].Y + fc[4].Y) / 2f;
+        var dirLen = MathF.Sqrt(Tower2OffX * Tower2OffX + Tower2OffZ * Tower2OffZ);
+        var dx = Tower2OffX / dirLen;
+        var dz = Tower2OffZ / dirLen;
+
+        var start = Project(new Vec3(dx * 0.95f, flaggedY, dz * 0.95f)).pt;
+        var end = Project(new Vec3(Tower2OffX, _groundY + Tower2Floors * FloorHeightModel, Tower2OffZ)).pt;
+
+        // Quadratic arc bowing upward in screen space.
+        var lift = Dist(start, end) * 0.30f;
+        var control = new SKPoint((start.X + end.X) / 2f, (start.Y + end.Y) / 2f - lift);
+
+        _facePath.Reset();
+        _facePath.MoveTo(start);
+        _facePath.QuadTo(control.X, control.Y, end.X, end.Y);
+        canvas.DrawPath(_facePath, _arcGlow);
+        canvas.DrawPath(_facePath, _arc);
+
+        // Travelling particles — data/energy flowing from the main tower to tower 2.
+        const int count = 7;
+        for (var i = 0; i < count; i++)
+        {
+            var t = _t * 0.22f + i / (float)count;
+            t -= MathF.Floor(t);
+            var p = Bezier(start, control, end, t);
+            var fade = MathF.Sin(t * MathF.PI); // dim at the ends, bright mid-flight
+            _particleGlow.Color = EnergyCyan.WithAlpha((byte)(0x90 * fade));
+            _particle.Color = EnergyCyan.WithAlpha((byte)(0xC0 + 0x3F * fade));
+            canvas.DrawCircle(p, 6f, _particleGlow);
+            canvas.DrawCircle(p, 2.6f, _particle);
+        }
+    }
+
+    private static SKPoint Bezier(SKPoint a, SKPoint c, SKPoint b, float t)
+    {
+        var mt = 1f - t;
+        var w0 = mt * mt;
+        var w1 = 2f * mt * t;
+        var w2 = t * t;
+        return new SKPoint(w0 * a.X + w1 * c.X + w2 * b.X, w0 * a.Y + w1 * c.Y + w2 * b.Y);
     }
 
     // ── Elevators ───────────────────────────────────────────────────────────────────────────────
