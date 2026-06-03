@@ -43,6 +43,13 @@ public sealed partial class BuildingTwinView : SKCanvasElement
     private static readonly SKColor CityDark = new(0x12, 0x1B, 0x30);
     private static readonly SKColor EnergyCyan = new(0x6C, 0xF2, 0xFF);
     private static readonly SKColor EnergyMint = new(0x7C, 0xFF, 0xC8);
+    private static readonly SKColor HazardRed = new(0xFF, 0x3B, 0x30);
+
+    // Fall-hazard detector (Die Hard easter egg): a figure periodically drops from Nakatomi Plaza.
+    private const float FallPeriod = 8f;
+    private const float FallDur = 1.7f;
+    private int _hazardCount;
+    private bool _hazardPrev;
 
     private sealed record BuildingDef(IReadOnlyList<FloorBox> Storeys, string Name, float OffX, float OffZ, int Floors, int OfficeTop);
 
@@ -93,6 +100,9 @@ public sealed partial class BuildingTwinView : SKCanvasElement
     private readonly SKPaint _arcGlow = new() { IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 6f, MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 5f) };
     private readonly SKPaint _particle = new() { IsAntialias = true, Style = SKPaintStyle.Fill };
     private readonly SKPaint _particleGlow = new() { IsAntialias = true, Style = SKPaintStyle.Fill, MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 5f) };
+    private readonly SKPaint _hazard = new() { IsAntialias = true, Style = SKPaintStyle.Fill, Color = HazardRed };
+    private readonly SKPaint _hazardGlow = new() { IsAntialias = true, Style = SKPaintStyle.Fill, MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 6f) };
+    private readonly SKPaint _hazardStroke = new() { IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeCap = SKStrokeCap.Round, Color = HazardRed };
     private readonly SKPath _facePath = new();
     private readonly SKPath _cellPath = new();
     private readonly List<Face> _faces = new(TotalStoreys * 5);
@@ -134,6 +144,19 @@ public sealed partial class BuildingTwinView : SKCanvasElement
         DependencyProperty.Register(nameof(ElevatorDirText), typeof(string), typeof(BuildingTwinView), new PropertyMetadata("—"));
     /// <summary>Lead elevator direction, e.g. "▲ Ascending".</summary>
     public string ElevatorDirText { get => (string)GetValue(ElevatorDirTextProperty); private set => SetValue(ElevatorDirTextProperty, value); }
+
+    // Fall-hazard status the left column binds to. Two Visibility flags drive the clear/alert banners.
+    public static readonly DependencyProperty HazardVisibleProperty =
+        DependencyProperty.Register(nameof(HazardVisible), typeof(Visibility), typeof(BuildingTwinView), new PropertyMetadata(Visibility.Collapsed));
+    public Visibility HazardVisible { get => (Visibility)GetValue(HazardVisibleProperty); private set => SetValue(HazardVisibleProperty, value); }
+
+    public static readonly DependencyProperty ClearVisibleProperty =
+        DependencyProperty.Register(nameof(ClearVisible), typeof(Visibility), typeof(BuildingTwinView), new PropertyMetadata(Visibility.Visible));
+    public Visibility ClearVisible { get => (Visibility)GetValue(ClearVisibleProperty); private set => SetValue(ClearVisibleProperty, value); }
+
+    public static readonly DependencyProperty HazardDetailProperty =
+        DependencyProperty.Register(nameof(HazardDetail), typeof(string), typeof(BuildingTwinView), new PropertyMetadata("No active hazards"));
+    public string HazardDetail { get => (string)GetValue(HazardDetailProperty); private set => SetValue(HazardDetailProperty, value); }
 
     public BuildingTwinView()
     {
@@ -298,6 +321,17 @@ public sealed partial class BuildingTwinView : SKCanvasElement
             ActiveFloorIndex = (ActiveFloorIndex + 1) % DataFloorCount;
         }
 
+        // Fall-hazard detector: active during the drop + a short aftermath window.
+        var active = _t % FallPeriod < FallDur + 1.6f;
+        if (active && !_hazardPrev) _hazardCount++;
+        if (active != _hazardPrev)
+        {
+            _hazardPrev = active;
+            HazardVisible = active ? Visibility.Visible : Visibility.Collapsed;
+            ClearVisible = active ? Visibility.Collapsed : Visibility.Visible;
+            HazardDetail = active ? $"Nakatomi Plaza · roof · event #{_hazardCount}" : "No active hazards";
+        }
+
         Invalidate();
     }
 
@@ -418,6 +452,52 @@ public sealed partial class BuildingTwinView : SKCanvasElement
 
         DrawElevators(canvas, _buildings[_focus]);
         DrawConnections(canvas);
+        DrawFallingHazard(canvas);
+    }
+
+    // ── Fall-hazard detector (Die Hard easter egg): a tumbling figure drops from Nakatomi Plaza ────
+    private void DrawFallingHazard(SKCanvas canvas)
+    {
+        var cyc = _t % FallPeriod;
+        if (cyc >= FallDur) return; // figure only visible mid-drop
+
+        var p = cyc / FallDur;
+        var main = _buildings[0]; // Nakatomi Plaza
+        var roofY = _groundY + main.Floors * FloorHeightModel;
+        var fx = main.OffX + 0.7f;
+        var fz = main.OffZ + 0.4f;
+
+        // Motion trail (earlier positions, gravity easing).
+        for (var k = 6; k >= 1; k--)
+        {
+            var pk = Math.Max(0f, p - k * 0.045f);
+            var yk = roofY + (_groundY - roofY) * pk * pk;
+            var tp = Project(new Vec3(fx, yk, fz)).pt;
+            _hazardGlow.Color = HazardRed.WithAlpha((byte)(0x44 * (1f - k / 7f)));
+            canvas.DrawCircle(tp, 5f, _hazardGlow);
+        }
+
+        var y = roofY + (_groundY - roofY) * p * p;
+        var basePt = Project(new Vec3(fx, y, fz)).pt;
+        var topPt = Project(new Vec3(fx, y + 0.24f, fz)).pt;
+        var s = Math.Max(7f, Dist(basePt, topPt));
+
+        _hazardGlow.Color = HazardRed.WithAlpha(0x99);
+        canvas.DrawCircle(basePt, s * 0.7f, _hazardGlow);
+
+        // Tumbling figure: head + torso + flailing limbs.
+        canvas.Save();
+        canvas.Translate(basePt.X, basePt.Y);
+        canvas.RotateRadians(_t * 7f);
+        _hazard.Color = HazardRed;
+        canvas.DrawRoundRect(new SKRect(-s * 0.12f, -s * 0.26f, s * 0.12f, s * 0.30f), s * 0.1f, s * 0.1f, _hazard);
+        canvas.DrawCircle(new SKPoint(0, -s * 0.42f), s * 0.16f, _hazard);
+        _hazardStroke.StrokeWidth = Math.Max(1.6f, s * 0.07f);
+        canvas.DrawLine(0, -s * 0.10f, -s * 0.42f, -s * 0.26f, _hazardStroke);
+        canvas.DrawLine(0, -s * 0.10f, s * 0.42f, s * 0.04f, _hazardStroke);
+        canvas.DrawLine(0, s * 0.30f, -s * 0.30f, s * 0.56f, _hazardStroke);
+        canvas.DrawLine(0, s * 0.30f, s * 0.34f, s * 0.50f, _hazardStroke);
+        canvas.Restore();
     }
 
     // ── Cityscape backdrop ──────────────────────────────────────────────────────────────────────

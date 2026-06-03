@@ -144,6 +144,30 @@
           </utu:AutoLayout>
         </Border>
 
+        <!-- ── Safety Monitor (fall-hazard detector) ── -->
+        <Border Visibility="{Binding ClearVisible, ElementName=Twin}" Background="{ThemeResource SurfaceCardBrush}"
+                CornerRadius="12" Padding="16" BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
+          <StackPanel Spacing="2">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <Ellipse Width="8" Height="8" Fill="{ThemeResource SavingsAccentBrush}" VerticalAlignment="Center" />
+              <TextBlock Text="Safety Monitor" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource MutedTextBrush}" />
+            </StackPanel>
+            <TextBlock Text="All systems nominal" Style="{StaticResource TitleSmall}" Foreground="{ThemeResource OnSurfaceBrush}" />
+            <TextBlock Text="No active hazards" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+          </StackPanel>
+        </Border>
+        <Border Visibility="{Binding HazardVisible, ElementName=Twin}" Background="{ThemeResource HazardCardBrush}"
+                CornerRadius="12" Padding="16" BorderThickness="1" BorderBrush="{ThemeResource HazardOutlineBrush}">
+          <StackPanel Spacing="2">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <TextBlock Text="⚠" FontSize="14" Foreground="{ThemeResource HazardRedBrush}" VerticalAlignment="Center" />
+              <TextBlock Text="Safety Monitor" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource HazardRedBrush}" />
+            </StackPanel>
+            <TextBlock Text="FALL HAZARD DETECTED" Style="{StaticResource TitleSmall}" Foreground="{ThemeResource HazardRedBrush}" />
+            <TextBlock Text="{Binding HazardDetail, ElementName=Twin}" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+          </StackPanel>
+        </Border>
+
         <!-- ── Live floor panel (populates as floors light up) ── -->
         <mvux:FeedView Source="{Binding ActiveFloor}">
           <mvux:FeedView.ValueTemplate>
