@@ -74,39 +74,56 @@ public sealed partial class BarChartView : SKCanvasElement
 
         var w = (float)area.Width;
         var h = (float)area.Height;
-        const float padBottom = 22f, padTop = 12f;
+        const float padBottom = 22f, padTop = 18f;
         var plotH = h - padBottom - padTop;
+        var baseY = padTop + plotH;
         var max = data.Max(d => d.CurrentKwh);
         if (max <= 0) return;
 
-        var slot = w / data.Count;
-        var barW = slot * 0.46f;
-
-        using var dim = new SKPaint { IsAntialias = true, Style = SKPaintStyle.Fill, Color = BodyBlueDim };
         using var bar = new SKPaint { IsAntialias = true, Style = SKPaintStyle.Fill };
+        using var grid = new SKPaint { IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 0.6f, Color = BodyBlueDim.WithAlpha(0x40) };
         using var label = new SKPaint { IsAntialias = true, Color = Muted };
+        using var value = new SKPaint { IsAntialias = true, Color = Muted };
         using var font = new SKFont(SKTypeface.Default, 10.5f);
+        using var valueFont = new SKFont(SKTypeface.Default, 9.5f);
+
+        // Faint horizontal gridlines for depth.
+        for (var g = 1; g <= 3; g++)
+        {
+            var gy = padTop + plotH * g / 4f;
+            canvas.DrawLine(0, gy, w, gy, grid);
+        }
+
+        var slot = w / data.Count;
+        var barW = slot * 0.30f;
+        const float pairGap = 3f;
+        var pairW = barW * 2f + pairGap;
 
         for (var i = 0; i < data.Count; i++)
         {
             var d = data[i];
             var cx = slot * i + slot / 2f;
-            var displayed = d.CurrentKwh + (d.OptimizedKwh - d.CurrentKwh) * _progress;
+            var startX = cx - pairW / 2f;
 
             var curH = (float)(d.CurrentKwh / max) * plotH;
-            var dispH = (float)(displayed / max) * plotH;
-            var baseY = padTop + plotH;
+            var optH = (float)(d.OptimizedKwh / max) * plotH;
 
-            // Dim current bar (the "before") sits behind the displayed bar so the gap reads as savings.
-            var rectCur = new SKRect(cx - barW / 2f, baseY - curH, cx + barW / 2f, baseY);
-            canvas.DrawRoundRect(rectCur, 3f, 3f, dim);
+            // Current bar (left).
+            bar.Color = BodyBlue.WithAlpha(0xE6);
+            canvas.DrawRoundRect(new SKRect(startX, baseY - curH, startX + barW, baseY), 2.5f, 2.5f, bar);
 
-            // Displayed bar: blue while at current, shifting toward green as it drops to optimized.
-            bar.Color = Lerp(BodyBlue, Savings, _progress).WithAlpha(0xF0);
-            var rectDisp = new SKRect(cx - barW / 2f, baseY - dispH, cx + barW / 2f, baseY);
-            canvas.DrawRoundRect(rectDisp, 3f, 3f, bar);
+            // Optimized bar (right): faint target before Apply, solidifying green as the suggestion is applied.
+            var optX = startX + barW + pairGap;
+            bar.Color = Savings.WithAlpha((byte)(0x60 + 0x90 * _progress));
+            canvas.DrawRoundRect(new SKRect(optX, baseY - optH, optX + barW, baseY), 2.5f, 2.5f, bar);
 
             var isNow = string.Equals(d.TimeLabel, "Now", StringComparison.OrdinalIgnoreCase);
+
+            // Current value label above the pair.
+            value.Color = isNow ? Savings : Muted;
+            canvas.DrawText(d.CurrentKwh.ToString("0"), cx, baseY - curH - 5f, SKTextAlign.Center, valueFont, value);
+
+            // Time label.
             label.Color = isNow ? Savings : Muted;
             canvas.DrawText(d.TimeLabel, cx, h - 6f, SKTextAlign.Center, font, label);
         }
