@@ -65,8 +65,8 @@ public sealed partial class BuildingTwinView : SKCanvasElement
     // Cityscape backdrop.
     private readonly List<CityBox> _city = new();
     private readonly List<Vec3[]> _roads = new();
-    private readonly List<Vec3> _trees = new();
     private float _groundY;
+    private const float SceneAzimuth = -0.62f; // fixed backdrop orientation — only the tower spins
 
     // ── Reused render objects (Phase 1: no per-frame allocations) ───────────────────────────────
     private readonly SKPaint _fill = new() { IsAntialias = true, Style = SKPaintStyle.Fill };
@@ -81,9 +81,6 @@ public sealed partial class BuildingTwinView : SKCanvasElement
     private readonly SKPaint _carPaint = new() { IsAntialias = true, Style = SKPaintStyle.Fill, Color = ElevatorAmber };
     private readonly SKPaint _carGlow = new() { IsAntialias = true, Style = SKPaintStyle.Fill, Color = ElevatorAmber.WithAlpha(0x66), MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 6f) };
     private readonly SKPaint _roadPaint = new() { IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 2.2f, Color = new SKColor(0x33, 0x3F, 0x59).WithAlpha(0x9A) };
-    private readonly SKPaint _treeCanopy = new() { IsAntialias = true, Style = SKPaintStyle.Fill, Color = new SKColor(0x2C, 0x5A, 0x3C) };
-    private readonly SKPaint _treeTop = new() { IsAntialias = true, Style = SKPaintStyle.Fill, Color = new SKColor(0x40, 0x7C, 0x54) };
-    private readonly SKPaint _treeTrunk = new() { IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 1.4f, Color = new SKColor(0x3A, 0x2A, 0x1E) };
     private readonly SKPath _facePath = new();
     private readonly SKPath _cellPath = new();
     private readonly List<Face> _faces = new(TotalStoreys * 5);
@@ -157,15 +154,6 @@ public sealed partial class BuildingTwinView : SKCanvasElement
             var o = g * 2.6f;
             _roads.Add(new[] { new Vec3(o, _groundY, -5.4f), new Vec3(o, _groundY, 5.4f) });
             _roads.Add(new[] { new Vec3(-5.4f, _groundY, o), new Vec3(5.4f, _groundY, o) });
-        }
-
-        // Scattered trees on the ground between blocks.
-        var trng = new Random(21);
-        for (var n = 0; n < 22; n++)
-        {
-            var ang = (float)(trng.NextDouble() * Math.PI * 2);
-            var rad = 1.6f + (float)trng.NextDouble() * 3.5f;
-            _trees.Add(new Vec3(MathF.Cos(ang) * rad, _groundY, MathF.Sin(ang) * rad));
         }
 
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(33) };
@@ -290,16 +278,19 @@ public sealed partial class BuildingTwinView : SKCanvasElement
         _cx = (float)area.Width * 0.58f;  // bias right of centre so the tower clears the floating column
         _cy = (float)area.Height / 2f;
         _scale = (float)Math.Min(area.Width, area.Height) * 1.2f;
-        _cosA = MathF.Cos(_azimuth);
-        _sinA = MathF.Sin(_azimuth);
         _cosE = MathF.Cos(_elevation);
         _sinE = MathF.Sin(_elevation);
 
-        // Backdrop first: ground glow, street grid, city blocks, then trees on top of the ground.
+        // Backdrop uses a FIXED azimuth so only the tower spins, not the whole scene.
+        _cosA = MathF.Cos(SceneAzimuth);
+        _sinA = MathF.Sin(SceneAzimuth);
         DrawGround(canvas);
         DrawRoads(canvas);
         DrawCity(canvas);
-        DrawTrees(canvas);
+
+        // Tower (and its elevators) use the live, animated azimuth.
+        _cosA = MathF.Cos(_azimuth);
+        _sinA = MathF.Sin(_azimuth);
 
         var activeStorey = OfficeTopStorey - Math.Clamp(ActiveFloorIndex, 0, DataFloorCount - 1);
         var flaggedStorey = OfficeTopStorey - FlaggedDataIndex;
@@ -429,23 +420,6 @@ public sealed partial class BuildingTwinView : SKCanvasElement
     {
         foreach (var road in _roads)
             canvas.DrawLine(Project(road[0]).pt, Project(road[1]).pt, _roadPaint);
-    }
-
-    private void DrawTrees(SKCanvas canvas)
-    {
-        foreach (var t in _trees)
-        {
-            var basePt = Project(t).pt;
-            var topPt = Project(t with { Y = t.Y + 0.18f }).pt;
-            var h = Dist(basePt, topPt);
-            if (h <= 0.5f) continue;
-            var trunkTop = new SKPoint(basePt.X, basePt.Y - h * 0.5f);
-            canvas.DrawLine(basePt, trunkTop, _treeTrunk);
-            var canopy = new SKPoint(basePt.X, basePt.Y - h * 0.75f);
-            var rr = h * 0.5f;
-            canvas.DrawCircle(canopy, rr, _treeCanopy);
-            canvas.DrawCircle(new SKPoint(canopy.X - rr * 0.3f, canopy.Y - rr * 0.3f), rr * 0.5f, _treeTop);
-        }
     }
 
     // ── Elevators ───────────────────────────────────────────────────────────────────────────────
