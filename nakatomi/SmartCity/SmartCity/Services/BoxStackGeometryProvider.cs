@@ -12,7 +12,7 @@ public class BoxStackGeometryProvider : IBuildingGeometryProvider
     private const float BaseHalfWidth = 0.92f;
     private const float BaseHalfDepth = 0.86f;
     private const float FloorHeight = 0.30f;
-    private const float ShaftTaper = 0.05f;   // gentle inward lean over the full height
+    private const float ShaftTaper = 0.03f;   // very gentle inward lean — reads as a clean slab
 
     public IReadOnlyList<FloorBox> BuildTower(int floorCount, int flaggedFloor)
     {
@@ -60,13 +60,12 @@ public class BoxStackGeometryProvider : IBuildingGeometryProvider
         if (i == 0) { hw *= 1.07f; hd *= 1.07f; }
         else if (i == 1) { hw *= 1.03f; hd *= 1.03f; }
 
-        // Terraced crown: progressive setbacks on the top three storeys.
+        // Mostly-rectangular slab (reference Fox Plaza): a single slight cap inset, otherwise flat.
         var fromTop = floorCount - 1 - i;
         var crown = fromTop switch
         {
-            0 => 0.60f,   // mast/cap storey
-            1 => 0.74f,
-            2 => 0.87f,
+            0 => 0.90f,   // subtle cap inset
+            1 => 0.97f,
             _ => 1.0f,
         };
 
