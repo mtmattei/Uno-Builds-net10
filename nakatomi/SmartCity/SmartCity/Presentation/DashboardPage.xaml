@@ -23,7 +23,10 @@
             <TextBlock Text="{Binding OptimizedText}" Style="{StaticResource LabelMedium}"
                        Foreground="{ThemeResource SavingsAccentBrush}" VerticalAlignment="Center" />
             <Border Background="{ThemeResource SavingsChipBrush}" CornerRadius="8" Padding="6,1" VerticalAlignment="Center">
-              <TextBlock Text="{Binding ReductionText}" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource SavingsAccentBrush}" />
+              <StackPanel Orientation="Horizontal" Spacing="2">
+                <TextBlock Text="{Binding ReductionText}" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource SavingsAccentBrush}" />
+                <TextBlock Text="⚡" FontSize="10" Foreground="{ThemeResource SavingsAccentBrush}" VerticalAlignment="Center" />
+              </StackPanel>
             </Border>
           </StackPanel>
         </utu:AutoLayout>
@@ -75,7 +78,10 @@
         <!-- ── AI Suggestion card ── -->
         <Border Background="{ThemeResource AiCardBlueGradient}" CornerRadius="12" Padding="16">
           <utu:AutoLayout Orientation="Vertical" Spacing="10" CounterAxisAlignment="Stretch">
-            <TextBlock Text="AI Suggestion" Style="{StaticResource LabelMedium}" Foreground="White" Opacity="0.8" />
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <TextBlock Text="✨" FontSize="14" Foreground="White" Opacity="0.9" VerticalAlignment="Center" />
+              <TextBlock Text="AI Suggestion" Style="{StaticResource LabelMedium}" Foreground="White" Opacity="0.8" VerticalAlignment="Center" />
+            </StackPanel>
 
             <mvux:FeedView Source="{Binding Suggestion}">
               <mvux:FeedView.ValueTemplate>
@@ -101,14 +107,29 @@
               </mvux:FeedView.ProgressTemplate>
             </mvux:FeedView>
 
-            <utu:AutoLayout Orientation="Horizontal" Spacing="8" PrimaryAxisAlignment="End">
-              <Button Content="Dismiss" Command="{Binding DismissSuggestion}"
-                      Style="{StaticResource TextButtonStyle}" Foreground="White"
-                      AutomationProperties.Name="Dismiss suggestion" />
-              <Button Content="Apply" Command="{Binding ApplySuggestion}"
-                      Style="{StaticResource FilledTonalButtonStyle}"
-                      AutomationProperties.Name="Apply suggestion" />
-            </utu:AutoLayout>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+              <Border Grid.Column="0" Background="{ThemeResource GlassChipBrush}" CornerRadius="10" Padding="8,3" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Spacing="3">
+                  <TextBlock Text="+25%" Style="{StaticResource LabelSmall}" Foreground="White" />
+                  <TextBlock Text="⚡" FontSize="11" Foreground="White" />
+                </StackPanel>
+              </Border>
+              <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" HorizontalAlignment="Right">
+                <Button Content="Dismiss" Command="{Binding DismissSuggestion}"
+                        Style="{StaticResource TextButtonStyle}" Foreground="White"
+                        AutomationProperties.Name="Dismiss suggestion" />
+                <Button Content="Apply" Command="{Binding ApplySuggestion}"
+                        Background="White" Foreground="{ThemeResource AiCardBlueBrush}"
+                        AutomationProperties.Name="Apply suggestion" />
+              </StackPanel>
+            </Grid>
+
+            <TextBlock Text="Show more ⌄" Style="{StaticResource LabelSmall}" Foreground="White"
+                       Opacity="0.7" HorizontalAlignment="Center" />
           </utu:AutoLayout>
         </Border>
 
@@ -332,7 +353,10 @@
                   <StackPanel Orientation="Horizontal" Spacing="8">
                     <TextBlock Text="{Binding Data.OptimizedText}" Style="{StaticResource TitleSmall}" Foreground="{ThemeResource SavingsAccentBrush}" />
                     <Border Background="{ThemeResource SavingsChipBrush}" CornerRadius="8" Padding="6,1" VerticalAlignment="Center">
-                      <TextBlock Text="{Binding Data.ReductionText}" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource SavingsAccentBrush}" />
+                      <StackPanel Orientation="Horizontal" Spacing="2">
+                        <TextBlock Text="{Binding Data.ReductionText}" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource SavingsAccentBrush}" />
+                        <TextBlock Text="⚡" FontSize="10" Foreground="{ThemeResource SavingsAccentBrush}" VerticalAlignment="Center" />
+                      </StackPanel>
                     </Border>
                   </StackPanel>
                 </StackPanel>

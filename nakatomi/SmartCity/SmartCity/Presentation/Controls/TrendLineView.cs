@@ -14,6 +14,10 @@ public sealed partial class TrendLineView : SKCanvasElement
 {
     private static readonly SKColor Teal = new(0x2E, 0xE0, 0xE0);
     private static readonly SKColor TealSoft = new(0x2E, 0xE0, 0xE0);
+    private static readonly SKColor Muted = new(0x8A, 0x94, 0xA6);
+
+    private readonly SKPaint _label = new() { IsAntialias = true, Color = Muted };
+    private readonly SKFont _font = new(SKTypeface.Default, 9.5f);
 
     public static readonly DependencyProperty PointsProperty =
         DependencyProperty.Register(nameof(Points), typeof(IEnumerable<TrendPoint>), typeof(TrendLineView),
@@ -40,9 +44,10 @@ public sealed partial class TrendLineView : SKCanvasElement
 
         var w = (float)area.Width;
         var h = (float)area.Height;
-        const float pad = 10f;
+        const float pad = 10f, padBottom = 18f;
         var plotW = w - pad * 2f;
-        var plotH = h - pad * 2f;
+        var plotH = h - pad - padBottom;
+        var baseY = pad + plotH;
 
         var min = data.Min(p => p.Value);
         var max = data.Max(p => p.Value);
@@ -58,9 +63,9 @@ public sealed partial class TrendLineView : SKCanvasElement
 
         // Gradient area fill under the line.
         using var area1 = new SKPath();
-        area1.MoveTo(pts[0].X, h - pad);
+        area1.MoveTo(pts[0].X, baseY);
         foreach (var p in pts) area1.LineTo(p.X, p.Y);
-        area1.LineTo(pts[^1].X, h - pad);
+        area1.LineTo(pts[^1].X, baseY);
         area1.Close();
         using var fill = new SKPaint
         {
@@ -93,5 +98,11 @@ public sealed partial class TrendLineView : SKCanvasElement
         using var dot = new SKPaint { IsAntialias = true, Style = SKPaintStyle.Fill, Color = Teal };
         canvas.DrawCircle(pts[^1], 7f, glow);
         canvas.DrawCircle(pts[^1], 3.2f, dot);
+
+        // Axis labels: max value (top-left) + first / mid / last date along the bottom.
+        canvas.DrawText(Format.Compact(max), pad, pad + 7f, SKTextAlign.Left, _font, _label);
+        canvas.DrawText(data[0].DateLabel, pad, h - 5f, SKTextAlign.Left, _font, _label);
+        canvas.DrawText(data[data.Count / 2].DateLabel, w / 2f, h - 5f, SKTextAlign.Center, _font, _label);
+        canvas.DrawText(data[^1].DateLabel, w - pad, h - 5f, SKTextAlign.Right, _font, _label);
     }
 }

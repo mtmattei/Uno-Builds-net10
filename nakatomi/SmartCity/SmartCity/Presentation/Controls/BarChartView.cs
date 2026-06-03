@@ -82,20 +82,27 @@ public sealed partial class BarChartView : SKCanvasElement
 
         var w = (float)area.Width;
         var h = (float)area.Height;
-        const float padBottom = 22f, padTop = 18f;
+        const float padBottom = 22f, padTop = 14f, padLeft = 30f;
         var plotH = h - padBottom - padTop;
+        var plotW = w - padLeft;
         var baseY = padTop + plotH;
         var max = data.Max(d => d.CurrentKwh);
         if (max <= 0) return;
 
-        // Faint horizontal gridlines for depth.
-        for (var g = 1; g <= 3; g++)
+        // Round the scale to a tidy maximum so the axis labels read 100/200/300/400 like the reference.
+        var niceMax = (float)(Math.Ceiling(max / 100.0) * 100.0);
+        var step = niceMax <= 400 ? 100f : niceMax / 4f;
+
+        // Horizontal gridlines + left-edge value labels.
+        for (var v = step; v <= niceMax + 0.5f; v += step)
         {
-            var gy = padTop + plotH * g / 4f;
-            canvas.DrawLine(0, gy, w, gy, _grid);
+            var gy = baseY - v / niceMax * plotH;
+            canvas.DrawLine(padLeft, gy, w, gy, _grid);
+            _label.Color = Muted;
+            canvas.DrawText(v.ToString("0"), padLeft - 6f, gy + 3.5f, SKTextAlign.Right, _font, _label);
         }
 
-        var slot = w / data.Count;
+        var slot = plotW / data.Count;
         var barW = slot * 0.30f;
         const float pairGap = 3f;
         var pairW = barW * 2f + pairGap;
@@ -103,11 +110,11 @@ public sealed partial class BarChartView : SKCanvasElement
         for (var i = 0; i < data.Count; i++)
         {
             var d = data[i];
-            var cx = slot * i + slot / 2f;
+            var cx = padLeft + slot * i + slot / 2f;
             var startX = cx - pairW / 2f;
 
-            var curH = (float)(d.CurrentKwh / max) * plotH;
-            var optH = (float)(d.OptimizedKwh / max) * plotH;
+            var curH = (float)(d.CurrentKwh / niceMax) * plotH;
+            var optH = (float)(d.OptimizedKwh / niceMax) * plotH;
 
             // Current bar (left).
             _bar.Color = BodyBlue.WithAlpha(0xE6);
