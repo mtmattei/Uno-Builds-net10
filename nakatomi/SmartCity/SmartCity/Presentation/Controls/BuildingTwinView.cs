@@ -264,7 +264,7 @@ public sealed partial class BuildingTwinView : SKCanvasElement
     {
         if (!IsSupportedOnCurrentPlatform()) return;
 
-        _cx = (float)area.Width / 2f;
+        _cx = (float)area.Width * 0.58f;  // bias right of centre so the tower clears the floating column
         _cy = (float)area.Height / 2f;
         _scale = (float)Math.Min(area.Width, area.Height) * 1.2f;
         _cosA = MathF.Cos(_azimuth);

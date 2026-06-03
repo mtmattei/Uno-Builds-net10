@@ -64,15 +64,13 @@
     Apply/Dismiss buttons sit in the page namescope (not inside a FeedView template) so the generated
     commands resolve against the page DataContext.
   -->
-  <Grid Padding="16" ColumnSpacing="24">
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="360" />
-      <ColumnDefinition Width="*" />
-    </Grid.ColumnDefinitions>
+  <!-- Full-bleed twin fills the page; the left column floats over it (Canvas.ZIndex), reference-style. -->
+  <Grid>
 
-    <!-- ============ LEFT COLUMN ============ -->
-    <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-      <utu:AutoLayout Orientation="Vertical" Spacing="24" CounterAxisAlignment="Stretch">
+    <!-- ============ LEFT COLUMN (floating overlay) ============ -->
+    <ScrollViewer Canvas.ZIndex="1" HorizontalAlignment="Left" Width="372" Margin="16,12,0,16"
+                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+      <utu:AutoLayout Orientation="Vertical" Spacing="20" CounterAxisAlignment="Stretch">
 
         <!-- ── AI Suggestion card ── -->
         <Border Background="{ThemeResource AiCardBlueGradient}" CornerRadius="12" Padding="16">
@@ -266,10 +264,9 @@
       </utu:AutoLayout>
     </ScrollViewer>
 
-    <!-- ============ RIGHT VIEWPORT (3D twin) ============ -->
-    <Grid Grid.Column="1">
-      <Border CornerRadius="12" Background="{ThemeResource SurfaceCanvasBrush}"
-              BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
+    <!-- ============ FULL-BLEED 3D TWIN (fills the page, behind the floating column) ============ -->
+    <Grid>
+      <Border Background="{ThemeResource SurfaceCanvasBrush}">
         <controls:BuildingTwinView x:Name="Twin"
                                    ActiveFloorIndex="{Binding ActiveFloorIndex, Mode=TwoWay}"
                                    AutomationProperties.Name="Nakatomi Plaza building twin — drag to orbit, scroll to zoom" />
@@ -297,7 +294,7 @@
       </Border>
 
       <!-- Floor ruler (17F → 11F). Highlight pill tracks ActiveFloorIndex; click/hover selects a floor. -->
-      <Grid HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" MinWidth="56">
+      <Grid HorizontalAlignment="Left" VerticalAlignment="Center" Margin="404,0,0,0" MinWidth="56">
         <Grid.RowDefinitions>
           <RowDefinition Height="30" />
           <RowDefinition Height="30" />
@@ -319,7 +316,7 @@
       </Grid>
 
       <!-- Live floor tooltip (tracks the lit / hovered floor) -->
-      <mvux:FeedView Source="{Binding ActiveFloor}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="92,0,0,0">
+      <mvux:FeedView Source="{Binding ActiveFloor}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="476,0,0,0">
         <mvux:FeedView.ValueTemplate>
           <DataTemplate>
             <Border Background="{ThemeResource TooltipSurfaceBrush}" CornerRadius="10" Padding="14" MaxWidth="220"
