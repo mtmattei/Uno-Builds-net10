@@ -22,6 +22,14 @@ public sealed partial class BarChartView : SKCanvasElement
     private float _progress;          // 0 = current heights, 1 = optimized heights
     private readonly DispatcherTimer _anim;
 
+    // Reused render objects (created once; no per-frame allocations).
+    private readonly SKPaint _bar = new() { IsAntialias = true, Style = SKPaintStyle.Fill };
+    private readonly SKPaint _grid = new() { IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 0.6f, Color = BodyBlueDim.WithAlpha(0x40) };
+    private readonly SKPaint _label = new() { IsAntialias = true, Color = Muted };
+    private readonly SKPaint _value = new() { IsAntialias = true, Color = Muted };
+    private readonly SKFont _font = new(SKTypeface.Default, 10.5f);
+    private readonly SKFont _valueFont = new(SKTypeface.Default, 9.5f);
+
     public static readonly DependencyProperty SeriesProperty =
         DependencyProperty.Register(nameof(Series), typeof(IEnumerable<HourlyConsumption>), typeof(BarChartView),
             new PropertyMetadata(null, static (d, _) => ((BarChartView)d).Invalidate()));
@@ -80,18 +88,11 @@ public sealed partial class BarChartView : SKCanvasElement
         var max = data.Max(d => d.CurrentKwh);
         if (max <= 0) return;
 
-        using var bar = new SKPaint { IsAntialias = true, Style = SKPaintStyle.Fill };
-        using var grid = new SKPaint { IsAntialias = true, Style = SKPaintStyle.Stroke, StrokeWidth = 0.6f, Color = BodyBlueDim.WithAlpha(0x40) };
-        using var label = new SKPaint { IsAntialias = true, Color = Muted };
-        using var value = new SKPaint { IsAntialias = true, Color = Muted };
-        using var font = new SKFont(SKTypeface.Default, 10.5f);
-        using var valueFont = new SKFont(SKTypeface.Default, 9.5f);
-
         // Faint horizontal gridlines for depth.
         for (var g = 1; g <= 3; g++)
         {
             var gy = padTop + plotH * g / 4f;
-            canvas.DrawLine(0, gy, w, gy, grid);
+            canvas.DrawLine(0, gy, w, gy, _grid);
         }
 
         var slot = w / data.Count;
@@ -109,23 +110,23 @@ public sealed partial class BarChartView : SKCanvasElement
             var optH = (float)(d.OptimizedKwh / max) * plotH;
 
             // Current bar (left).
-            bar.Color = BodyBlue.WithAlpha(0xE6);
-            canvas.DrawRoundRect(new SKRect(startX, baseY - curH, startX + barW, baseY), 2.5f, 2.5f, bar);
+            _bar.Color = BodyBlue.WithAlpha(0xE6);
+            canvas.DrawRoundRect(new SKRect(startX, baseY - curH, startX + barW, baseY), 2.5f, 2.5f, _bar);
 
             // Optimized bar (right): faint target before Apply, solidifying green as the suggestion is applied.
             var optX = startX + barW + pairGap;
-            bar.Color = Savings.WithAlpha((byte)(0x60 + 0x90 * _progress));
-            canvas.DrawRoundRect(new SKRect(optX, baseY - optH, optX + barW, baseY), 2.5f, 2.5f, bar);
+            _bar.Color = Savings.WithAlpha((byte)(0x60 + 0x90 * _progress));
+            canvas.DrawRoundRect(new SKRect(optX, baseY - optH, optX + barW, baseY), 2.5f, 2.5f, _bar);
 
             var isNow = string.Equals(d.TimeLabel, "Now", StringComparison.OrdinalIgnoreCase);
 
             // Current value label above the pair.
-            value.Color = isNow ? Savings : Muted;
-            canvas.DrawText(d.CurrentKwh.ToString("0"), cx, baseY - curH - 5f, SKTextAlign.Center, valueFont, value);
+            _value.Color = isNow ? Savings : Muted;
+            canvas.DrawText(d.CurrentKwh.ToString("0"), cx, baseY - curH - 5f, SKTextAlign.Center, _valueFont, _value);
 
             // Time label.
-            label.Color = isNow ? Savings : Muted;
-            canvas.DrawText(d.TimeLabel, cx, h - 6f, SKTextAlign.Center, font, label);
+            _label.Color = isNow ? Savings : Muted;
+            canvas.DrawText(d.TimeLabel, cx, h - 6f, SKTextAlign.Center, _font, _label);
         }
     }
 

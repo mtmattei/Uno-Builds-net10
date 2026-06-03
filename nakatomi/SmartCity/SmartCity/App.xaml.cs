@@ -17,6 +17,9 @@ public partial class App : Application
     protected Window? MainWindow { get; private set; }
     protected IHost? Host { get; private set; }
 
+    /// <summary>The app window, exposed so render controls can pause their loops when it deactivates.</summary>
+    public static Window? MainWindowInstance { get; private set; }
+
     [SuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Uno.Extensions APIs are used in a way that is safe for trimming in this template context.")]
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
     {
@@ -73,6 +76,7 @@ public partial class App : Application
                 .UseNavigation(ReactiveViewModelMappings.ViewModelMappings, RegisterRoutes)
             );
         MainWindow = builder.Window;
+        MainWindowInstance = MainWindow;
 
         // Decision: extended/custom title bar for the borderless console look. Deferred to M4
         // polish — it needs SetTitleBar drag-region handling; enabling it now hides the top nav
