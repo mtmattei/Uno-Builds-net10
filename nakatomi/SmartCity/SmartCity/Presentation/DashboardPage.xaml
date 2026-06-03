@@ -10,6 +10,52 @@
       mc:Ignorable="d"
       Background="{ThemeResource SurfaceCanvasBrush}">
 
+  <Page.Resources>
+    <!-- KPI tile: headline consumption, label, optimized value + savings chip (DataContext = KpiTile) -->
+    <DataTemplate x:Key="KpiTileTemplate">
+      <Border Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="12" MinHeight="92"
+              BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
+        <utu:AutoLayout Orientation="Vertical" Spacing="4" CounterAxisAlignment="Stretch">
+          <TextBlock Text="{Binding KwhText}" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
+          <TextBlock Text="{Binding Title}" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+          <StackPanel Orientation="Horizontal" Spacing="6">
+            <TextBlock Text="{Binding OptimizedText}" Style="{StaticResource LabelMedium}"
+                       Foreground="{ThemeResource SavingsAccentBrush}" VerticalAlignment="Center" />
+            <Border Background="{ThemeResource SavingsChipBrush}" CornerRadius="8" Padding="6,1" VerticalAlignment="Center">
+              <TextBlock Text="{Binding ReductionText}" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource SavingsAccentBrush}" />
+            </Border>
+          </StackPanel>
+        </utu:AutoLayout>
+      </Border>
+    </DataTemplate>
+
+    <!-- Floor-ruler entry: transparent text button, centered. -->
+    <Style x:Key="RulerFloorButton" TargetType="Button">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Padding" Value="10,2" />
+      <Setter Property="MinHeight" Value="0" />
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="Foreground" Value="{ThemeResource MutedTextBrush}" />
+      <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <!-- Bottom-right viewport control (zoom / 2D / pause): rounded square chip. -->
+    <Style x:Key="ViewportControlButton" TargetType="Button">
+      <Setter Property="Width" Value="40" />
+      <Setter Property="Height" Value="40" />
+      <Setter Property="Padding" Value="0" />
+      <Setter Property="CornerRadius" Value="10" />
+      <Setter Property="Background" Value="{ThemeResource TooltipSurfaceBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="BorderBrush" Value="{ThemeResource ConsoleOutlineBrush}" />
+      <Setter Property="Foreground" Value="{ThemeResource OnSurfaceBrush}" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+  </Page.Resources>
+
   <!--
     MVUX page → {Binding} for the data surface (brief override of the repo x:Bind default). Each panel
     is a FeedView so loading/empty/error states are handled. The twin's ActiveFloorIndex is two-way
@@ -118,6 +164,17 @@
         <utu:AutoLayout Orientation="Vertical" Spacing="12" CounterAxisAlignment="Stretch">
           <TextBlock Text="Energy Consumption" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
 
+          <StackPanel Orientation="Horizontal" Spacing="16">
+            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+              <Rectangle Width="10" Height="10" RadiusX="2" RadiusY="2" Fill="{ThemeResource TwinBodyBlueBrush}" />
+              <TextBlock Text="Currently" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+              <Rectangle Width="10" Height="10" RadiusX="2" RadiusY="2" Fill="{ThemeResource SavingsAccentBrush}" />
+              <TextBlock Text="After applying AI suggestions" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+            </StackPanel>
+          </StackPanel>
+
           <Border Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Height="180" Padding="12">
             <mvux:FeedView Source="{Binding HourlyChart}">
               <mvux:FeedView.ValueTemplate>
@@ -128,7 +185,7 @@
             </mvux:FeedView>
           </Border>
 
-          <!-- 2×2 KPI tiles -->
+          <!-- 2×2 KPI tiles: headline consumption + optimized value + savings chip -->
           <mvux:FeedView Source="{Binding Kpis}">
             <mvux:FeedView.ValueTemplate>
               <DataTemplate>
@@ -142,38 +199,10 @@
                     <ColumnDefinition Width="*" />
                   </Grid.ColumnDefinitions>
 
-                  <Border Grid.Row="0" Grid.Column="0" Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="12" MinHeight="84"
-                          BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
-                    <utu:AutoLayout Orientation="Vertical" Spacing="4">
-                      <TextBlock Text="{Binding Data.Daily.Title}" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
-                      <TextBlock Text="{Binding Data.Daily.KwhText}" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
-                      <TextBlock Text="{Binding Data.Daily.ReductionText}" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource SavingsAccentBrush}" />
-                    </utu:AutoLayout>
-                  </Border>
-                  <Border Grid.Row="0" Grid.Column="1" Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="12" MinHeight="84"
-                          BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
-                    <utu:AutoLayout Orientation="Vertical" Spacing="4">
-                      <TextBlock Text="{Binding Data.Weekly.Title}" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
-                      <TextBlock Text="{Binding Data.Weekly.KwhText}" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
-                      <TextBlock Text="{Binding Data.Weekly.ReductionText}" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource SavingsAccentBrush}" />
-                    </utu:AutoLayout>
-                  </Border>
-                  <Border Grid.Row="1" Grid.Column="0" Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="12" MinHeight="84"
-                          BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
-                    <utu:AutoLayout Orientation="Vertical" Spacing="4">
-                      <TextBlock Text="{Binding Data.Monthly.Title}" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
-                      <TextBlock Text="{Binding Data.Monthly.KwhText}" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
-                      <TextBlock Text="{Binding Data.Monthly.ReductionText}" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource SavingsAccentBrush}" />
-                    </utu:AutoLayout>
-                  </Border>
-                  <Border Grid.Row="1" Grid.Column="1" Background="{ThemeResource SurfaceCardBrush}" CornerRadius="12" Padding="12" MinHeight="84"
-                          BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
-                    <utu:AutoLayout Orientation="Vertical" Spacing="4">
-                      <TextBlock Text="{Binding Data.Yearly.Title}" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
-                      <TextBlock Text="{Binding Data.Yearly.KwhText}" Style="{StaticResource TitleMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
-                      <TextBlock Text="{Binding Data.Yearly.ReductionText}" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource SavingsAccentBrush}" />
-                    </utu:AutoLayout>
-                  </Border>
+                  <ContentControl Grid.Row="0" Grid.Column="0" Content="{Binding Data.Daily}" ContentTemplate="{StaticResource KpiTileTemplate}" HorizontalContentAlignment="Stretch" />
+                  <ContentControl Grid.Row="0" Grid.Column="1" Content="{Binding Data.Weekly}" ContentTemplate="{StaticResource KpiTileTemplate}" HorizontalContentAlignment="Stretch" />
+                  <ContentControl Grid.Row="1" Grid.Column="0" Content="{Binding Data.Monthly}" ContentTemplate="{StaticResource KpiTileTemplate}" HorizontalContentAlignment="Stretch" />
+                  <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding Data.Yearly}" ContentTemplate="{StaticResource KpiTileTemplate}" HorizontalContentAlignment="Stretch" />
                 </Grid>
               </DataTemplate>
             </mvux:FeedView.ValueTemplate>
@@ -223,8 +252,9 @@
     <Grid Grid.Column="1">
       <Border CornerRadius="12" Background="{ThemeResource SurfaceCanvasBrush}"
               BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
-        <controls:BuildingTwinView ActiveFloorIndex="{Binding ActiveFloorIndex, Mode=TwoWay}"
-                                   AutomationProperties.Name="Nakatomi Plaza building twin" />
+        <controls:BuildingTwinView x:Name="Twin"
+                                   ActiveFloorIndex="{Binding ActiveFloorIndex, Mode=TwoWay}"
+                                   AutomationProperties.Name="Nakatomi Plaza building twin — drag to orbit, scroll to zoom" />
       </Border>
 
       <!-- Scale selector (City / District / Street / Building) — Building is the only wired scale -->
@@ -240,6 +270,70 @@
           </Border>
         </utu:AutoLayout>
       </Border>
+
+      <!-- Building callout -->
+      <Border HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,56,0,0"
+              Background="{ThemeResource TooltipSurfaceBrush}" CornerRadius="8" Padding="10,4"
+              BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
+        <TextBlock Text="Main Hospital Building" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
+      </Border>
+
+      <!-- Floor ruler (17F → 11F). Highlight pill tracks ActiveFloorIndex; click/hover selects a floor. -->
+      <Grid HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" MinWidth="56">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="30" />
+          <RowDefinition Height="30" />
+          <RowDefinition Height="30" />
+          <RowDefinition Height="30" />
+          <RowDefinition Height="30" />
+          <RowDefinition Height="30" />
+          <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <Border Grid.Row="{Binding ActiveFloorIndex}" Background="{ThemeResource SavingsChipBrush}"
+                CornerRadius="8" Margin="0,2" />
+        <Button Grid.Row="0" Tag="0" Content="17F" Style="{StaticResource RulerFloorButton}" Click="RulerFloor_Click" PointerEntered="RulerFloor_PointerEntered" />
+        <Button Grid.Row="1" Tag="1" Content="16F" Style="{StaticResource RulerFloorButton}" Click="RulerFloor_Click" PointerEntered="RulerFloor_PointerEntered" />
+        <Button Grid.Row="2" Tag="2" Content="15F" Style="{StaticResource RulerFloorButton}" Click="RulerFloor_Click" PointerEntered="RulerFloor_PointerEntered" />
+        <Button Grid.Row="3" Tag="3" Content="14F" Style="{StaticResource RulerFloorButton}" Click="RulerFloor_Click" PointerEntered="RulerFloor_PointerEntered" />
+        <Button Grid.Row="4" Tag="4" Content="13F" Style="{StaticResource RulerFloorButton}" Click="RulerFloor_Click" PointerEntered="RulerFloor_PointerEntered" />
+        <Button Grid.Row="5" Tag="5" Content="12F" Style="{StaticResource RulerFloorButton}" Click="RulerFloor_Click" PointerEntered="RulerFloor_PointerEntered" />
+        <Button Grid.Row="6" Tag="6" Content="11F" Style="{StaticResource RulerFloorButton}" Click="RulerFloor_Click" PointerEntered="RulerFloor_PointerEntered" />
+      </Grid>
+
+      <!-- Live floor tooltip (tracks the lit / hovered floor) -->
+      <mvux:FeedView Source="{Binding ActiveFloor}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="92,0,0,0">
+        <mvux:FeedView.ValueTemplate>
+          <DataTemplate>
+            <Border Background="{ThemeResource TooltipSurfaceBrush}" CornerRadius="10" Padding="14" MaxWidth="220"
+                    BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
+              <StackPanel Spacing="10">
+                <TextBlock Text="{Binding Data.Title}" Style="{StaticResource TitleSmall}" Foreground="{ThemeResource OnSurfaceBrush}" />
+                <StackPanel Spacing="2">
+                  <TextBlock Text="Current consumption" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+                  <TextBlock Text="{Binding Data.CurrentText}" Style="{StaticResource TitleSmall}" Foreground="{ThemeResource OnSurfaceBrush}" />
+                </StackPanel>
+                <StackPanel Spacing="2">
+                  <TextBlock Text="After optimization" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource MutedTextBrush}" />
+                  <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="{Binding Data.OptimizedText}" Style="{StaticResource TitleSmall}" Foreground="{ThemeResource SavingsAccentBrush}" />
+                    <Border Background="{ThemeResource SavingsChipBrush}" CornerRadius="8" Padding="6,1" VerticalAlignment="Center">
+                      <TextBlock Text="{Binding Data.ReductionText}" Style="{StaticResource LabelSmall}" Foreground="{ThemeResource SavingsAccentBrush}" />
+                    </Border>
+                  </StackPanel>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </DataTemplate>
+        </mvux:FeedView.ValueTemplate>
+      </mvux:FeedView>
+
+      <!-- Viewport controls -->
+      <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,16,16" Spacing="8">
+        <Button Content="+" Style="{StaticResource ViewportControlButton}" Click="ZoomIn_Click" AutomationProperties.Name="Zoom in" />
+        <Button Content="−" Style="{StaticResource ViewportControlButton}" Click="ZoomOut_Click" AutomationProperties.Name="Zoom out" />
+        <Button x:Name="Toggle2DBtn" Content="2D" Style="{StaticResource ViewportControlButton}" Click="Toggle2D_Click" AutomationProperties.Name="Toggle 2D top-down view" />
+        <Button x:Name="PauseBtn" Content="❚❚" Style="{StaticResource ViewportControlButton}" Click="TogglePause_Click" AutomationProperties.Name="Pause or resume the floor simulation" />
+      </StackPanel>
     </Grid>
 
   </Grid>

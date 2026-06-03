@@ -49,11 +49,16 @@ public partial record EnergyDashboardModel(IEnergyService Energy)
         Feed.Combine(Rollup, Applied)
             .Select(t => Project(t.Item1, t.Item2));
 
+    // Headline number = current (matches the reference tiles); optimized shown beneath with the +25%
+    // chip. Applied flips the headline to the optimized value so the tiles animate post-apply.
     private static RollupView Project(ConsumptionRollup r, bool applied) => new(
-        new KpiTile("Daily", applied ? r.Daily.Optimized : r.Daily.Current, r.Daily.ReductionPct),
-        new KpiTile("Weekly", applied ? r.Weekly.Optimized : r.Weekly.Current, r.Weekly.ReductionPct),
-        new KpiTile("Monthly", applied ? r.Monthly.Optimized : r.Monthly.Current, r.Monthly.ReductionPct),
-        new KpiTile("Yearly", applied ? r.Yearly.Optimized : r.Yearly.Current, r.Yearly.ReductionPct));
+        Tile("Daily consumption", r.Daily, applied),
+        Tile("Weekly consumption", r.Weekly, applied),
+        Tile("Monthly consumption", r.Monthly, applied),
+        Tile("Yearly consumption", r.Yearly, applied));
+
+    private static KpiTile Tile(string title, Metric m, bool applied) =>
+        new(title, applied ? m.Optimized : m.Current, m.Optimized, Format.OptimizationPct);
 
     // ── Commands (auto-generated on the bindable proxy) ───────────────────────────────────────
     /// <summary>Commit the optimization — KPIs + chart move to their optimized values.</summary>

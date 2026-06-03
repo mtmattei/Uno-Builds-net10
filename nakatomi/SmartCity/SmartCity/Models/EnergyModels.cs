@@ -12,20 +12,17 @@ public enum BuildingScale
 /// <summary>One floor of the building twin. Floor 14 is the flagged optimization target.</summary>
 public record FloorReading(int Floor, string Label, double CurrentKwh, double OptimizedKwh, bool IsFlagged);
 
-/// <summary>Display projection of the live (lit) floor for the left-column panel.</summary>
-public record FloorView(string Label, string CurrentText, string OptimizedText, string ReductionText, string StatusText, bool IsFlagged)
+/// <summary>Display projection of the live (lit) floor for the left-column panel and the twin tooltip.</summary>
+public record FloorView(string Title, string Label, string CurrentText, string OptimizedText, string ReductionText, string StatusText, bool IsFlagged)
 {
-    public static FloorView From(FloorReading f)
-    {
-        var reduction = f.CurrentKwh <= 0 ? 0 : (f.CurrentKwh - f.OptimizedKwh) / f.CurrentKwh;
-        return new FloorView(
-            f.Label,
-            Format.Kwh(f.CurrentKwh),
-            Format.Kwh(f.OptimizedKwh),
-            Format.Pct(reduction),
-            f.IsFlagged ? "Optimization target" : "Nominal",
-            f.IsFlagged);
-    }
+    public static FloorView From(FloorReading f) => new(
+        $"{f.Floor} Floor",
+        f.Label,
+        Format.Kwh(f.CurrentKwh),
+        Format.Kwh(f.OptimizedKwh),
+        Format.Pct(Format.OptimizationPct),
+        f.IsFlagged ? "Optimization target" : "Nominal",
+        f.IsFlagged);
 }
 
 /// <summary>A single bar in the energy-consumption chart (current vs after-optimization).</summary>
@@ -57,10 +54,11 @@ public record SavingsSummary(double CostSaved, double EnergySaved, double Co2Avo
     public string Co2Text => Format.Compact(Co2Avoided) + " kg";
 }
 
-/// <summary>One KPI tile's display values: the headline kWh (current or optimized) plus its computed reduction.</summary>
-public record KpiTile(string Title, double Kwh, double ReductionPct)
+/// <summary>One KPI tile: headline kWh (current, or optimized once applied), the optimized value, and the savings chip.</summary>
+public record KpiTile(string Title, double Kwh, double Optimized, double ReductionPct)
 {
     public string KwhText => Format.Kwh(Kwh);
+    public string OptimizedText => Format.Kwh(Optimized);
     public string ReductionText => Format.Pct(ReductionPct);
 }
 

@@ -39,6 +39,8 @@
       <SolidColorBrush x:Key="AiCardBlueBrush" Color="{StaticResource AiCardBlueColor}" />
       <SolidColorBrush x:Key="AccentTealBrush" Color="{StaticResource AccentTealColor}" />
       <SolidColorBrush x:Key="SavingsAccentBrush" Color="{StaticResource SavingsAccentColor}" />
+      <SolidColorBrush x:Key="SavingsChipBrush" Color="#2646E08C" />
+      <SolidColorBrush x:Key="TooltipSurfaceBrush" Color="#E6121826" />
       <SolidColorBrush x:Key="MutedTextBrush" Color="{StaticResource MutedTextColor}" />
 
       <LinearGradientBrush x:Key="AiCardBlueGradient" StartPoint="0,0" EndPoint="1,1">
