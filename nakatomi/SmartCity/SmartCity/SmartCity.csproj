@@ -13,6 +13,16 @@
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
+
+    <!--
+      Preview SkiaSharp pin for the SKMesh-based 3D building twin (Decision 1).
+      SkiaSharpVersion drives ALL implicit SkiaSharp.* packages Uno.Sdk pulls (managed + native),
+      keeping them matched. Requires the matching Uno.Sdk dev build in global.json (6.6.0-dev.208,
+      confirmed against the SkiaSharp Uno gallery sample). UnoDisableLottieSkiaVersionCheck suppresses
+      Uno's Lottie/Skia version assert for the 4.x preview. SkiaRenderer is enabled via UnoFeatures.
+    -->
+    <SkiaSharpVersion>4.147.0-preview.2.1</SkiaSharpVersion>
+    <UnoDisableLottieSkiaVersionCheck>true</UnoDisableLottieSkiaVersionCheck>
     <!-- Package Publisher -->
     <ApplicationPublisher>SmartCity</ApplicationPublisher>
     <!-- Package Description -->
