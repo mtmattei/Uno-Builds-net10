@@ -480,27 +480,36 @@ public sealed partial class BuildingTwinView : SKCanvasElement
             canvas.DrawLine(Project(road[0]).pt, Project(road[1]).pt, _roadPaint);
     }
 
-    // ── Energy links: focused building → each other building, bidirectional (two arcs) ────────────
+    // ── Energy links: rooftop "electrical box" on the focused building → rooftop box on each other ──
     private void DrawConnections(SKCanvas canvas)
     {
         var fb = _buildings[_focus];
-        var flaggedStorey = Math.Clamp(fb.OfficeTop - FlaggedDataIndex, 0, fb.Floors - 1);
-        var fc = fb.Storeys[flaggedStorey].Corners;
-        var flaggedY = (fc[0].Y + fc[4].Y) / 2f;
-        var start = Project(new Vec3(fb.OffX, flaggedY, fb.OffZ)).pt;
+        var start = Project(new Vec3(fb.OffX, _groundY + fb.Floors * FloorHeightModel, fb.OffZ)).pt; // focused roof
 
         for (var b = 0; b < _buildings.Length; b++)
         {
             if (b == _focus) continue;
             var ob = _buildings[b];
-            var end = Project(new Vec3(ob.OffX, _groundY + ob.Floors * FloorHeightModel, ob.OffZ)).pt;
+            var end = Project(new Vec3(ob.OffX, _groundY + ob.Floors * FloorHeightModel, ob.OffZ)).pt; // other roof
 
             var mx = (start.X + end.X) / 2f;
             var my = (start.Y + end.Y) / 2f;
-            var lift = Dist(start, end) * 0.30f;
+            var lift = Dist(start, end) * 0.32f;
             DrawArc(canvas, start, new SKPoint(mx, my - lift), end, EnergyCyan, forward: true);
-            DrawArc(canvas, start, new SKPoint(mx, my + lift * 0.55f), end, EnergyMint, forward: false);
+            DrawArc(canvas, start, new SKPoint(mx, my - lift * 0.45f), end, EnergyMint, forward: false);
+            DrawRoofBox(canvas, end);
         }
+
+        DrawRoofBox(canvas, start); // single shared box on the focused roof
+    }
+
+    // Small glowing rooftop junction box where the energy links terminate.
+    private void DrawRoofBox(SKCanvas canvas, SKPoint p)
+    {
+        _particleGlow.Color = EnergyCyan.WithAlpha(0x88);
+        canvas.DrawCircle(p, 9f, _particleGlow);
+        _particle.Color = EnergyCyan;
+        canvas.DrawRoundRect(new SKRect(p.X - 5f, p.Y - 4f, p.X + 5f, p.Y + 4f), 2f, 2f, _particle);
     }
 
     private void DrawArc(SKCanvas canvas, SKPoint a, SKPoint c, SKPoint b, SKColor color, bool forward)
