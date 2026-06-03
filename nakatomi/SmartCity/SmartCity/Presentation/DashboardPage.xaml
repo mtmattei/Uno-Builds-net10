@@ -45,6 +45,17 @@
       <Setter Property="FontSize" Value="12" />
     </Style>
 
+    <!-- Building focus selector entry. -->
+    <Style x:Key="FocusSelectButton" TargetType="Button">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Padding" Value="14,6" />
+      <Setter Property="MinHeight" Value="0" />
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="Foreground" Value="{ThemeResource OnSurfaceBrush}" />
+      <Setter Property="FontSize" Value="12" />
+    </Style>
+
     <!-- Bottom-right viewport control (zoom / 2D / pause): rounded square chip. -->
     <Style x:Key="ViewportControlButton" TargetType="Button">
       <Setter Property="Width" Value="40" />
@@ -330,11 +341,21 @@
         </utu:AutoLayout>
       </Border>
 
-      <!-- Building callout -->
-      <Border HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,56,0,0"
-              Background="{ThemeResource TooltipSurfaceBrush}" CornerRadius="8" Padding="10,4"
+      <!-- Building focus selector — switches the centered / active building -->
+      <Border HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,52,0,0"
+              Background="{ThemeResource TooltipSurfaceBrush}" CornerRadius="18" Padding="4"
               BorderThickness="1" BorderBrush="{ThemeResource ConsoleOutlineBrush}">
-        <TextBlock Text="Nakatomi Plaza" Style="{StaticResource LabelMedium}" Foreground="{ThemeResource OnSurfaceBrush}" />
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <Border Grid.Column="{Binding Focus, ElementName=Twin}" Background="{ThemeResource SurfaceBrush}" CornerRadius="14" />
+          <Button Grid.Column="0" Tag="0" Content="Nakatomi Plaza" Style="{StaticResource FocusSelectButton}" Click="FocusSelect_Click" />
+          <Button Grid.Column="1" Tag="1" Content="Vortex Tower" Style="{StaticResource FocusSelectButton}" Click="FocusSelect_Click" />
+          <Button Grid.Column="2" Tag="2" Content="Helix Center" Style="{StaticResource FocusSelectButton}" Click="FocusSelect_Click" />
+        </Grid>
       </Border>
 
       <!-- Floor ruler (17F → 11F). Highlight pill tracks ActiveFloorIndex; click/hover selects a floor. -->

@@ -83,6 +83,13 @@ public sealed partial class DashboardPage : Page
         PauseBtn.Content = Twin.IsPaused ? "▶" : "❚❚";
     }
 
+    // Focus selector switches which building is centered + active in the twin.
+    private void FocusSelect_Click(object sender, RoutedEventArgs e)
+    {
+        if (sender is FrameworkElement { Tag: string tag } && int.TryParse(tag, out var index))
+            Twin.Focus = index;
+    }
+
     // Ruler click/hover selects a floor via the shared ActiveFloorIndex DP and pins the sweep on it.
     private void RulerFloor_Click(object sender, RoutedEventArgs e) => SelectRulerFloor(sender);
     private void RulerFloor_PointerEntered(object sender, PointerRoutedEventArgs e) => SelectRulerFloor(sender);
