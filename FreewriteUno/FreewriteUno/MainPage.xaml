@@ -4,6 +4,7 @@
       xmlns:local="using:FreewriteUno"
       xmlns:vm="using:FreewriteUno.ViewModels"
       xmlns:models="using:FreewriteUno.Models"
+      xmlns:aictrl="using:FreewriteUno.InlineAi.Presentation.Controls"
       xmlns:utu="using:Uno.Toolkit.UI"
       RequestedTheme="{x:Bind ViewModel.Theme, Mode=OneWay}"
       Background="{ThemeResource EditorBackgroundBrush}">
@@ -161,6 +162,19 @@
             </Grid>
           </ScrollViewer>
 
+          <!-- Inline AI: held-selection highlight band + off-screen mirror used to locate the
+               selected line (TextBox exposes no selection geometry on Skia). Never interactive. -->
+          <Canvas x:Name="OverlayCanvas" IsHitTestVisible="False">
+            <Border x:Name="SelectionHighlight"
+                    Background="{ThemeResource SelectionHighlightBrush}"
+                    CornerRadius="3"
+                    Visibility="Collapsed" />
+            <TextBlock x:Name="MeasureBlock"
+                       Opacity="0"
+                       IsHitTestVisible="False"
+                       TextWrapping="Wrap" />
+          </Canvas>
+
           <!-- Backspace flash overlay -->
           <Border x:Name="BackspaceFlash"
                   Background="{ThemeResource BackspaceFlashBrush}"
@@ -267,6 +281,14 @@
                       AutomationProperties.Name="Theme"
                       ToolTipService.ToolTip="Toggle theme" />
 
+              <!-- Review mode (inline AI) -->
+              <Button Style="{StaticResource ChromeIconButtonStyle}"
+                      Command="{x:Bind ViewModel.ToggleReviewModeCommand}"
+                      Content="&#x2726;"
+                      Foreground="{x:Bind ActiveOrInactiveBrush(ViewModel.IsReviewMode), Mode=OneWay}"
+                      AutomationProperties.Name="Review mode"
+                      ToolTipService.ToolTip="Review mode — select text to ask AI" />
+
               <!-- Sidebar toggle -->
               <Button Style="{StaticResource ChromeIconButtonStyle}"
                       Command="{x:Bind ViewModel.ToggleSidebarCommand}"
@@ -307,6 +329,17 @@
                        FontFamily="{StaticResource LatoFontFamily}"
                        FontSize="13" />
           </Border>
+
+          <!-- Inline AI overlays (review mode). Popups render above the editor; offsets are set in
+               code-behind in EditorRoot coordinates. DataContext is the generated InlineAiViewModel. -->
+          <Popup x:Name="PillPopup">
+            <aictrl:ActionPillView x:Name="ActionPill" />
+          </Popup>
+          <Popup x:Name="ChatPopup"
+                 IsLightDismissEnabled="True"
+                 IsOpen="{Binding IsChatOpen, Mode=TwoWay}">
+            <aictrl:InlineAiView x:Name="ChatView" />
+          </Popup>
 
           <!-- Theme cross-fade overlay (painted with the OUTGOING surface color,
                then faded out). Kept LAST so it sits above chrome + toasts during

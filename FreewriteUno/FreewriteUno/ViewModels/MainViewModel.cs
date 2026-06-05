@@ -39,6 +39,10 @@ public sealed partial class MainViewModel : ObservableObject
     [ObservableProperty] private bool _isSidebarOpen;
     [ObservableProperty] private double _chromeOpacity = 1.0;
 
+    // Post-session edit mode: the inline AI pill is suppressed while writing and enabled only in
+    // review mode (set true when the countdown completes; also togglable for untimed sessions).
+    [ObservableProperty] private bool _isReviewMode;
+
     public async Task InitializeAsync(CancellationToken ct = default)
     {
         var existing = await _entryStore.LoadAllAsync(ct).ConfigureAwait(true);
@@ -247,6 +251,9 @@ public sealed partial class MainViewModel : ObservableObject
 
     [RelayCommand]
     private void ToggleSidebar() => IsSidebarOpen = !IsSidebarOpen;
+
+    [RelayCommand]
+    private void ToggleReviewMode() => IsReviewMode = !IsReviewMode;
 
     public Func<string, Task>? OnCopyChatPrompt { get; set; }
     public Func<Task>? OnExportPdf { get; set; }
