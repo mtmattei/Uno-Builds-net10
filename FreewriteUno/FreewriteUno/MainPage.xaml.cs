@@ -260,7 +260,13 @@ public sealed partial class MainPage : Page
                 }
                 break;
             case nameof(MainViewModel.IsReviewMode):
-                if (!ViewModel.IsReviewMode)
+                if (ViewModel.IsReviewMode)
+                {
+                    // Entering review mode (e.g. tapping the sparkle): if text is already selected,
+                    // surface the pill now instead of waiting for the next selection gesture.
+                    EvaluateSelection();
+                }
+                else
                 {
                     // Leaving review mode dismisses any open chat and clears the held selection.
                     ChatPopup.IsOpen = false;

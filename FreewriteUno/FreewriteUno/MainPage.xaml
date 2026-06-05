@@ -132,11 +132,12 @@
           <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                         VerticalScrollBarVisibility="Auto"
                         Padding="48,48,48,112">
-            <Grid HorizontalAlignment="Center" MaxWidth="720">
+            <!-- Stretch + MaxWidth gives a fixed ~720 reading column centered in the viewport, so
+                 typed text wraps at a comfortable width instead of collapsing to the placeholder's
+                 width (which read as a thin vertical column). -->
+            <Grid HorizontalAlignment="Stretch" MaxWidth="720">
               <!-- Placeholder behind the editor TextBox. Same leading newlines so it
-                   aligns with where the cursor sits. The Grid is intentionally
-                   auto-sized + centered so writing begins in the middle of the
-                   viewport and grows outward as text is typed (original spec). -->
+                   aligns with where the cursor sits. -->
               <TextBlock x:Name="PlaceholderText"
                          Text="&#10;&#10;What's on your mind?"
                          FontFamily="{x:Bind FontFamilyForName(ViewModel.SelectedFont), Mode=OneWay}"
