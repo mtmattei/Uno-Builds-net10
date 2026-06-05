@@ -136,10 +136,10 @@
                  typed text wraps at a comfortable width instead of collapsing to the placeholder's
                  width (which read as a thin vertical column). -->
             <Grid HorizontalAlignment="Stretch" MaxWidth="720">
-              <!-- Placeholder behind the editor TextBox. Same leading newlines so it
-                   aligns with where the cursor sits. -->
+              <!-- Placeholder behind the editor TextBox. Sits on the caret line (the TextBox
+                   renders the caret at the top, so the placeholder carries no leading newlines). -->
               <TextBlock x:Name="PlaceholderText"
-                         Text="&#10;&#10;What's on your mind?"
+                         Text="What's on your mind?"
                          FontFamily="{x:Bind FontFamilyForName(ViewModel.SelectedFont), Mode=OneWay}"
                          FontSize="{x:Bind ViewModel.FontSize, Mode=OneWay}"
                          Opacity="{x:Bind vm:Formatters.PlaceholderOpacity(ViewModel.Text), Mode=OneWay}"

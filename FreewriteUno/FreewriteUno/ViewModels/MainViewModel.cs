@@ -9,7 +9,6 @@ namespace FreewriteUno.ViewModels;
 [Bindable]
 public sealed partial class MainViewModel : ObservableObject
 {
-    private const string LeadingPrefix = "\n\n";
     private const int SaveDebounceMs = 150;
 
     private readonly IEntryStore _entryStore;
@@ -29,7 +28,7 @@ public sealed partial class MainViewModel : ObservableObject
     public ObservableCollection<Entry> Entries { get; } = new();
 
     [ObservableProperty] private Entry? _selectedEntry;
-    [ObservableProperty] private string _text = LeadingPrefix;
+    [ObservableProperty] private string _text = string.Empty;
     [ObservableProperty] private int _timeRemaining = 900;
     [ObservableProperty] private bool _timerIsRunning;
     [ObservableProperty] private bool _backspaceDisabled;
@@ -71,10 +70,7 @@ public sealed partial class MainViewModel : ObservableObject
         try
         {
             var content = await _entryStore.ReadAsync(entry, ct).ConfigureAwait(true);
-            if (!content.StartsWith(LeadingPrefix, StringComparison.Ordinal))
-            {
-                content = LeadingPrefix + content.TrimStart('\n', '\r');
-            }
+            content = content.TrimStart('\n', '\r'); // strip the legacy leading padding stored in files
             SelectedEntry = entry;
             Text = content;
         }
@@ -87,14 +83,6 @@ public sealed partial class MainViewModel : ObservableObject
     partial void OnTextChanged(string value)
     {
         if (_suppressSave) return;
-
-        if (!value.StartsWith(LeadingPrefix, StringComparison.Ordinal))
-        {
-            var cleaned = value.TrimStart('\n', '\r');
-            Text = LeadingPrefix + cleaned;
-            return;
-        }
-
         if (SelectedEntry is null) return;
         ScheduleDebouncedSave(SelectedEntry, value);
     }
